@@ -37,11 +37,11 @@ Examples:
   - if a "framework context" exists and _carries_ the baggage context already, it is permitted to pass that context together with the baggage;
   - it is _strongly recommended_ to store the baggage context as `baggage` property of `FrameworkContext` in such cases, in order to avoid the confusing spelling of `context.context`, and favoring the self-explanatory `context.baggage` spelling when the baggage is contained in a framework context object.
 - `func receiveMessage(_ message: Message, context: FrameworkContext)`
-- `func handle(element: Element,` **`context: FrameworkContext`** `, settings: Settings? = nil)
+- `func handle(element: Element,` **`context: FrameworkContext`** `, settings: Settings? = nil)`
   - before any defaulted non-function parameters
-- `func handle(element: Element,` **`context: FrameworkContext`** `, settings: Settings? = nil, onComplete: () -> ())
+- `func handle(element: Element,` **`context: FrameworkContext`** `, settings: Settings? = nil, onComplete: () -> ())`
   - before defaulted parameters, which themselfes are before required function parameters
-- `func handle(element: Element,` **`context: FrameworkContext`** `, onError: (Error) -> (), onComplete: (() -> ())? = nil)
+- `func handle(element: Element,` **`context: FrameworkContext`** `, onError: (Error) -> (), onComplete: (() -> ())? = nil)`
 
 In case there are _multiple_ "framework-ish" parameters, such as passing a NIO `EventLoop` or similar, we suggest:
 
