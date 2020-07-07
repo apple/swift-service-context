@@ -32,7 +32,7 @@ This way when reading the call side, users of these APIs can learn to "ignore" o
 
 Examples: 
 
-- `func request(_ url: URL, context: BaggageContext)`, which may be called as `httpClient.request(url, context: context)`
+- `func request(_ url: URL,` **`context: BaggageContext`** `)`, which may be called as `httpClient.request(url, context: context)`
 - `func handle(_ request: RequestObject,` **`context: FrameworkContext`** `)`
   - if a "framework context" exists and _carries_ the baggage context already, it is permitted to pass that context together with the baggage;
   - it is _strongly recommended_ to store the baggage context as `baggage` property of `FrameworkContext` in such cases, in order to avoid the confusing spelling of `context.context`, and favoring the self-explanatory `context.baggage` spelling when the baggage is contained in a framework context object.
