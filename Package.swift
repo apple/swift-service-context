@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "gsoc-swift-baggage-context",
+    name: "swift-baggage-context",
     products: [
         .library(name: "Baggage", targets: ["Baggage"])
     ],
