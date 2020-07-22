@@ -6,18 +6,26 @@
 `BaggageContext` is a minimal (zero-dependency) "context" library meant to "carry" baggage (metadata) for cross-cutting tools such as tracers.
 It is purposefully not tied to any specific use-case (in the spirit of the [Tracing Plane paper](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf)'s BaggageContext), however it should enable a vast majority of use cases cross-cutting tools need to support. Unlike mentioned in the paper, our `BaggageContext` does not implement its own serialization scheme (today).
 
-
-
 See https://github.com/slashmo/gsoc-swift-tracing for actual instrument types and implementations which can be used to deploy various cross-cutting instruments all reusing the same baggage type.
+
+## Installation
+
+You can install the `BaggageContext` library through the Swift Package Manager. The library itself is called `Baggage`, so that's what you'd import in your Swift files.
+
+```swift
+dependencies: [
+  .package(url: "https://github.com/slashmo/gsoc-swift-baggage-context.git", from: "0.1.0")
+]
+```
 
 ## Context-Passing Guidelines
 
-In order for context-passing to feel consistent and Swifty among all server-side (and not only) libraries and frameworks 
+In order for context-passing to feel consistent and Swifty among all server-side (and not only) libraries and frameworks
 aiming to adopt `BaggageContext` (or any of its uses, such as Distributed Tracing), we suggest the following set of guidelines:
 
 ### Argument naming/positioning
 
-In order to propagate baggage through function calls (and asynchronous-boundaries it may often be necessary to pass it explicitly (unless wrapper APIs are provided which handle the propagation automatically). 
+In order to propagate baggage through function calls (and asynchronous-boundaries it may often be necessary to pass it explicitly (unless wrapper APIs are provided which handle the propagation automatically).
 
 When passing baggage context explicitly we strongly suggest sticking to the following style guideline:
 
@@ -30,7 +38,7 @@ When passing baggage context explicitly we strongly suggest sticking to the foll
 
 This way when reading the call side, users of these APIs can learn to "ignore" or "skim over" the context parameter and the method signature remains human-readable and “Swifty”.
 
-Examples: 
+Examples:
 
 - `func request(_ url: URL,` **`context: BaggageContext`** `)`, which may be called as `httpClient.request(url, context: context)`
 - `func handle(_ request: RequestObject,` **`context: FrameworkContext`** `)`
@@ -62,7 +70,7 @@ When adapting an existing library/framework to support `BaggageContext` and it a
   - if they take no framework context, accept a `context: BaggageContext` which is the same guideline as for all other cases
   - if they already _must_ take a context object and you are out of words (or your API already accepts your framework context as "context"), pass the baggage as **last** parameter (see above) yet call the parameter `baggage` to disambiguate your `context` object from the `baggage` context object.
 
-Examples: 
+Examples:
 
 - `Lamda.Context` may contain `baggage` and this way offer traceIDs and other values
   - passing context to a `Lambda.Context` unaware library becomes: `http.request(url: "...", context: context.baggage)`.
