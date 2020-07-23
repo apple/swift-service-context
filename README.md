@@ -16,7 +16,7 @@ You can install the `BaggageContext` library through the Swift Package Manager. 
 dependencies: [
   .package(
     name: "swift-baggage-context", 
-    url: "https://github.com/slashmo/swift-baggage-context.git", 
+    url: "https://github.com/slashmo/gsoc-swift-baggage-context.git", 
     from: "0.1.0"
   )
 ]
