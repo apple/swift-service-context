@@ -11,11 +11,30 @@ let package = Package(
             name: "Baggage",
             dependencies: []
         ),
+
+        // ==== --------------------------------------------------------------------------------------------------------
+        // MARK: Tests
+
         .testTarget(
             name: "BaggageTests",
             dependencies: [
                 "Baggage"
             ]
-        )
+        ),
+
+        // ==== --------------------------------------------------------------------------------------------------------
+        // MARK: Performance / Benchmarks
+
+        .target(
+            name: "Benchmarks",
+            dependencies: [
+                "Baggage",
+                "SwiftBenchmarkTools",
+            ]
+        ),
+        .target(
+            name: "SwiftBenchmarkTools",
+            dependencies: []
+        ),
     ]
 )
