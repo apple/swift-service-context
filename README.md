@@ -45,25 +45,33 @@ This way when reading the call side, users of these APIs can learn to "ignore" o
 Examples:
 
 - `func request(_ url: URL,` **`context: BaggageContext`** `)`, which may be called as `httpClient.request(url, context: context)`
-- `func handle(_ request: RequestObject,` **`context: FrameworkContext`** `)`
+- `func handle(_ request: RequestObject,` **`context: BaggageContextCarrier`** `)`
   - if a "framework context" exists and _carries_ the baggage context already, it is permitted to pass that context together with the baggage;
   - it is _strongly recommended_ to store the baggage context as `baggage` property of `FrameworkContext` in such cases, in order to avoid the confusing spelling of `context.context`, and favoring the self-explanatory `context.baggage` spelling when the baggage is contained in a framework context object.
 - `func receiveMessage(_ message: Message, context: FrameworkContext)`
-- `func handle(element: Element,` **`context: FrameworkContext`** `, settings: Settings? = nil)`
+- `func handle(element: Element,` **`context: BaggageContextCarrier`** `, settings: Settings? = nil)`
   - before any defaulted non-function parameters
-- `func handle(element: Element,` **`context: FrameworkContext`** `, settings: Settings? = nil, onComplete: () -> ())`
+- `func handle(element: Element,` **`context: BaggageContextCarrier`** `, settings: Settings? = nil, onComplete: () -> ())`
   - before defaulted parameters, which themselfes are before required function parameters
-- `func handle(element: Element,` **`context: FrameworkContext`** `, onError: (Error) -> (), onComplete: (() -> ())? = nil)`
+- `func handle(element: Element,` **`context: BaggageContextCarrier`** `, onError: (Error) -> (), onComplete: (() -> ())? = nil)`
 
 In case there are _multiple_ "framework-ish" parameters, such as passing a NIO `EventLoop` or similar, we suggest:
 
 - `func perform(_ work: Work, for user: User,` _`frameworkThing: Thing, eventLoop: NIO.EventLoop,`_ **`context: BaggageContext`** `)`
   - pass the baggage as **last** of such non-domain specific parameters as it will be _by far more_ omnipresent than any specific framework parameter - as it is expected that any framework should be accepting a context if it is able to do so. While not all libraries are necessarily going to be implemented using the same frameworks.
 
-And lastly
-
 We feel it is important to preserve Swift's human-readable nature of function definitions. In other words, we intend to keep the read-out-loud phrasing of methods to remain _"request that url (ignore reading out loud the context parameter)"_ rather than _"request (ignore this context parameter when reading) that url"_.
 
+#### When to use what context type?
+
+This library defines the following context (carrier) types:
+
+- `struct BaggageContext` - which is the actual context object,
+- `protocol BaggageContextCarrier` - which should be used whenever a library implements an API and does not necessarily care where it gets a `context` value from
+  - this pattern enables other frameworks to pass their `FrameworkContext`, like so: `get(context: MyFrameworkContext())` if they already have such context in scope (e.g. Vapor's `Request` object is a good example, or Lambda Runtime's `Lambda.Context`
+- `protocol LoggingBaggageContextCarrier` - which in addition exposes a logger bound to the passed context
+
+Finally, some frameworks will have APIs which accept the specific `MyFrameworkContext`, withing frameworks specifically a lot more frequently than libraries one would hope. It is important when designing APIs to keep in mind -- can this API work with any context, or is it always going to require _my framework context_, and erring on accepting the most general type possible.
 
 #### Existing context argument
 
