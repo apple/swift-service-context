@@ -21,7 +21,7 @@ extension Logger {
     /// The rendering of baggage values into metadata values is performed on demand,
     /// whenever a log statement is effective (i.e. will be logged, according to active `logLevel`).
     public func with(context: BaggageContext) -> Logger {
-        Logger(
+        return Logger(
             label: self.label,
             factory: { _ in BaggageMetadataLogHandler(logger: self, context: context) }
         )

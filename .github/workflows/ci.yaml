@@ -4,10 +4,14 @@ on: [push, pull_request]
 
 jobs:
   unit-test:
+    strategy:
+      matrix:
+        # GitHub Actions replaces 5.0 with 5 so we have to be specific here
+        swift: [5.0.3, 5.1, 5.2]
     runs-on: ubuntu-latest
-    container: swift:5.2
+    container: swift:${{ matrix.swift }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Build & Test
-        run: swift test -c release --enable-test-discovery
+        run: swift test
