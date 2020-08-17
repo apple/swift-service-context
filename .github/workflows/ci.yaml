@@ -13,5 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Build & Test
+      - name: Build
+        run: swift build
+      - name: Test
         run: swift test
