@@ -72,7 +72,7 @@ public struct ExampleFrameworkContext: LoggingBaggageContextCarrier {
     private var _logger: Logger
     public var logger: Logger {
         get {
-            self._logger.with(context: self.baggage)
+            return self._logger.with(context: self.baggage)
         }
         set {
             self._logger = newValue
@@ -89,7 +89,7 @@ struct CoolFrameworkContext: LoggingBaggageContextCarrier {
     private var _logger: Logger = Logger(label: "some frameworks logger")
     var logger: Logger {
         get {
-            self._logger.with(context: self.baggage)
+            return self._logger.with(context: self.baggage)
         }
         set {
             self._logger = newValue
@@ -110,7 +110,7 @@ struct FakeEventLoop {}
 private extension BaggageContextProtocol {
     var testID: Int? {
         get {
-            self[TestIDKey.self]
+            return self[TestIDKey.self]
         }
         set {
             self[TestIDKey.self] = newValue
@@ -119,7 +119,7 @@ private extension BaggageContextProtocol {
 
     var secondTestID: String? {
         get {
-            self[SecondTestIDKey.self]
+            return self[SecondTestIDKey.self]
         }
         set {
             self[SecondTestIDKey.self] = newValue

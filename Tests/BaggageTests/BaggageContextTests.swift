@@ -22,7 +22,7 @@ final class BaggageContextTests: XCTestCase {
         XCTAssertNil(baggage[TestIDKey.self])
 
         baggage[TestIDKey.self] = testID
-        XCTAssertEqual(baggage[TestIDKey], testID)
+        XCTAssertEqual(baggage[TestIDKey.self], testID)
 
         baggage[TestIDKey.self] = nil
         XCTAssertNil(baggage[TestIDKey.self])
@@ -73,7 +73,7 @@ private enum TestIDKey: BaggageContextKey {
 private extension BaggageContext {
     var testID: Int? {
         get {
-            self[TestIDKey.self]
+            return self[TestIDKey.self]
         } set {
             self[TestIDKey.self] = newValue
         }

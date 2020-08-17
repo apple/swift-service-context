@@ -29,7 +29,7 @@ public struct BaggageMetadataLogHandler: LogHandler {
 
     public var logLevel: Logger.Level {
         get {
-            self.underlying.logLevel
+            return self.underlying.logLevel
         }
         set {
             self.underlying.logLevel = newValue
@@ -58,7 +58,7 @@ public struct BaggageMetadataLogHandler: LogHandler {
 
     public var metadata: Logger.Metadata {
         get {
-            [:]
+            return [:]
         }
         set {
             newValue.forEach { k, v in
@@ -74,7 +74,7 @@ public struct BaggageMetadataLogHandler: LogHandler {
     /// into a baggage with String keys through this handler (as that is not a capability `BaggageContext` offers in any case.
     public subscript(metadataKey metadataKey: Logger.Metadata.Key) -> Logger.Metadata.Value? {
         get {
-            self.underlying[metadataKey: metadataKey]
+            return self.underlying[metadataKey: metadataKey]
         }
         set {
             self.underlying[metadataKey: metadataKey] = newValue
@@ -104,7 +104,7 @@ public struct BaggageMetadataLogHandler: LogHandler {
         }
 
         var description: String {
-            "\(self.value)"
+            return "\(self.value)"
         }
     }
 }
