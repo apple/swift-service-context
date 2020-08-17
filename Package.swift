@@ -28,7 +28,8 @@ let package = Package(
         .target(
             name: "BaggageLogging",
             dependencies: [
-                .product(name: "Logging", package: "swift-log")
+                "Baggage",
+                .product(name: "Logging", package: "swift-log"),
             ]
         ),
 
