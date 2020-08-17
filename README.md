@@ -17,7 +17,7 @@ dependencies: [
   .package(
     name: "swift-baggage-context",
     url: "https://github.com/slashmo/gsoc-swift-baggage-context.git",
-    from: "0.2.0"
+    from: "0.3.0"
   )
 ]
 ```
