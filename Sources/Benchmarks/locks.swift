@@ -43,7 +43,7 @@ internal class CountDownLatch {
     }
 
     var count: Int {
-        self.lock.synchronized {
+        return self.lock.synchronized {
             self.counter
         }
     }
@@ -63,7 +63,7 @@ internal class CountDownLatch {
 
 extension CountDownLatch: CustomStringConvertible {
     public var description: String {
-        "CountDownLatch(remaining:\(self.count)"
+        return "CountDownLatch(remaining:\(self.count)"
     }
 }
 

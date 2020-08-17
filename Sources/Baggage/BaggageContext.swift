@@ -52,7 +52,7 @@ public struct BaggageContext: BaggageContextProtocol {
 
     public subscript<Key: BaggageContextKey>(_ key: Key.Type) -> Key.Value? {
         get {
-            self._storage[AnyBaggageContextKey(key)]?.forceUnwrap(key)
+            return self._storage[AnyBaggageContextKey(key)]?.forceUnwrap(key)
         } set {
             self._storage[AnyBaggageContextKey(key)] = newValue.map {
                 ValueContainer(value: $0)
@@ -70,14 +70,14 @@ public struct BaggageContext: BaggageContextProtocol {
         let value: Any
 
         func forceUnwrap<Key: BaggageContextKey>(_ key: Key.Type) -> Key.Value {
-            self.value as! Key.Value
+            return self.value as! Key.Value
         }
     }
 }
 
 extension BaggageContext: CustomStringConvertible {
     public var description: String {
-        "\(Self.self)(keys: \(self._storage.map(\.key.name)))"
+        return "\(type(of: self).self)(keys: \(self._storage.map { $0.key.name }))"
     }
 }
 
@@ -118,7 +118,7 @@ public protocol BaggageContextKey {
 }
 
 extension BaggageContextKey {
-    public static var name: String? { nil }
+    public static var name: String? { return nil }
 }
 
 public struct AnyBaggageContextKey {
@@ -129,7 +129,7 @@ public struct AnyBaggageContextKey {
     /// A human-readable String representation of the underlying key.
     /// If no explicit name has been set on the wrapped key the type name is used.
     public var name: String {
-        self._name ?? String(describing: self.keyType.self)
+        return self._name ?? String(describing: self.keyType.self)
     }
 
     public init<Key>(_ keyType: Key.Type) where Key: BaggageContextKey {
@@ -140,7 +140,7 @@ public struct AnyBaggageContextKey {
 
 extension AnyBaggageContextKey: Hashable {
     public static func == (lhs: AnyBaggageContextKey, rhs: AnyBaggageContextKey) -> Bool {
-        ObjectIdentifier(lhs.keyType) == ObjectIdentifier(rhs.keyType)
+        return ObjectIdentifier(lhs.keyType) == ObjectIdentifier(rhs.keyType)
     }
 
     public func hash(into hasher: inout Hasher) {
