@@ -35,11 +35,11 @@ internal struct TestLogging {
     private let recorder = Recorder() // shared among loggers
 
     func make(label: String) -> LogHandler {
-        TestLogHandler(label: label, config: self.config, recorder: self.recorder)
+        return TestLogHandler(label: label, config: self.config, recorder: self.recorder)
     }
 
-    var config: Config { self._config }
-    var history: History { self.recorder }
+    var config: Config { return self._config }
+    var history: History { return self.recorder }
 }
 
 internal struct TestLogHandler: LogHandler {
@@ -68,7 +68,7 @@ internal struct TestLogHandler: LogHandler {
     var logLevel: Logger.Level {
         get {
             // get from config unless set
-            self.logLevelLock.withLock { self._logLevel } ?? self.config.get(key: self.label)
+            return self.logLevelLock.withLock { self._logLevel } ?? self.config.get(key: self.label)
         }
         set {
             self.logLevelLock.withLock { self._logLevel = newValue }
@@ -85,7 +85,7 @@ internal struct TestLogHandler: LogHandler {
     public var metadata: Logger.Metadata {
         get {
             // return self.logger.metadata
-            self.metadataLock.withLock { self._metadata }
+            return self.metadataLock.withLock { self._metadata }
         }
         set {
             // self.logger.metadata = newValue
@@ -97,7 +97,7 @@ internal struct TestLogHandler: LogHandler {
     subscript(metadataKey metadataKey: Logger.Metadata.Key) -> Logger.Metadata.Value? {
         get {
             // return self.logger[metadataKey: metadataKey]
-            self.metadataLock.withLock { self._metadata[metadataKey] }
+            return self.metadataLock.withLock { self._metadata[metadataKey] }
         }
         set {
             // return logger[metadataKey: metadataKey] = newValue
@@ -115,7 +115,7 @@ internal class Config {
     private var storage = [String: Logger.Level]()
 
     func get(key: String) -> Logger.Level {
-        self.get(key) ?? self.get(Config.ALL) ?? Logger.Level.debug
+        return self.get(key) ?? self.get(Config.ALL) ?? Logger.Level.debug
     }
 
     func get(_ key: String) -> Logger.Level? {
@@ -145,7 +145,7 @@ internal class Recorder: History {
     }
 
     var entries: [LogEntry] {
-        self.lock.withLock { self._entries }
+        return self.lock.withLock { return self._entries }
     }
 }
 
@@ -155,29 +155,29 @@ internal protocol History {
 
 internal extension History {
     func atLevel(level: Logger.Level) -> [LogEntry] {
-        self.entries.filter { entry in
+        return self.entries.filter { entry in
             level == entry.level
         }
     }
 
     var trace: [LogEntry] {
-        self.atLevel(level: .debug)
+        return self.atLevel(level: .debug)
     }
 
     var debug: [LogEntry] {
-        self.atLevel(level: .debug)
+        return self.atLevel(level: .debug)
     }
 
     var info: [LogEntry] {
-        self.atLevel(level: .info)
+        return self.atLevel(level: .info)
     }
 
     var warning: [LogEntry] {
-        self.atLevel(level: .warning)
+        return self.atLevel(level: .warning)
     }
 
     var error: [LogEntry] {
-        self.atLevel(level: .error)
+        return self.atLevel(level: .error)
     }
 }
 
@@ -226,7 +226,7 @@ extension History {
     }
 
     func find(level: Logger.Level, message: String, metadata: Logger.Metadata? = nil, source: String) -> LogEntry? {
-        self.entries.first { entry in
+        return self.entries.first { entry in
             entry.level == level &&
                 entry.message == message &&
                 entry.metadata ?? [:] == metadata ?? [:] &&
@@ -245,8 +245,8 @@ public class MDC {
 
     public subscript(metadataKey: String) -> Logger.Metadata.Value? {
         get {
-            self.lock.withLock {
-                self.storage[self.threadId]?[metadataKey]
+            return self.lock.withLock {
+                return self.storage[self.threadId]?[metadataKey]
             }
         }
         set {
@@ -260,8 +260,8 @@ public class MDC {
     }
 
     public var metadata: Logger.Metadata {
-        self.lock.withLock {
-            self.storage[self.threadId] ?? [:]
+        return self.lock.withLock {
+            return self.storage[self.threadId] ?? [:]
         }
     }
 

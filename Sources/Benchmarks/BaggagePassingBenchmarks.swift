@@ -158,32 +158,32 @@ private enum TestKD1: BaggageContextKey {
 
 extension BaggageContext {
     fileprivate var passCounter: TestPassCounterKey.Value {
-        get { self[TestPassCounterKey.self] ?? 0 }
+        get { return self[TestPassCounterKey.self] ?? 0 }
         set { self[TestPassCounterKey.self] = newValue }
     }
 
     fileprivate var k1: TestK1.Value? {
-        get { self[TestK1.self] }
+        get { return self[TestK1.self] }
         set { self[TestK1.self] = newValue }
     }
 
     fileprivate var k2: TestK2.Value? {
-        get { self[TestK2.self] }
+        get { return self[TestK2.self] }
         set { self[TestK2.self] = newValue }
     }
 
     fileprivate var k3: TestK3.Value? {
-        get { self[TestK3.self] }
+        get { return self[TestK3.self] }
         set { self[TestK3.self] = newValue }
     }
 
     fileprivate var k4: TestK4.Value? {
-        get { self[TestK4.self] }
+        get { return self[TestK4.self] }
         set { self[TestK4.self] = newValue }
     }
 
     fileprivate var kd1: TestKD1.Value? {
-        get { self[TestKD1.self] }
+        get { return self[TestKD1.self] }
         set { self[TestKD1.self] = newValue }
     }
 }

@@ -30,7 +30,7 @@ public protocol BaggageContextCarrier: BaggageContextProtocol {
 extension BaggageContextCarrier {
     public subscript<Key: BaggageContextKey>(baggageKey: Key.Type) -> Key.Value? {
         get {
-            self.baggage[baggageKey]
+            return self.baggage[baggageKey]
         } set {
             self.baggage[baggageKey] = newValue
         }
@@ -45,7 +45,7 @@ extension BaggageContextCarrier {
 extension BaggageContext: BaggageContextCarrier {
     public var baggage: BaggageContext {
         get {
-            self
+            return self
         }
         set {
             self = newValue
