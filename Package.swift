@@ -55,15 +55,15 @@ let package = Package(
         // MARK: Performance / Benchmarks
 
         .target(
-            name: "Benchmarks",
+            name: "BaggageBenchmarks",
             dependencies: [
                 "Baggage",
                 "BaggageLogging",
-                "SwiftBenchmarkTools",
+                "BaggageBenchmarkTools",
 ]
         ),
         .target(
-            name: "SwiftBenchmarkTools",
+            name: "BaggageBenchmarkTools",
             dependencies: []
         ),
     ]
