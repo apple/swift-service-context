@@ -12,9 +12,9 @@
 //===----------------------------------------------------------------------===//
 
 import Baggage
+import BaggageBenchmarkTools
 import Dispatch
 import class Foundation.NSLock
-import SwiftBenchmarkTools
 public let BaggagePassingBenchmarks: [BenchmarkInfo] = [
     // ==== ----------------------------------------------------------------------------------------------------------------
     // MARK: "Read only" context passing around
