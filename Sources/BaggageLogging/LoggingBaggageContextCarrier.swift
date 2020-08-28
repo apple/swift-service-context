@@ -29,5 +29,5 @@ public protocol LoggingBaggageContextCarrier: BaggageContextCarrier {
     ///
     /// Writes to the `logger` metadata SHOULD NOT be reflected in the `baggage`,
     /// however writes to the underlying `baggage` SHOULD be reflected in the `logger`.
-    var logger: Logger { get set }
+    var logger: Logger { get }
 }
