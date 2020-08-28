@@ -71,12 +71,7 @@ public struct ExampleFrameworkContext: LoggingBaggageContextCarrier {
 
     private var _logger: Logger
     public var logger: Logger {
-        get {
-            return self._logger.with(context: self.baggage)
-        }
-        set {
-            self._logger = newValue
-        }
+        return self._logger.with(context: self.baggage)
     }
 
     public init(context baggage: BaggageContext, logger: Logger) {
@@ -88,12 +83,7 @@ public struct ExampleFrameworkContext: LoggingBaggageContextCarrier {
 struct CoolFrameworkContext: LoggingBaggageContextCarrier {
     private var _logger: Logger = Logger(label: "some frameworks logger")
     var logger: Logger {
-        get {
-            return self._logger.with(context: self.baggage)
-        }
-        set {
-            self._logger = newValue
-        }
+        return self._logger.with(context: self.baggage)
     }
 
     var baggage: BaggageContext = .init()
