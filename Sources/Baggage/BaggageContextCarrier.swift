@@ -36,8 +36,8 @@ extension BaggageContextCarrier {
         }
     }
 
-    public func forEach(_ callback: (AnyBaggageContextKey, Any) -> Void) {
-        self.baggage.forEach(callback)
+    public func forEach(_ body: (AnyBaggageContextKey, Any) throws -> Void) rethrows {
+        try self.baggage.forEach(body)
     }
 }
 

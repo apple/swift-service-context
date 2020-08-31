@@ -22,13 +22,13 @@
 ///       typealias Value = String
 ///     }
 ///
-///     var baggage = BaggageContext()
+///     var context = BaggageContext()
 ///     // set a new value
-///     baggage[TestIDKey.self] = "abc"
+///     context[TestIDKey.self] = "abc"
 ///     // retrieve a stored value
-///     baggage[TestIDKey.self] ?? "default"
+///     context[TestIDKey.self] ?? "default"
 ///     // remove a stored value
-///     baggage[TestIDKey.self] = nil
+///     context[TestIDKey.self] = nil
 ///
 /// ## Convenience extensions
 ///
@@ -36,7 +36,7 @@
 /// using the following pattern:
 ///
 ///     extension BaggageContextProtocol {
-///       var testID: TestIDKey.Value {
+///       var testID: TestIDKey.Value? {
 ///         get {
 ///           self[TestIDKey.self]
 ///         } set {
@@ -45,37 +45,34 @@
 ///       }
 ///     }
 public struct BaggageContext: BaggageContextProtocol {
-    private var _storage = [AnyBaggageContextKey: ValueContainer]()
+    private var _storage = [AnyBaggageContextKey: Any]()
 
     /// Create an empty `BaggageContext`.
     public init() {}
 
     public subscript<Key: BaggageContextKey>(_ key: Key.Type) -> Key.Value? {
         get {
-            return self._storage[AnyBaggageContextKey(key)]?.forceUnwrap(key)
+            guard let value = self._storage[AnyBaggageContextKey(key)] else { return nil }
+            // safe to force-cast as this subscript is the only way to set a value.
+            return (value as! Key.Value)
         } set {
-            self._storage[AnyBaggageContextKey(key)] = newValue.map {
-                ValueContainer(value: $0)
-            }
+            self._storage[AnyBaggageContextKey(key)] = newValue
         }
     }
 
-    public func forEach(_ callback: (AnyBaggageContextKey, Any) -> Void) {
-        self._storage.forEach { key, container in
-            callback(key, container.value)
-        }
-    }
-
-    private struct ValueContainer {
-        let value: Any
-
-        func forceUnwrap<Key: BaggageContextKey>(_ key: Key.Type) -> Key.Value {
-            return self.value as! Key.Value
+    public func forEach(_ body: (AnyBaggageContextKey, Any) throws -> Void) rethrows {
+        try self._storage.forEach { key, value in
+            try body(key, value)
         }
     }
 }
 
 extension BaggageContext: CustomStringConvertible {
+    /// A context's description prints only keys of the contained values.
+    /// This is in order to prevent spilling a lot of detailed information of carried values accidentally.
+    ///
+    /// `BaggageContext`s are not intended to be printed "raw" but rather inter-operate with tracing, logging and other systems,
+    /// which can use the `forEach` function providing access to its underlying values.
     public var description: String {
         return "\(type(of: self).self)(keys: \(self._storage.map { $0.key.name }))"
     }
@@ -88,7 +85,7 @@ public protocol BaggageContextProtocol {
     /// using the following pattern:
     ///
     ///     extension BaggageContextProtocol {
-    ///       var testID: TestIDKey.Value {
+    ///       var testID: TestIDKey.Value? {
     ///         get {
     ///           self[TestIDKey.self]
     ///         } set {
@@ -98,17 +95,30 @@ public protocol BaggageContextProtocol {
     ///     }
     subscript<Key: BaggageContextKey>(_ key: Key.Type) -> Key.Value? { get set }
 
-    /// Iterates over the baggage context's contents invoking the callback one-by one.
+    /// Calls the given closure on each key/value pair in the `BaggageContext`.
     ///
-    /// - Parameter callback: invoked with the type erased key and value stored for the key in this baggage.
-    func forEach(_ callback: (AnyBaggageContextKey, Any) -> Void)
+    /// - Parameter body: A closure invoked with the type erased key and value stored for the key in this baggage.
+    func forEach(_ body: (AnyBaggageContextKey, Any) throws -> Void) rethrows
 }
 
 // ==== ------------------------------------------------------------------------
 // MARK: Baggage keys
 
-/// `BaggageContextKey`s are used as keys in a `BaggageContext`. Their associated type `Value` gurantees type-safety.
+/// `BaggageContextKey`s are used as keys in a `BaggageContext`. Their associated type `Value` guarantees type-safety.
 /// To give your `BaggageContextKey` an explicit name you may override the `name` property.
+///
+/// In general, `BaggageContextKey`s should be `internal` to the part of a system using it. It is strongly recommended to do
+/// convenience extensions on `BaggageContextProtocol`, using the keys directly is considered an anti-pattern.
+///
+///     extension BaggageContextProtocol {
+///       var testID: TestIDKey.Value? {
+///         get {
+///           self[TestIDKey.self]
+///         } set {
+///           self[TestIDKey.self] = newValue
+///         }
+///       }
+///     }
 public protocol BaggageContextKey {
     /// The type of `Value` uniquely identified by this key.
     associatedtype Value
@@ -121,7 +131,9 @@ extension BaggageContextKey {
     public static var name: String? { return nil }
 }
 
+/// A type-erased `BaggageContextKey` used when iterating through the `BaggageContext` using its `forEach` method.
 public struct AnyBaggageContextKey {
+    /// The key's type represented erased to an `Any.Type`.
     public let keyType: Any.Type
 
     private let _name: String?
@@ -132,7 +144,7 @@ public struct AnyBaggageContextKey {
         return self._name ?? String(describing: self.keyType.self)
     }
 
-    public init<Key>(_ keyType: Key.Type) where Key: BaggageContextKey {
+    init<Key>(_ keyType: Key.Type) where Key: BaggageContextKey {
         self.keyType = keyType
         self._name = keyType.name
     }
