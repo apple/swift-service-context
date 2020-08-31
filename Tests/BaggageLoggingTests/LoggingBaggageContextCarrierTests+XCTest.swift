@@ -27,6 +27,7 @@ extension LoggingBaggageContextCarrierTests {
       return [
                 ("test_ContextWithLogger_dumpBaggage", test_ContextWithLogger_dumpBaggage),
                 ("test_ContextWithLogger_log_withBaggage", test_ContextWithLogger_log_withBaggage),
+                ("test_ContextWithLogger_log_prefersBaggageContextOverExistingLoggerMetadata", test_ContextWithLogger_log_prefersBaggageContextOverExistingLoggerMetadata),
            ]
    }
 }

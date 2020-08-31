@@ -62,7 +62,6 @@ final class BaggageContextTests: XCTestCase {
         // use contains instead of `XCTAssertEqual` because the order is non-predictable (Dictionary)
         XCTAssert(description.contains("TestIDKey"))
         XCTAssert(description.contains("ExplicitKeyName"))
-        print(description.reversed().starts(with: "])"))
     }
 }
 

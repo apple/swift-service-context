@@ -4,22 +4,23 @@ import PackageDescription
 let package = Package(
     name: "swift-baggage-context",
     products: [
-        .library(name: "Baggage",
+        .library(
+            name: "Baggage",
             targets: [
-                "Baggage"
+                "Baggage",
             ]
         ),
-        .library(name: "BaggageLogging",
+        .library(
+            name: "BaggageLogging",
             targets: [
-                "BaggageLogging"
+                "BaggageLogging",
             ]
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-log.git", from: "1.3.0")
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.3.0"),
     ],
     targets: [
-
         .target(
             name: "Baggage",
             dependencies: []
@@ -39,7 +40,7 @@ let package = Package(
         .testTarget(
             name: "BaggageTests",
             dependencies: [
-                "Baggage"
+                "Baggage",
             ]
         ),
 
@@ -47,7 +48,7 @@ let package = Package(
             name: "BaggageLoggingTests",
             dependencies: [
                 "Baggage",
-                "BaggageLogging"
+                "BaggageLogging",
             ]
         ),
 
@@ -60,7 +61,7 @@ let package = Package(
                 "Baggage",
                 "BaggageLogging",
                 "BaggageBenchmarkTools",
-]
+            ]
         ),
         .target(
             name: "BaggageBenchmarkTools",
