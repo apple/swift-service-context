@@ -194,8 +194,7 @@ extension History {
                      metadata: Logger.Metadata? = nil,
                      source: String? = nil,
                      file: StaticString = #file,
-                     line: UInt = #line)
-    {
+                     line: UInt = #line) {
         let source = source ?? Logger.currentModule(filePath: "\(file)")
         let entry = self.find(level: level, message: message, metadata: metadata, source: source)
         XCTAssertNotNil(
@@ -215,8 +214,7 @@ extension History {
                         metadata: Logger.Metadata? = nil,
                         source: String? = nil,
                         file: StaticString = #file,
-                        line: UInt = #line)
-    {
+                        line: UInt = #line) {
         let source = source ?? Logger.currentModule(filePath: "\(file)")
         let entry = self.find(level: level, message: message, metadata: metadata, source: source)
         XCTAssertNil(

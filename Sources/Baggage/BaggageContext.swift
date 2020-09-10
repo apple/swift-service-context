@@ -22,7 +22,7 @@
 ///       typealias Value = String
 ///     }
 ///
-///     var context = BaggageContext()
+///     var context = BaggageContext.empty
 ///     // set a new value
 ///     context[TestIDKey.self] = "abc"
 ///     // retrieve a stored value
@@ -47,8 +47,11 @@
 public struct BaggageContext: BaggageContextProtocol {
     private var _storage = [AnyBaggageContextKey: Any]()
 
-    /// Create an empty `BaggageContext`.
-    public init() {}
+    /// Internal on purpose, please use `TODO` or `.background` to create an "empty" context,
+    /// which carries more meaning to other developers why an empty context was used.
+    ///
+    /// Frameworks and libraries which create a new baggage to populate it right away can start
+    init() {}
 
     public subscript<Key: BaggageContextKey>(_ key: Key.Type) -> Key.Value? {
         get {
@@ -158,4 +161,80 @@ extension AnyBaggageContextKey: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self.keyType))
     }
+}
+
+// ==== ----------------------------------------------------------------------------------------------------------------
+// MARK: Background BaggageContext
+
+extension BaggageContextProtocol {
+    /// An empty baggage context intended as the "root" or "initial" baggage context background processing tasks, or as the "root" baggage context.
+    ///
+    /// It is never canceled, has no values, and has no deadline.
+    /// It is typically used by the main function, initialization, and tests, and as the top-level Context for incoming requests.
+    ///
+    /// ### Usage in frameworks and libraries
+    /// This function is really only intended to be used frameworks and libraries, at the "top-level" where a request's,
+    /// message's or task's processing is initiated. For example, a framework handling requests, should create an empty
+    /// context when handling a request only to immediately populate it with useful trace information extracted from e.g.
+    /// request headers.
+    ///
+    /// ### Usage in applications
+    /// More often than not application code should never have to create an empty context.
+    ///
+    /// Usually, a framework such as an HTTP server or similar "request handler" would already provide users
+    /// with a context to be passed along through subsequent calls.
+    ///
+    /// If unsure where to obtain a context from, prefer using `TODO("Not sure where I should get a context from here?")`,
+    /// such that other developers are informed that the lack of context was not done on purpose, but rather because either
+    /// not being sure where to obtain a context from, or other framework limitations -- e.g. the outer framework not being
+    /// context aware just yet.
+    public static var empty: BaggageContext {
+        return BaggageContext()
+    }
+}
+
+// ==== ----------------------------------------------------------------------------------------------------------------
+// MARK: "TO DO" BaggageContext
+
+extension BaggageContextProtocol {
+    /// A baggage context intended as a placeholder until a real value can be passed through a function call.
+    ///
+    /// It should ONLY be used while prototyping or when the passing of the proper context is not yet possible,
+    /// e.g. because an external library did not pass it correctly and has to be fixed before the proper context
+    /// can be obtained where the TO-DO is currently used.
+    ///
+    /// ### Crashing on TO-DO context creation
+    /// You may set the `BAGGAGE_CRASH_TODOS` variable while compiling a project in order to make calls to this function crash
+    /// with a fatal error, indicating where a to-do baggage context was used. This comes in handy when wanting to ensure that
+    /// a project never ends up using with code which initially was written as "was lazy, did not pass context", yet the
+    /// project requires context passing to be done correctly throughout the application. Similar checks can be performed
+    /// at compile time easily using linters (not yet implemented), since it is always valid enough to detect a to-do context
+    /// being passed as illegal and warn or error when spotted.
+    ///
+    /// - Parameters:
+    ///   - reason: Informational reason for developers, why a placeholder context was used instead of a proper one,
+    /// - Returns: Empty "to-do" baggage context which should be eventually replaced with a carried through one, or `background`.
+    public static func TODO(_ reason: String, function: String = #function, file: String = #file, line: UInt = #line) -> BaggageContext {
+        var context = BaggageContext.empty
+        #if BAGGAGE_CRASH_TODOS
+        fatalError("BAGGAGE_CRASH_TODOS: at \(file):\(line) (function \(function))")
+        #else
+        context[TODOKey.self] = .init(file: file, line: line)
+        return context
+        #endif
+    }
+}
+
+internal enum TODOKey: BaggageContextKey {
+    typealias Value = TODOLocation
+    static var name: String? {
+        return "todo-loc"
+    }
+}
+
+/// Carried automatically by a "to do" baggage context.
+/// It can be used to track where a context originated and which "to do" context must be fixed into a real one to avoid this.
+public struct TODOLocation {
+    let file: String
+    let line: UInt
 }

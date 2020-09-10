@@ -18,7 +18,7 @@ final class BaggageContextTests: XCTestCase {
     func testSubscriptAccess() {
         let testID = 42
 
-        var baggage = BaggageContext()
+        var baggage = BaggageContext.empty
         XCTAssertNil(baggage[TestIDKey.self])
 
         baggage[TestIDKey.self] = testID
@@ -31,7 +31,7 @@ final class BaggageContextTests: XCTestCase {
     func testRecommendedConvenienceExtension() {
         let testID = 42
 
-        var baggage = BaggageContext()
+        var baggage = BaggageContext.empty
         XCTAssertNil(baggage.testID)
 
         baggage.testID = testID
@@ -42,18 +42,18 @@ final class BaggageContextTests: XCTestCase {
     }
 
     func testEmptyBaggageDescription() {
-        XCTAssertEqual(String(describing: BaggageContext()), "BaggageContext(keys: [])")
+        XCTAssertEqual(String(describing: BaggageContext.empty), "BaggageContext(keys: [])")
     }
 
     func testSingleKeyBaggageDescription() {
-        var baggage = BaggageContext()
+        var baggage = BaggageContext.empty
         baggage.testID = 42
 
         XCTAssertEqual(String(describing: baggage), #"BaggageContext(keys: ["TestIDKey"])"#)
     }
 
     func testMultiKeysBaggageDescription() {
-        var baggage = BaggageContext()
+        var baggage = BaggageContext.empty
         baggage.testID = 42
         baggage[SecondTestIDKey.self] = "test"
 
@@ -62,6 +62,33 @@ final class BaggageContextTests: XCTestCase {
         // use contains instead of `XCTAssertEqual` because the order is non-predictable (Dictionary)
         XCTAssert(description.contains("TestIDKey"))
         XCTAssert(description.contains("ExplicitKeyName"))
+    }
+
+    // ==== ------------------------------------------------------------------------------------------------------------
+    // MARK: Factories
+
+    func test_todo_context() {
+        // the to-do context can be used to record intentions for why a context could not be passed through
+        let context = BaggageContext.TODO("#1245 Some other library should be adjusted to pass us context")
+        _ = context // avoid "not used" warning
+
+        // TODO: Can't work with protocols; re-consider the entire carrier approach... Context being a Baggage + Logger, and a specific type.
+//        func take(context: BaggageContextProtocol) {
+//            _ = context // ignore
+//        }
+//        take(context: .TODO("pass from request instead"))
+    }
+
+    func test_todo_empty() {
+        let context = BaggageContext.empty
+        _ = context // avoid "not used" warning
+
+        // TODO: Can't work with protocols; re-consider the entire carrier approach... Context being a Baggage + Logger, and a specific type.
+        // static member 'empty' cannot be used on protocol metatype 'BaggageContextProtocol.Protocol'
+//        func take(context: BaggageContextProtocol) {
+//            _ = context // ignore
+//        }
+//        take(context: .empty)
     }
 }
 
