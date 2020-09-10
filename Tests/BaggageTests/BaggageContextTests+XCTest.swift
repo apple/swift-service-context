@@ -30,6 +30,8 @@ extension BaggageContextTests {
                 ("testEmptyBaggageDescription", testEmptyBaggageDescription),
                 ("testSingleKeyBaggageDescription", testSingleKeyBaggageDescription),
                 ("testMultiKeysBaggageDescription", testMultiKeysBaggageDescription),
+                ("test_todo_context", test_todo_context),
+                ("test_todo_empty", test_todo_empty),
            ]
    }
 }
