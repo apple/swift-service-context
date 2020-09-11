@@ -22,7 +22,7 @@
 ///       typealias Value = String
 ///     }
 ///
-///     var context = BaggageContext.empty
+///     var context = BaggageContext.background
 ///     // set a new value
 ///     context[TestIDKey.self] = "abc"
 ///     // retrieve a stored value
@@ -49,8 +49,6 @@ public struct BaggageContext: BaggageContextProtocol {
 
     /// Internal on purpose, please use `TODO` or `.background` to create an "empty" context,
     /// which carries more meaning to other developers why an empty context was used.
-    ///
-    /// Frameworks and libraries which create a new baggage to populate it right away can start
     init() {}
 
     public subscript<Key: BaggageContextKey>(_ key: Key.Type) -> Key.Value? {
@@ -179,16 +177,17 @@ extension BaggageContextProtocol {
     /// request headers.
     ///
     /// ### Usage in applications
-    /// More often than not application code should never have to create an empty context.
+    /// Application code should never have to create an empty context during the processing lifetime of any request,
+    /// and only should create contexts if some processing is performed in the background - thus the naming of this property.
     ///
     /// Usually, a framework such as an HTTP server or similar "request handler" would already provide users
     /// with a context to be passed along through subsequent calls.
     ///
-    /// If unsure where to obtain a context from, prefer using `TODO("Not sure where I should get a context from here?")`,
+    /// If unsure where to obtain a context from, prefer using `.TODO("Not sure where I should get a context from here?")`,
     /// such that other developers are informed that the lack of context was not done on purpose, but rather because either
     /// not being sure where to obtain a context from, or other framework limitations -- e.g. the outer framework not being
     /// context aware just yet.
-    public static var empty: BaggageContext {
+    public static var background: BaggageContext {
         return BaggageContext()
     }
 }
@@ -206,7 +205,7 @@ extension BaggageContextProtocol {
     /// ### Crashing on TO-DO context creation
     /// You may set the `BAGGAGE_CRASH_TODOS` variable while compiling a project in order to make calls to this function crash
     /// with a fatal error, indicating where a to-do baggage context was used. This comes in handy when wanting to ensure that
-    /// a project never ends up using with code which initially was written as "was lazy, did not pass context", yet the
+    /// a project never ends up using with code initially was written as "was lazy, did not pass context", yet the
     /// project requires context passing to be done correctly throughout the application. Similar checks can be performed
     /// at compile time easily using linters (not yet implemented), since it is always valid enough to detect a to-do context
     /// being passed as illegal and warn or error when spotted.
@@ -214,10 +213,10 @@ extension BaggageContextProtocol {
     /// - Parameters:
     ///   - reason: Informational reason for developers, why a placeholder context was used instead of a proper one,
     /// - Returns: Empty "to-do" baggage context which should be eventually replaced with a carried through one, or `background`.
-    public static func TODO(_ reason: String, function: String = #function, file: String = #file, line: UInt = #line) -> BaggageContext {
-        var context = BaggageContext.empty
+    public static func TODO(_ reason: StaticString? = "", function: String = #function, file: String = #file, line: UInt = #line) -> BaggageContext {
+        var context = BaggageContext.background
         #if BAGGAGE_CRASH_TODOS
-        fatalError("BAGGAGE_CRASH_TODOS: at \(file):\(line) (function \(function))")
+        fatalError("BAGGAGE_CRASH_TODOS: at \(file):\(line) (function \(function)), reason: \(reason)")
         #else
         context[TODOKey.self] = .init(file: file, line: line)
         return context
@@ -228,7 +227,7 @@ extension BaggageContextProtocol {
 internal enum TODOKey: BaggageContextKey {
     typealias Value = TODOLocation
     static var name: String? {
-        return "todo-loc"
+        return "todo"
     }
 }
 

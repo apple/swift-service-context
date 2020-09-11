@@ -18,7 +18,7 @@ import XCTest
 
 final class LoggingBaggageContextCarrierTests: XCTestCase {
     func test_ContextWithLogger_dumpBaggage() throws {
-        let baggage = BaggageContext.empty
+        let baggage = BaggageContext.background
         let logger = Logger(label: "TheLogger")
 
         var context: LoggingBaggageContextCarrier = ExampleFrameworkContext(context: baggage, logger: logger)
@@ -43,7 +43,7 @@ final class LoggingBaggageContextCarrierTests: XCTestCase {
     }
 
     func test_ContextWithLogger_log_withBaggage() throws {
-        let baggage = BaggageContext.empty
+        let baggage = BaggageContext.background
         let logging = TestLogging()
         let logger = Logger(label: "TheLogger", factory: { label in logging.make(label: label) })
 
@@ -66,7 +66,7 @@ final class LoggingBaggageContextCarrierTests: XCTestCase {
     }
 
     func test_ContextWithLogger_log_prefersBaggageContextOverExistingLoggerMetadata() {
-        let baggage = BaggageContext.empty
+        let baggage = BaggageContext.background
         let logging = TestLogging()
         var logger = Logger(label: "TheLogger", factory: { label in logging.make(label: label) })
         logger[metadataKey: "secondIDExplicitlyNamed"] = "set on logger"
@@ -103,7 +103,7 @@ struct CoolFrameworkContext: LoggingBaggageContextCarrier {
         return self._logger.with(context: self.baggage)
     }
 
-    var baggage: BaggageContext = .empty
+    var baggage: BaggageContext = .background
 
     // framework context defines other values as well
     let frameworkField: String = ""
