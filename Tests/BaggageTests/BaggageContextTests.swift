@@ -18,7 +18,7 @@ final class BaggageContextTests: XCTestCase {
     func testSubscriptAccess() {
         let testID = 42
 
-        var baggage = BaggageContext.empty
+        var baggage = BaggageContext.background
         XCTAssertNil(baggage[TestIDKey.self])
 
         baggage[TestIDKey.self] = testID
@@ -31,7 +31,7 @@ final class BaggageContextTests: XCTestCase {
     func testRecommendedConvenienceExtension() {
         let testID = 42
 
-        var baggage = BaggageContext.empty
+        var baggage = BaggageContext.background
         XCTAssertNil(baggage.testID)
 
         baggage.testID = testID
@@ -42,18 +42,18 @@ final class BaggageContextTests: XCTestCase {
     }
 
     func testEmptyBaggageDescription() {
-        XCTAssertEqual(String(describing: BaggageContext.empty), "BaggageContext(keys: [])")
+        XCTAssertEqual(String(describing: BaggageContext.background), "BaggageContext(keys: [])")
     }
 
     func testSingleKeyBaggageDescription() {
-        var baggage = BaggageContext.empty
+        var baggage = BaggageContext.background
         baggage.testID = 42
 
         XCTAssertEqual(String(describing: baggage), #"BaggageContext(keys: ["TestIDKey"])"#)
     }
 
     func testMultiKeysBaggageDescription() {
-        var baggage = BaggageContext.empty
+        var baggage = BaggageContext.background
         baggage.testID = 42
         baggage[SecondTestIDKey.self] = "test"
 
@@ -80,7 +80,7 @@ final class BaggageContextTests: XCTestCase {
     }
 
     func test_todo_empty() {
-        let context = BaggageContext.empty
+        let context = BaggageContext.background
         _ = context // avoid "not used" warning
 
         // TODO: Can't work with protocols; re-consider the entire carrier approach... Context being a Baggage + Logger, and a specific type.
@@ -88,7 +88,7 @@ final class BaggageContextTests: XCTestCase {
 //        func take(context: BaggageContextProtocol) {
 //            _ = context // ignore
 //        }
-//        take(context: .empty)
+//        take(context: .background)
     }
 }
 

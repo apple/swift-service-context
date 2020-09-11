@@ -21,7 +21,7 @@ public let BaggagePassingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: "BaggagePassingBenchmarks.pass_async_empty_100_000         ",
         runFunction: { _ in
-            let context = BaggageContext.empty
+            let context = BaggageContext.background
             pass_async(context: context, times: 100_000)
         },
         tags: [],
@@ -31,7 +31,7 @@ public let BaggagePassingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: "BaggagePassingBenchmarks.pass_async_smol_100_000          ",
         runFunction: { _ in
-            var context = BaggageContext.empty
+            var context = BaggageContext.background
             context.k1 = "one"
             context.k2 = "two"
             context.k3 = "three"
@@ -45,7 +45,7 @@ public let BaggagePassingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: "BaggagePassingBenchmarks.pass_async_small_nonconst_100_000",
         runFunction: { _ in
-            var context = BaggageContext.empty
+            var context = BaggageContext.background
             context.k1 = "\(Int.random(in: 1 ... Int.max))"
             context.k2 = "\(Int.random(in: 1 ... Int.max))"
             context.k3 = "\(Int.random(in: 1 ... Int.max))"
@@ -65,7 +65,7 @@ public let BaggagePassingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: "BaggagePassingBenchmarks.pass_mut_async_small_100_000     ",
         runFunction: { _ in
-            var context = BaggageContext.empty
+            var context = BaggageContext.background
             context.k1 = "\(Int.random(in: 1 ... Int.max))"
             context.k2 = "\(Int.random(in: 1 ... Int.max))"
             context.k3 = "\(Int.random(in: 1 ... Int.max))"
