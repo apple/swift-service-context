@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-baggage-context",
+    name: "swift-distributed-tracing-baggage",
     products: [
         .library(
             name: "Baggage",
@@ -10,27 +10,17 @@ let package = Package(
                 "Baggage",
             ]
         ),
-        .library(
-            name: "BaggageLogging",
-            targets: [
-                "BaggageLogging",
-            ]
-        ),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-log.git", from: "1.3.0"),
+        .package(url: "https://github.com/apple/swift-distributed-tracing-baggage-core.git", from: "0.3.0"),
     ],
     targets: [
         .target(
             name: "Baggage",
-            dependencies: []
-        ),
-
-        .target(
-            name: "BaggageLogging",
             dependencies: [
-                "Baggage",
                 .product(name: "Logging", package: "swift-log"),
+                .product(name: "CoreBaggage", package: "swift-distributed-tracing-baggage-core"),
             ]
         ),
 
@@ -44,14 +34,6 @@ let package = Package(
             ]
         ),
 
-        .testTarget(
-            name: "BaggageLoggingTests",
-            dependencies: [
-                "Baggage",
-                "BaggageLogging",
-            ]
-        ),
-
         // ==== --------------------------------------------------------------------------------------------------------
         // MARK: Performance / Benchmarks
 
@@ -59,7 +41,6 @@ let package = Package(
             name: "BaggageBenchmarks",
             dependencies: [
                 "Baggage",
-                "BaggageLogging",
                 "BaggageBenchmarkTools",
             ]
         ),

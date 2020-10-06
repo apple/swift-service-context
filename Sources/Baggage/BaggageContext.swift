@@ -1,8 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Context Propagation open source project
+// This source file is part of the Swift Distributed Tracing Baggage open source project
 //
-// Copyright (c) 2020 Apple Inc. and the Swift Baggage Context project authors
+// Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
@@ -11,163 +11,227 @@
 //
 //===----------------------------------------------------------------------===//
 
-/// A `BaggageContext` is a heterogeneous storage type with value semantics for keyed values in a type-safe
-/// fashion. Its values are uniquely identified via `BaggageContextKey`s. These keys also dictate the type of
-/// value allowed for a specific key-value pair through their associated type `Value`.
-///
-/// ## Subscript access
-/// You may access the stored values by subscripting with a key type conforming to `BaggageContextKey`.
-///
-///     enum TestIDKey: BaggageContextKey {
-///       typealias Value = String
-///     }
-///
-///     var context = BaggageContext.background
-///     // set a new value
-///     context[TestIDKey.self] = "abc"
-///     // retrieve a stored value
-///     context[TestIDKey.self] ?? "default"
-///     // remove a stored value
-///     context[TestIDKey.self] = nil
-///
-/// ## Convenience extensions
-///
-/// Libraries may also want to provide an extension, offering the values that users are expected to reach for
-/// using the following pattern:
-///
-///     extension BaggageContextProtocol {
-///       var testID: TestIDKey.Value? {
-///         get {
-///           self[TestIDKey.self]
-///         } set {
-///           self[TestIDKey.self] = newValue
-///         }
-///       }
-///     }
-public struct BaggageContext: BaggageContextProtocol {
-    private var _storage = [AnyBaggageContextKey: Any]()
+@_exported import CoreBaggage
+import Logging
 
-    /// Internal on purpose, please use `TODO` or `.background` to create an "empty" context,
-    /// which carries more meaning to other developers why an empty context was used.
-    init() {}
+// ==== ----------------------------------------------------------------------------------------------------------------
+// MARK: Context Protocol
 
-    public subscript<Key: BaggageContextKey>(_ key: Key.Type) -> Key.Value? {
-        get {
-            guard let value = self._storage[AnyBaggageContextKey(key)] else { return nil }
-            // safe to force-cast as this subscript is the only way to set a value.
-            return (value as! Key.Value)
-        } set {
-            self._storage[AnyBaggageContextKey(key)] = newValue
-        }
-    }
-
-    public func forEach(_ body: (AnyBaggageContextKey, Any) throws -> Void) rethrows {
-        try self._storage.forEach { key, value in
-            try body(key, value)
-        }
-    }
-}
-
-extension BaggageContext: CustomStringConvertible {
-    /// A context's description prints only keys of the contained values.
-    /// This is in order to prevent spilling a lot of detailed information of carried values accidentally.
+/// The `BaggageContext` MAY be adopted by specific "framework contexts" such as e.g. `CoolFramework.Context` in
+/// order to allow users to pass such context directly to libraries accepting any context.
+///
+/// This allows frameworks and library authors to offer APIs which compose more easily.
+/// Please refer to the "Reference Implementation" notes on each of the requirements to know how to implement this protocol correctly.
+///
+/// ### Implementation notes
+/// It is STRONGLY encouraged that a context type should exhibit Value Semantics (i.e. be a pure `struct`, or implement
+/// the Copy-on-Write pattern), in order to implement the `set` requirements of the baggage and logger effectively,
+/// and also for their user's sanity, as a reference semantics context type can be very confusing to use when shared
+/// between multiple threads, as often is the case in server side environments.
+///
+/// It is STRONGLY encouraged to use the `DefaultContext` as inspiration for a correct implementation of a `BaggageContext`,
+/// as the relationship between `Logger` and `Baggage` can be tricky to wrap your head around at first.
+public protocol BaggageContext {
+    /// Get the `Baggage` container.
     ///
-    /// `BaggageContext`s are not intended to be printed "raw" but rather inter-operate with tracing, logging and other systems,
-    /// which can use the `forEach` function providing access to its underlying values.
-    public var description: String {
-        return "\(type(of: self).self)(keys: \(self._storage.map { $0.key.name }))"
-    }
-}
-
-public protocol BaggageContextProtocol {
-    /// Provides type-safe access to the baggage's values.
+    /// ### Implementation notes
+    /// Libraries and/or frameworks which conform to this protocol with their "Framework Context" types MUST
+    /// ensure that a modification of the baggage is properly represented in the associated `logger`. Users expect values
+    /// from the baggage be visible in their log statements issued via `context.logger.info()`.
     ///
-    /// Rather than using this subscript directly, users are encouraged to offer a convenience accessor to their values,
-    /// using the following pattern:
+    /// Please refer to `DefaultContext`'s implementation for a reference implementation,
+    /// here a short snippet of how the baggage itself should be implemented:
     ///
-    ///     extension BaggageContextProtocol {
-    ///       var testID: TestIDKey.Value? {
-    ///         get {
-    ///           self[TestIDKey.self]
-    ///         } set {
-    ///           self[TestIDKey.self] = newValue
+    ///     public var baggage: Baggage {
+    ///         willSet {
+    ///             self._logger.updateMetadata(previous: self.baggage, latest: newValue)
     ///         }
-    ///       }
     ///     }
-    subscript<Key: BaggageContextKey>(_ key: Key.Type) -> Key.Value? { get set }
-
-    /// Calls the given closure on each key/value pair in the `BaggageContext`.
     ///
-    /// - Parameter body: A closure invoked with the type erased key and value stored for the key in this baggage.
-    func forEach(_ body: (AnyBaggageContextKey, Any) throws -> Void) rethrows
+    /// #### Thread Safety
+    /// Implementations / MUST take care of thread-safety of modifications of the baggage. They can achieve this by such
+    /// context type being a pure `struct` or by implementing Copy-on-Write semantics for their type, the latter gives
+    /// many benefits, allowing the context to avoid being copied unless needed to (e.g. if the context type contains
+    /// many other values, in addition to the baggage).
+    var baggage: Baggage { get set }
+
+    /// The `Logger` associated with this context carrier.
+    ///
+    /// It automatically populates the loggers metadata based on the `Baggage` associated with this context object.
+    ///
+    /// ### Implementation notes
+    /// Libraries and/or frameworks which conform to this protocol with their "Framework Context" types,
+    /// SHOULD implement this logger by wrapping the "raw" logger associated with  `_logger.with(self.baggage)` function,
+    /// which efficiently handles the bridging of baggage to logging metadata values.
+    ///
+    /// If a new logger is set, it MUST populate itself with the latest (current) baggage of the context,
+    /// this is to ensure that even if users set a new logger (completely "fresh") here, the metadata from the baggage
+    /// still will properly be logged in other pieces of the application where the context might be passed to.
+    ///
+    /// A correct implementation might look like the following:
+    ///
+    ///     public var _logger: Logger
+    ///         public var logger: Logger {
+    ///             get {
+    ///                 return self._logger
+    ///             }
+    ///             set {
+    ///                 self._logger = newValue
+    ///                 // Since someone could have completely replaced the logger (not just changed the log level),
+    ///                 // we have to update the baggage again, since perhaps the new logger has empty metadata.
+    ///                 self._logger.updateMetadata(previous: .topLevel, latest: self.baggage)
+    ///             }
+    ///         }
+    ///     }
+    ///
+    ///
+    /// #### Thread Safety
+    /// Implementations MUST ensure the thread-safety of mutating the logger. This is usually handled best by the
+    /// framework context itself being a Copy-on-Write type, however the exact safety mechanism is left up to the libraries.
+    var logger: Logger { get set }
 }
 
-// ==== ------------------------------------------------------------------------
-// MARK: Baggage keys
-
-/// `BaggageContextKey`s are used as keys in a `BaggageContext`. Their associated type `Value` guarantees type-safety.
-/// To give your `BaggageContextKey` an explicit name you may override the `name` property.
+/// A default `BaggageContext` type.
 ///
-/// In general, `BaggageContextKey`s should be `internal` to the part of a system using it. It is strongly recommended to do
-/// convenience extensions on `BaggageContextProtocol`, using the keys directly is considered an anti-pattern.
+/// It is a carrier of contextual `Baggage` and related `Logger`, allowing to log and trace throughout a system.
 ///
-///     extension BaggageContextProtocol {
-///       var testID: TestIDKey.Value? {
-///         get {
-///           self[TestIDKey.self]
-///         } set {
-///           self[TestIDKey.self] = newValue
-///         }
-///       }
-///     }
-public protocol BaggageContextKey {
-    /// The type of `Value` uniquely identified by this key.
-    associatedtype Value
-
-    /// The human-readable name of this key. Defaults to `nil`.
-    static var name: String? { get }
-}
-
-extension BaggageContextKey {
-    public static var name: String? { return nil }
-}
-
-/// A type-erased `BaggageContextKey` used when iterating through the `BaggageContext` using its `forEach` method.
-public struct AnyBaggageContextKey {
-    /// The key's type represented erased to an `Any.Type`.
-    public let keyType: Any.Type
-
-    private let _name: String?
-
-    /// A human-readable String representation of the underlying key.
-    /// If no explicit name has been set on the wrapped key the type name is used.
-    public var name: String {
-        return self._name ?? String(describing: self.keyType.self)
+/// Any values set on the `baggage` will be made accessible to the logger as call-site metadata, allowing it to log those.
+///
+/// ### Logged Metadata and Baggage Items
+///
+/// Please refer to your configured log handler documentation about how to configure which metadata values should be logged
+/// and which not, as each log handler may handle and configure those differently. The default implementations log *all*
+/// metadata/baggage values present, which often is the right thing, however in larger systems one may want to choose a
+/// log handler which allows for configuring these details.
+///
+/// ### Accepting context types in APIs
+///
+/// It is preferred to accept values of `BaggageContext` in library APIs, as this yields a more flexible API shape,
+/// to which other libraries/frameworks may pass their specific context objects.
+///
+/// - SeeAlso: `Baggage` from the Baggage module.
+/// - SeeAlso: `Logger` from the SwiftLog package.
+public struct DefaultContext: BaggageContext {
+    /// The `Baggage` carried with this context.
+    /// It's values will automatically be made available to the `logger` as metadata when logging.
+    ///
+    /// Baggage values are different from plain logging metadata in that they are intended to be
+    /// carried across process and node boundaries (serialized and deserialized) and are made
+    /// available to instruments using `swift-distributed-tracing`.
+    public var baggage: Baggage {
+        willSet {
+            // every time the baggage changes, we need to update the logger;
+            // values removed from the baggage are also removed from the logger metadata.
+            //
+            // TODO: optimally, logger could some day accept baggage directly, without ever having to map it into `Metadata`,
+            //       then we would not have to make those mappings at all and passing the logger.with(baggage) would be cheap.
+            //
+            // This implementation generally is a tradeoff, we bet on logging being performed far more often than baggage
+            // being changed; We do this logger update eagerly, so even if we never log anything, the logger has to be updated.
+            // Systems which never or rarely log will take the hit for it here. The alternative tradeoff to map lazily as `logger.with(baggage)`
+            // is available as well, but users would have to build their own context and specifically make use of that then -- that approach
+            // allows to not pay the mapping cost up front, but only if a log statement is made (but then again, the cost is paid every time we log something).
+            self._logger.updateMetadata(previous: self.baggage, latest: newValue)
+        }
     }
 
-    init<Key>(_ keyType: Key.Type) where Key: BaggageContextKey {
-        self.keyType = keyType
-        self._name = keyType.name
+    // We need to store the logger as `_logger` in order to avoid cyclic updates triggering when baggage changes
+    public var _logger: Logger
+    public var logger: Logger {
+        get {
+            return self._logger
+        }
+        set {
+            self._logger = newValue
+            // Since someone could have completely replaced the logger (not just changed the log level),
+            // we have to update the baggage again, since perhaps the new logger has empty metadata.
+            self._logger.updateMetadata(previous: .topLevel, latest: self.baggage)
+        }
     }
-}
 
-extension AnyBaggageContextKey: Hashable {
-    public static func == (lhs: AnyBaggageContextKey, rhs: AnyBaggageContextKey) -> Bool {
-        return ObjectIdentifier(lhs.keyType) == ObjectIdentifier(rhs.keyType)
+    public init(baggage: Baggage, logger: Logger) {
+        self.baggage = baggage
+        self._logger = logger
+        self._logger.updateMetadata(previous: .topLevel, latest: baggage)
     }
 
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self.keyType))
+    public init<Context>(context: Context) where Context: BaggageContext {
+        self.baggage = context.baggage
+        self._logger = context.logger
+        self._logger.updateMetadata(previous: .topLevel, latest: self.baggage)
     }
 }
 
 // ==== ----------------------------------------------------------------------------------------------------------------
-// MARK: Background BaggageContext
+// MARK: `with...` functions
 
-extension BaggageContextProtocol {
-    /// An empty baggage context intended as the "root" or "initial" baggage context background processing tasks, or as the "root" baggage context.
+extension DefaultContext {
+    /// Fluent API allowing for modification of underlying logger when passing the context to other functions.
     ///
-    /// It is never canceled, has no values, and has no deadline.
+    /// - Parameter logger: Logger that should replace the underlying logger of this context.
+    /// - Returns: new context, with the passed in `logger`
+    public func withLogger(_ logger: Logger) -> DefaultContext {
+        var copy = self
+        copy.logger = logger
+        return copy
+    }
+
+    /// Fluent API allowing for modification of underlying logger when passing the context to other functions.
+    ///
+    /// - Parameter logger: Logger that should replace the underlying logger of this context.
+    /// - Returns: new context, with the passed in `logger`
+    public func withLogger(_ function: (inout Logger) -> Void) -> DefaultContext {
+        var logger = self.logger
+        function(&logger)
+        return .init(baggage: self.baggage, logger: logger)
+    }
+
+    /// Fluent API allowing for modification of underlying log level when passing the context to other functions.
+    ///
+    /// - Parameter logLevel: New log level which should be used to create the new context
+    /// - Returns: new context, with the passed in `logLevel` used for the underlying logger
+    public func withLogLevel(_ logLevel: Logger.Level) -> DefaultContext {
+        var copy = self
+        copy.logger.logLevel = logLevel
+        return copy
+    }
+
+    /// Fluent API allowing for modification a few baggage values when passing the context to other functions, e.g.
+    ///
+    ///     makeRequest(url, context: context.withBaggage {
+    ///         $0.traceID = "fake-value"
+    ///         $0.calledFrom = #function
+    ///     })
+    ///
+    /// - Parameter function:
+    public func withBaggage(_ function: (inout Baggage) -> Void) -> DefaultContext {
+        var baggage = self.baggage
+        function(&baggage)
+        return self.withBaggage(baggage)
+    }
+
+    /// Fluent API allowing for replacement of underlying baggage when passing the context to other functions.
+    ///
+    /// - Warning: Use with caution, generally it is not recommended to modify an entire baggage, but rather only add a few values to it.
+    ///
+    /// - Parameter baggage: baggage that should *replace* the context's current baggage.
+    /// - Returns: new context, with the passed in baggage
+    public func withBaggage(_ baggage: Baggage) -> DefaultContext {
+        var copy = self
+        copy.baggage = baggage
+        return copy
+    }
+}
+
+// ==== ----------------------------------------------------------------------------------------------------------------
+// MARK: Context Initializers
+
+extension DefaultContext {
+    /// Creates a new empty "top level" default baggage context, generally used as an "initial" context to immediately be populated with
+    /// some values by a framework or runtime. Another use case is for tasks starting in the "background" (e.g. on a timer),
+    /// which don't have a "request context" per se that they can pick up, and as such they have to create a "top level"
+    /// baggage for their work.
+    ///
     /// It is typically used by the main function, initialization, and tests, and as the top-level Context for incoming requests.
     ///
     /// ### Usage in frameworks and libraries
@@ -187,22 +251,19 @@ extension BaggageContextProtocol {
     /// such that other developers are informed that the lack of context was not done on purpose, but rather because either
     /// not being sure where to obtain a context from, or other framework limitations -- e.g. the outer framework not being
     /// context aware just yet.
-    public static var background: BaggageContext {
-        return BaggageContext()
+    public static func topLevel(logger: Logger) -> DefaultContext {
+        return .init(baggage: .topLevel, logger: logger)
     }
 }
 
-// ==== ----------------------------------------------------------------------------------------------------------------
-// MARK: "TO DO" BaggageContext
-
-extension BaggageContextProtocol {
+extension DefaultContext {
     /// A baggage context intended as a placeholder until a real value can be passed through a function call.
     ///
     /// It should ONLY be used while prototyping or when the passing of the proper context is not yet possible,
     /// e.g. because an external library did not pass it correctly and has to be fixed before the proper context
     /// can be obtained where the TO-DO is currently used.
     ///
-    /// ### Crashing on TO-DO context creation
+    /// ## Crashing on TO-DO context creation
     /// You may set the `BAGGAGE_CRASH_TODOS` variable while compiling a project in order to make calls to this function crash
     /// with a fatal error, indicating where a to-do baggage context was used. This comes in handy when wanting to ensure that
     /// a project never ends up using with code initially was written as "was lazy, did not pass context", yet the
@@ -210,30 +271,21 @@ extension BaggageContextProtocol {
     /// at compile time easily using linters (not yet implemented), since it is always valid enough to detect a to-do context
     /// being passed as illegal and warn or error when spotted.
     ///
+    /// ## Example
+    ///
+    ///     frameworkHandler { what in
+    ///         hello(who: "World", baggage: .TODO(logger: logger, "The framework XYZ should be modified to pass us a context here, and we'd pass it along"))
+    ///     }
+    ///
     /// - Parameters:
     ///   - reason: Informational reason for developers, why a placeholder context was used instead of a proper one,
     /// - Returns: Empty "to-do" baggage context which should be eventually replaced with a carried through one, or `background`.
-    public static func TODO(_ reason: StaticString? = "", function: String = #function, file: String = #file, line: UInt = #line) -> BaggageContext {
-        var context = BaggageContext.background
+    public static func TODO(logger: Logger, _ reason: StaticString? = "", function: String = #function, file: String = #file, line: UInt = #line) -> DefaultContext {
+        let baggage = Baggage.TODO(reason, function: function, file: file, line: line)
         #if BAGGAGE_CRASH_TODOS
-        fatalError("BAGGAGE_CRASH_TODOS: at \(file):\(line) (function \(function)), reason: \(reason)")
+        fatalError("BAGGAGE_CRASH_TODOS: at \(file):\(line) (function \(function)), reason: \(reason)", file: file, line: line)
         #else
-        context[TODOKey.self] = .init(file: file, line: line)
-        return context
+        return .init(baggage: baggage, logger: logger)
         #endif
     }
-}
-
-internal enum TODOKey: BaggageContextKey {
-    typealias Value = TODOLocation
-    static var name: String? {
-        return "todo"
-    }
-}
-
-/// Carried automatically by a "to do" baggage context.
-/// It can be used to track where a context originated and which "to do" context must be fixed into a real one to avoid this.
-public struct TODOLocation {
-    let file: String
-    let line: UInt
 }

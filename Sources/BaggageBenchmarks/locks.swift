@@ -1,8 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Context Propagation open source project
+// This source file is part of the Swift Distributed Tracing Baggage open source project
 //
-// Copyright (c) 2020 Apple Inc. and the Swift Baggage Context project authors
+// Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
@@ -72,7 +72,7 @@ extension CountDownLatch: CustomStringConvertible {
 
 final class _Condition {
     @usableFromInline
-    var condition: pthread_cond_t = pthread_cond_t()
+    var condition = pthread_cond_t()
 
     public init() {
         let error = pthread_cond_init(&self.condition, nil)
@@ -163,10 +163,10 @@ final class _Condition {
 
 final class _Mutex {
     @usableFromInline
-    var mutex: pthread_mutex_t = pthread_mutex_t()
+    var mutex = pthread_mutex_t()
 
     public init() {
-        var attr: pthread_mutexattr_t = pthread_mutexattr_t()
+        var attr = pthread_mutexattr_t()
         pthread_mutexattr_init(&attr)
         pthread_mutexattr_settype(&attr, Int32(PTHREAD_MUTEX_RECURSIVE))
 

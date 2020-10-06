@@ -1,8 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Context Propagation open source project
+// This source file is part of the Swift Distributed Tracing Baggage open source project
 //
-// Copyright (c) 2020 Apple Inc. and the Swift Baggage Context project authors
+// Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
@@ -25,13 +25,10 @@ extension BaggageContextTests {
    @available(*, deprecated, message: "not actually deprecated. Just deprecated to allow deprecated tests (which test deprecated functionality) without warnings")
    static var allTests : [(String, (BaggageContextTests) -> () throws -> Void)] {
       return [
-                ("testSubscriptAccess", testSubscriptAccess),
-                ("testRecommendedConvenienceExtension", testRecommendedConvenienceExtension),
-                ("testEmptyBaggageDescription", testEmptyBaggageDescription),
-                ("testSingleKeyBaggageDescription", testSingleKeyBaggageDescription),
-                ("testMultiKeysBaggageDescription", testMultiKeysBaggageDescription),
-                ("test_todo_context", test_todo_context),
-                ("test_todo_empty", test_todo_empty),
+                ("test_ExampleFrameworkContext_dumpBaggage", test_ExampleFrameworkContext_dumpBaggage),
+                ("test_ExampleFrameworkContext_log_withBaggage", test_ExampleFrameworkContext_log_withBaggage),
+                ("test_DefaultContext_log_withBaggage", test_DefaultContext_log_withBaggage),
+                ("test_ExampleFrameworkContext_log_prefersBaggageContextOverExistingLoggerMetadata", test_ExampleFrameworkContext_log_prefersBaggageContextOverExistingLoggerMetadata),
            ]
    }
 }
