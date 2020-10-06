@@ -1,8 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Context Propagation open source project
+// This source file is part of the Swift Distributed Tracing Baggage open source project
 //
-// Copyright (c) 2020 Apple Inc. and the Swift Baggage Context project authors
+// Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
@@ -37,5 +37,6 @@ private func registerBenchmark(_ name: String, _ function: @escaping (Int) -> Vo
 }
 
 registerBenchmark(BaggagePassingBenchmarks)
+registerBenchmark(BaggageLoggingBenchmarks)
 
 main()

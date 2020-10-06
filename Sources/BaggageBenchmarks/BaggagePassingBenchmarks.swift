@@ -1,8 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Context Propagation open source project
+// This source file is part of the Swift Distributed Tracing Baggage open source project
 //
-// Copyright (c) 2020 Apple Inc. and the Swift Baggage Context project authors
+// Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
@@ -15,13 +15,14 @@ import Baggage
 import BaggageBenchmarkTools
 import Dispatch
 import class Foundation.NSLock
+
 public let BaggagePassingBenchmarks: [BenchmarkInfo] = [
     // ==== ----------------------------------------------------------------------------------------------------------------
     // MARK: "Read only" context passing around
     BenchmarkInfo(
         name: "BaggagePassingBenchmarks.pass_async_empty_100_000         ",
         runFunction: { _ in
-            let context = BaggageContext.background
+            let context = Baggage.topLevel
             pass_async(context: context, times: 100_000)
         },
         tags: [],
@@ -31,7 +32,7 @@ public let BaggagePassingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: "BaggagePassingBenchmarks.pass_async_smol_100_000          ",
         runFunction: { _ in
-            var context = BaggageContext.background
+            var context = Baggage.topLevel
             context.k1 = "one"
             context.k2 = "two"
             context.k3 = "three"
@@ -45,7 +46,7 @@ public let BaggagePassingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: "BaggagePassingBenchmarks.pass_async_small_nonconst_100_000",
         runFunction: { _ in
-            var context = BaggageContext.background
+            var context = Baggage.topLevel
             context.k1 = "\(Int.random(in: 1 ... Int.max))"
             context.k2 = "\(Int.random(in: 1 ... Int.max))"
             context.k3 = "\(Int.random(in: 1 ... Int.max))"
@@ -65,7 +66,7 @@ public let BaggagePassingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: "BaggagePassingBenchmarks.pass_mut_async_small_100_000     ",
         runFunction: { _ in
-            var context = BaggageContext.background
+            var context = Baggage.topLevel
             context.k1 = "\(Int.random(in: 1 ... Int.max))"
             context.k2 = "\(Int.random(in: 1 ... Int.max))"
             context.k3 = "\(Int.random(in: 1 ... Int.max))"
@@ -87,10 +88,10 @@ private func tearDown() {
 }
 
 @inline(never)
-func pass_async(context: BaggageContext, times remaining: Int) {
+func pass_async(context: Baggage, times remaining: Int) {
     let latch = CountDownLatch(from: 1)
 
-    func pass_async0(context: BaggageContext, times remaining: Int) {
+    func pass_async0(context: Baggage, times remaining: Int) {
         if remaining == 0 {
             latch.countDown()
         }
@@ -105,11 +106,11 @@ func pass_async(context: BaggageContext, times remaining: Int) {
 }
 
 @inline(never)
-func pass_mut_async(context: BaggageContext, times remaining: Int) {
+func pass_mut_async(context: Baggage, times remaining: Int) {
     var context = context
     let latch = CountDownLatch(from: 1)
 
-    func pass_async0(context: BaggageContext, times remaining: Int) {
+    func pass_async0(context: Baggage, times remaining: Int) {
         if remaining == 0 {
             latch.countDown()
         }
@@ -132,31 +133,31 @@ func pass_mut_async(context: BaggageContext, times remaining: Int) {
 // ==== ----------------------------------------------------------------------------------------------------------------
 // MARK: Baggage Keys
 
-private enum TestPassCounterKey: BaggageContextKey {
+private enum TestPassCounterKey: BaggageKey {
     typealias Value = Int
 }
 
-private enum TestK1: BaggageContextKey {
+private enum TestK1: BaggageKey {
     typealias Value = String
 }
 
-private enum TestK2: BaggageContextKey {
+private enum TestK2: BaggageKey {
     typealias Value = String
 }
 
-private enum TestK3: BaggageContextKey {
+private enum TestK3: BaggageKey {
     typealias Value = String
 }
 
-private enum TestK4: BaggageContextKey {
+private enum TestK4: BaggageKey {
     typealias Value = String
 }
 
-private enum TestKD1: BaggageContextKey {
+private enum TestKD1: BaggageKey {
     typealias Value = [String: String]
 }
 
-extension BaggageContext {
+extension Baggage {
     fileprivate var passCounter: TestPassCounterKey.Value {
         get { return self[TestPassCounterKey.self] ?? 0 }
         set { self[TestPassCounterKey.self] = newValue }

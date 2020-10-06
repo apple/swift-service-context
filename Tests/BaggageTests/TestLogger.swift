@@ -1,8 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Context Propagation open source project
+// This source file is part of the Swift Distributed Tracing Baggage open source project
 //
-// Copyright (c) 2020 Apple Inc. and the Swift Baggage Context project authors
+// Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
@@ -84,11 +84,9 @@ internal struct TestLogHandler: LogHandler {
 
     public var metadata: Logger.Metadata {
         get {
-            // return self.logger.metadata
             return self.metadataLock.withLock { self._metadata }
         }
         set {
-            // self.logger.metadata = newValue
             self.metadataLock.withLock { self._metadata = newValue }
         }
     }
@@ -96,11 +94,9 @@ internal struct TestLogHandler: LogHandler {
     // TODO: would be nice to delegate to local copy of logger but StdoutLogger is a reference type. why?
     subscript(metadataKey metadataKey: Logger.Metadata.Key) -> Logger.Metadata.Value? {
         get {
-            // return self.logger[metadataKey: metadataKey]
             return self.metadataLock.withLock { self._metadata[metadataKey] }
         }
         set {
-            // return logger[metadataKey: metadataKey] = newValue
             self.metadataLock.withLock {
                 self._metadata[metadataKey] = newValue
             }
