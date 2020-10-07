@@ -15,7 +15,7 @@
 @_exported import Logging
 
 // ==== ----------------------------------------------------------------------------------------------------------------
-// MARK: Context Protocol
+// MARK: LoggingContext
 
 /// The `LoggingContext` MAY be adopted by specific "framework contexts" such as e.g. `CoolFramework.Context` in
 /// order to allow users to pass such context directly to libraries accepting any context.
@@ -24,10 +24,9 @@
 /// Please refer to the "Reference Implementation" notes on each of the requirements to know how to implement this protocol correctly.
 ///
 /// ### Implementation notes
-/// It is STRONGLY encouraged that a context type should exhibit Value Semantics (i.e. be a pure `struct`, or implement
-/// the Copy-on-Write pattern), in order to implement the `set` requirements of the baggage and logger effectively,
-/// and also for their user's sanity, as a reference semantics context type can be very confusing to use when shared
-/// between multiple threads, as often is the case in server side environments.
+/// Conforming types MUST exhibit Value Semantics (i.e. be a pure `struct`, or implement the Copy-on-Write pattern),
+/// in order to implement the `set` requirements of the baggage and logger effectively, and also for their user's sanity,
+/// as a reference semantics context type can be very confusing to use when shared between multiple threads, as often is the case in server side environments.
 ///
 /// It is STRONGLY encouraged to use the `DefaultLoggingContext` as inspiration for a correct implementation of a `LoggingContext`,
 /// as the relationship between `Logger` and `Baggage` can be tricky to wrap your head around at first.
@@ -106,35 +105,16 @@ public protocol LoggingContext {
 ///
 /// ### Accepting context types in APIs
 ///
-/// It is preferred to accept values of `LoggingContext` in library APIs, as this yields a more flexible API shape,
-/// to which other libraries/frameworks may pass their specific context objects.
+/// It is preferred to accept values of `LoggingContext` in public library APIs, e.g.:
 ///
-/// - SeeAlso: `Baggage` from the Baggage module.
-/// - SeeAlso: `Logger` from the SwiftLog package.
+///     func call(string: String, context: LoggingContext) -> Thing
+///
+/// The context parameter SHOULD be positioned as the *last non-optional not-function parameter*.
+/// If unsure how to pass/accept the context, please refer to the project's README for more examples and exact context passing guidelines.
+///
+/// - SeeAlso: `CoreBaggage.Baggage`
+/// - SeeAlso: `Logging.Logger`
 public struct DefaultLoggingContext: LoggingContext {
-    /// The `Baggage` carried with this context.
-    /// It's values will automatically be made available to the `logger` as metadata when logging.
-    ///
-    /// Baggage values are different from plain logging metadata in that they are intended to be
-    /// carried across process and node boundaries (serialized and deserialized) and are made
-    /// available to instruments using `swift-distributed-tracing`.
-    public var baggage: Baggage {
-        willSet {
-            // every time the baggage changes, we need to update the logger;
-            // values removed from the baggage are also removed from the logger metadata.
-            //
-            // TODO: optimally, logger could some day accept baggage directly, without ever having to map it into `Metadata`,
-            //       then we would not have to make those mappings at all and passing the logger.with(baggage) would be cheap.
-            //
-            // This implementation generally is a tradeoff, we bet on logging being performed far more often than baggage
-            // being changed; We do this logger update eagerly, so even if we never log anything, the logger has to be updated.
-            // Systems which never or rarely log will take the hit for it here. The alternative tradeoff to map lazily as `logger.with(baggage)`
-            // is available as well, but users would have to build their own context and specifically make use of that then -- that approach
-            // allows to not pay the mapping cost up front, but only if a log statement is made (but then again, the cost is paid every time we log something).
-            self._logger.updateMetadata(previous: self.baggage, latest: newValue)
-        }
-    }
-
     // We need to store the logger as `_logger` in order to avoid cyclic updates triggering when baggage changes
     public var _logger: Logger
     public var logger: Logger {
@@ -149,15 +129,37 @@ public struct DefaultLoggingContext: LoggingContext {
         }
     }
 
-    public init(baggage: Baggage, logger: Logger) {
-        self.baggage = baggage
+    /// The `Baggage` carried with this context.
+    /// It's values will automatically be made available to the `logger` as metadata when logging.
+    ///
+    /// Baggage values are different from plain logging metadata in that they are intended to be
+    /// carried across process and node boundaries (serialized and deserialized) and are made
+    /// available to instruments using `swift-distributed-tracing`.
+    public var baggage: Baggage {
+        willSet {
+            // every time the baggage changes, we need to update the logger;
+            // values removed from the baggage are also removed from the logger metadata.
+            //
+            // This implementation generally is a tradeoff, we bet on logging being performed far more often than baggage
+            // being changed; We do this logger update eagerly, so even if we never log anything, the logger has to be updated.
+            // Systems which never or rarely log will take the hit for it here. The alternative tradeoff to map lazily as `logger.with(baggage)`
+            // is available as well, but users would have to build their own context and specifically make use of that then -- that approach
+            // allows to not pay the mapping cost up front, but only if a log statement is made (but then again, the cost is paid every time we log something).
+            self._logger.updateMetadata(previous: self.baggage, latest: newValue)
+        }
+    }
+
+    /// Create a default context, which will update the logger any time the context.baggage is modified.
+    public init(logger: Logger, baggage: Baggage) {
         self._logger = logger
+        self.baggage = baggage
         self._logger.updateMetadata(previous: .topLevel, latest: baggage)
     }
 
-    public init<Context>(context: Context) where Context: LoggingContext {
-        self.baggage = context.baggage
+    /// Create a default context, which will update the logger any time the context.baggage is modified.
+    public init(context: LoggingContext) {
         self._logger = context.logger
+        self.baggage = context.baggage
         self._logger.updateMetadata(previous: .topLevel, latest: self.baggage)
     }
 }
@@ -183,7 +185,7 @@ extension DefaultLoggingContext {
     public func withLogger(_ function: (inout Logger) -> Void) -> DefaultLoggingContext {
         var logger = self.logger
         function(&logger)
-        return .init(baggage: self.baggage, logger: logger)
+        return .init(logger: logger, baggage: self.baggage)
     }
 
     /// Fluent API allowing for modification of underlying log level when passing the context to other functions.
@@ -252,7 +254,7 @@ extension DefaultLoggingContext {
     /// not being sure where to obtain a context from, or other framework limitations -- e.g. the outer framework not being
     /// context aware just yet.
     public static func topLevel(logger: Logger) -> DefaultLoggingContext {
-        return .init(baggage: .topLevel, logger: logger)
+        return .init(logger: logger, baggage: .topLevel)
     }
 }
 
@@ -285,7 +287,7 @@ extension DefaultLoggingContext {
         #if BAGGAGE_CRASH_TODOS
         fatalError("BAGGAGE_CRASH_TODOS: at \(file):\(line) (function \(function)), reason: \(reason)", file: file, line: line)
         #else
-        return .init(baggage: baggage, logger: logger)
+        return .init(logger: logger, baggage: baggage)
         #endif
     }
 }
