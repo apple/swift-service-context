@@ -23,11 +23,11 @@ func pad(_ label: String) -> String {
     return "\(label)\(String(repeating: " ", count: max(0, 80 - label.count)))"
 }
 
-public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
+public let LoggingContextBenchmarks: [BenchmarkInfo] = [
     // ==== ----------------------------------------------------------------------------------------------------------------
     // MARK: Baseline
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.0_log_noop_baseline_empty"),
+        name: pad("LoggingContextBenchmarks.0_log_noop_baseline_empty"),
         runFunction: { iters in
             let logger = Logger(label: "0_log_noop_baseline_empty", factory: { _ in SwiftLogNoOpLogHandler() })
             log_baseline(logger: logger, iters: iters)
@@ -39,7 +39,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
         tearDownFunction: tearDown
     ),
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.0_log_noop_baseline_smallMetadata"),
+        name: pad("LoggingContextBenchmarks.0_log_noop_baseline_smallMetadata"),
         runFunction: { iters in
             var logger = Logger(label: "0_log_noop_baseline_smallMetadata", factory: { _ in SwiftLogNoOpLogHandler() })
             logger[metadataKey: "k1"] = "k1-value"
@@ -58,7 +58,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     // MARK: Context / Baggage (Really do log)
 
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.0_log_noop_loggerWithBaggage_small"),
+        name: pad("LoggingContextBenchmarks.0_log_noop_loggerWithBaggage_small"),
         runFunction: { iters in
             let logger = Logger(label: "0_log_noop_loggerWithBaggage_small", factory: { _ in SwiftLogNoOpLogHandler() })
             var baggage = Baggage.topLevel
@@ -74,7 +74,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
         tearDownFunction: tearDown
     ),
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.0_log_noop_context_with_baggage_small"),
+        name: pad("LoggingContextBenchmarks.0_log_noop_context_with_baggage_small"),
         runFunction: { iters in
             var context = DefaultLoggingContext.topLevel(logger: Logger(label: "0_log_noop_context_with_baggage_small", factory: { _ in SwiftLogNoOpLogHandler() }))
             context.baggage[TestK1.self] = "k1-value"
@@ -93,7 +93,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     // MARK: Context / Baggage (do actually emit the logs)
 
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.1_log_real_baseline_empty"),
+        name: pad("LoggingContextBenchmarks.1_log_real_baseline_empty"),
         runFunction: { iters in
             let logger = Logger(label: "1_log_real_baseline_empty", factory: StreamLogHandler.standardError)
             log_baseline(logger: logger, iters: iters)
@@ -105,7 +105,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
         tearDownFunction: tearDown
     ),
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.1_log_real_baseline_smallMetadata"),
+        name: pad("LoggingContextBenchmarks.1_log_real_baseline_smallMetadata"),
         runFunction: { iters in
             var logger = Logger(label: "1_log_real_baseline_smallMetadata", factory: StreamLogHandler.standardError)
             logger[metadataKey: "k1"] = "k1-value"
@@ -121,7 +121,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     ),
 
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.1_log_real_loggerWithBaggage_small"),
+        name: pad("LoggingContextBenchmarks.1_log_real_loggerWithBaggage_small"),
         runFunction: { iters in
             let logger = Logger(label: "1_log_real_loggerWithBaggage_small", factory: StreamLogHandler.standardError)
             var baggage = Baggage.topLevel
@@ -137,7 +137,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
         tearDownFunction: tearDown
     ),
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.1_log_real_context_with_baggage_small"),
+        name: pad("LoggingContextBenchmarks.1_log_real_context_with_baggage_small"),
         runFunction: { iters in
             var context = DefaultLoggingContext.topLevel(logger: Logger(label: "1_log_real_context_with_baggage_small", factory: StreamLogHandler.standardError))
             context.baggage[TestK1.self] = "k1-value"
@@ -156,7 +156,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     // MARK: Context / Baggage (log not emitted because logLevel)
 
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.2_log_real-trace_baseline_empty"),
+        name: pad("LoggingContextBenchmarks.2_log_real-trace_baseline_empty"),
         runFunction: { iters in
             let logger = Logger(label: "trace_baseline_empty", factory: StreamLogHandler.standardError)
             log_baseline_trace(logger: logger, iters: iters)
@@ -168,7 +168,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
         tearDownFunction: tearDown
     ),
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.2_log_real-trace_baseline_smallMetadata"),
+        name: pad("LoggingContextBenchmarks.2_log_real-trace_baseline_smallMetadata"),
         runFunction: { iters in
             var logger = Logger(label: "2_log_real-trace_baseline_smallMetadata", factory: StreamLogHandler.standardError)
             logger[metadataKey: "k1"] = "k1-value"
@@ -184,7 +184,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     ),
 
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.2_log_real-trace_loggerWithBaggage_small"),
+        name: pad("LoggingContextBenchmarks.2_log_real-trace_loggerWithBaggage_small"),
         runFunction: { iters in
             let logger = Logger(label: "2_log_real-trace_loggerWithBaggage_small", factory: StreamLogHandler.standardError)
             var baggage = Baggage.topLevel
@@ -200,7 +200,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
         tearDownFunction: tearDown
     ),
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.2_log_real-trace_context_with_baggage_small"),
+        name: pad("LoggingContextBenchmarks.2_log_real-trace_context_with_baggage_small"),
         runFunction: { iters in
             var context = DefaultLoggingContext.topLevel(logger: Logger(label: "2_log_real-trace_context_with_baggage_small", factory: StreamLogHandler.standardError))
             context.baggage[TestK1.self] = "k1-value"
@@ -219,7 +219,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     // MARK: materialize once once
 
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.3_log_real_small_context_materializeOnce"),
+        name: pad("LoggingContextBenchmarks.3_log_real_small_context_materializeOnce"),
         runFunction: { iters in
             var context = DefaultLoggingContext.topLevel(logger: Logger(label: "3_log_real_context_materializeOnce", factory: StreamLogHandler.standardError))
             context.baggage[TestK1.self] = "k1-value"
@@ -234,7 +234,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
         tearDownFunction: tearDown
     ),
     BenchmarkInfo(
-        name: pad("BaggageLoggingBenchmarks.3_log_real-trace_small_context_materializeOnce"),
+        name: pad("LoggingContextBenchmarks.3_log_real-trace_small_context_materializeOnce"),
         runFunction: { iters in
             var context = DefaultLoggingContext.topLevel(logger: Logger(label: "3_log_real_context_materializeOnce", factory: StreamLogHandler.standardError))
             context.baggage[TestK1.self] = "k1-value"
