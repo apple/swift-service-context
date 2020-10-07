@@ -76,7 +76,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: pad("BaggageLoggingBenchmarks.0_log_noop_context_with_baggage_small"),
         runFunction: { iters in
-            var context = DefaultContext.topLevel(logger: Logger(label: "0_log_noop_context_with_baggage_small", factory: { _ in SwiftLogNoOpLogHandler() }))
+            var context = DefaultLoggingContext.topLevel(logger: Logger(label: "0_log_noop_context_with_baggage_small", factory: { _ in SwiftLogNoOpLogHandler() }))
             context.baggage[TestK1.self] = "k1-value"
             context.baggage[TestK2.self] = "k2-value"
             context.baggage[TestK3.self] = "k3-value"
@@ -139,7 +139,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: pad("BaggageLoggingBenchmarks.1_log_real_context_with_baggage_small"),
         runFunction: { iters in
-            var context = DefaultContext.topLevel(logger: Logger(label: "1_log_real_context_with_baggage_small", factory: StreamLogHandler.standardError))
+            var context = DefaultLoggingContext.topLevel(logger: Logger(label: "1_log_real_context_with_baggage_small", factory: StreamLogHandler.standardError))
             context.baggage[TestK1.self] = "k1-value"
             context.baggage[TestK2.self] = "k2-value"
             context.baggage[TestK3.self] = "k3-value"
@@ -202,7 +202,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: pad("BaggageLoggingBenchmarks.2_log_real-trace_context_with_baggage_small"),
         runFunction: { iters in
-            var context = DefaultContext.topLevel(logger: Logger(label: "2_log_real-trace_context_with_baggage_small", factory: StreamLogHandler.standardError))
+            var context = DefaultLoggingContext.topLevel(logger: Logger(label: "2_log_real-trace_context_with_baggage_small", factory: StreamLogHandler.standardError))
             context.baggage[TestK1.self] = "k1-value"
             context.baggage[TestK2.self] = "k2-value"
             context.baggage[TestK3.self] = "k3-value"
@@ -221,7 +221,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: pad("BaggageLoggingBenchmarks.3_log_real_small_context_materializeOnce"),
         runFunction: { iters in
-            var context = DefaultContext.topLevel(logger: Logger(label: "3_log_real_context_materializeOnce", factory: StreamLogHandler.standardError))
+            var context = DefaultLoggingContext.topLevel(logger: Logger(label: "3_log_real_context_materializeOnce", factory: StreamLogHandler.standardError))
             context.baggage[TestK1.self] = "k1-value"
             context.baggage[TestK2.self] = "k2-value"
             context.baggage[TestK3.self] = "k3-value"
@@ -236,7 +236,7 @@ public let BaggageLoggingBenchmarks: [BenchmarkInfo] = [
     BenchmarkInfo(
         name: pad("BaggageLoggingBenchmarks.3_log_real-trace_small_context_materializeOnce"),
         runFunction: { iters in
-            var context = DefaultContext.topLevel(logger: Logger(label: "3_log_real_context_materializeOnce", factory: StreamLogHandler.standardError))
+            var context = DefaultLoggingContext.topLevel(logger: Logger(label: "3_log_real_context_materializeOnce", factory: StreamLogHandler.standardError))
             context.baggage[TestK1.self] = "k1-value"
             context.baggage[TestK2.self] = "k2-value"
             context.baggage[TestK3.self] = "k3-value"
@@ -283,7 +283,7 @@ func log_loggerWithBaggage(logger: Logger, baggage: Baggage, iters remaining: In
 }
 
 @inline(never)
-func log_throughContext(context: BaggageContext, iters remaining: Int) {
+func log_throughContext(context: LoggingContext, iters remaining: Int) {
     for _ in 0 ..< remaining {
         context.logger.warning(message)
     }
@@ -297,14 +297,14 @@ func log_loggerWithBaggage_trace(logger: Logger, baggage: Baggage, iters remaini
 }
 
 @inline(never)
-func log_throughContext_trace(context: BaggageContext, iters remaining: Int) {
+func log_throughContext_trace(context: LoggingContext, iters remaining: Int) {
     for _ in 0 ..< remaining {
         context.logger.trace(message)
     }
 }
 
 @inline(never)
-func log_materializeOnce_trace(context: BaggageContext, iters remaining: Int) {
+func log_materializeOnce_trace(context: LoggingContext, iters remaining: Int) {
     var logger = context.logger
     context.baggage.forEach { key, value in
         logger[metadataKey: key.name] = "\(value)"
@@ -316,7 +316,7 @@ func log_materializeOnce_trace(context: BaggageContext, iters remaining: Int) {
 }
 
 @inline(never)
-func log_materializeOnce(context: BaggageContext, iters remaining: Int) {
+func log_materializeOnce(context: LoggingContext, iters remaining: Int) {
     var logger = context.logger
     context.baggage.forEach { key, value in
         logger[metadataKey: key.name] = "\(value)"

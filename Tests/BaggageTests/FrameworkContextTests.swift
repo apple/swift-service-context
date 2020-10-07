@@ -16,8 +16,8 @@ import Baggage
 import Logging
 import XCTest
 
-final class FrameworkBaggageContextTests: XCTestCase {
-    func testBaggageContextSubscript() {
+final class FrameworkLoggingContextTests: XCTestCase {
+    func testLoggingContextSubscript() {
         var context = TestFrameworkContext()
 
         // mutate baggage context directly
@@ -25,7 +25,7 @@ final class FrameworkBaggageContextTests: XCTestCase {
         XCTAssertEqual(context.baggage.otherKey, "test")
     }
 
-    func testBaggageContextForEach() {
+    func testLoggingContextForEach() {
         var contents = [AnyBaggageKey: Any]()
         var context = TestFrameworkContext()
 
@@ -43,7 +43,7 @@ final class FrameworkBaggageContextTests: XCTestCase {
     }
 }
 
-private struct TestFrameworkContext: BaggageContext {
+private struct TestFrameworkContext: LoggingContext {
     var baggage = Baggage.topLevel
 
     private var _logger = Logger(label: "test")
