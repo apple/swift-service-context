@@ -12,12 +12,12 @@
 //===----------------------------------------------------------------------===//
 
 @_exported import CoreBaggage
-import Logging
+@_exported import Logging
 
 // ==== ----------------------------------------------------------------------------------------------------------------
 // MARK: Context Protocol
 
-/// The `BaggageContext` MAY be adopted by specific "framework contexts" such as e.g. `CoolFramework.Context` in
+/// The `LoggingContext` MAY be adopted by specific "framework contexts" such as e.g. `CoolFramework.Context` in
 /// order to allow users to pass such context directly to libraries accepting any context.
 ///
 /// This allows frameworks and library authors to offer APIs which compose more easily.
@@ -29,9 +29,9 @@ import Logging
 /// and also for their user's sanity, as a reference semantics context type can be very confusing to use when shared
 /// between multiple threads, as often is the case in server side environments.
 ///
-/// It is STRONGLY encouraged to use the `DefaultContext` as inspiration for a correct implementation of a `BaggageContext`,
+/// It is STRONGLY encouraged to use the `DefaultLoggingContext` as inspiration for a correct implementation of a `LoggingContext`,
 /// as the relationship between `Logger` and `Baggage` can be tricky to wrap your head around at first.
-public protocol BaggageContext {
+public protocol LoggingContext {
     /// Get the `Baggage` container.
     ///
     /// ### Implementation notes
@@ -39,7 +39,7 @@ public protocol BaggageContext {
     /// ensure that a modification of the baggage is properly represented in the associated `logger`. Users expect values
     /// from the baggage be visible in their log statements issued via `context.logger.info()`.
     ///
-    /// Please refer to `DefaultContext`'s implementation for a reference implementation,
+    /// Please refer to `DefaultLoggingContext`'s implementation for a reference implementation,
     /// here a short snippet of how the baggage itself should be implemented:
     ///
     ///     public var baggage: Baggage {
@@ -91,7 +91,7 @@ public protocol BaggageContext {
     var logger: Logger { get set }
 }
 
-/// A default `BaggageContext` type.
+/// A default `LoggingContext` type.
 ///
 /// It is a carrier of contextual `Baggage` and related `Logger`, allowing to log and trace throughout a system.
 ///
@@ -106,12 +106,12 @@ public protocol BaggageContext {
 ///
 /// ### Accepting context types in APIs
 ///
-/// It is preferred to accept values of `BaggageContext` in library APIs, as this yields a more flexible API shape,
+/// It is preferred to accept values of `LoggingContext` in library APIs, as this yields a more flexible API shape,
 /// to which other libraries/frameworks may pass their specific context objects.
 ///
 /// - SeeAlso: `Baggage` from the Baggage module.
 /// - SeeAlso: `Logger` from the SwiftLog package.
-public struct DefaultContext: BaggageContext {
+public struct DefaultLoggingContext: LoggingContext {
     /// The `Baggage` carried with this context.
     /// It's values will automatically be made available to the `logger` as metadata when logging.
     ///
@@ -155,7 +155,7 @@ public struct DefaultContext: BaggageContext {
         self._logger.updateMetadata(previous: .topLevel, latest: baggage)
     }
 
-    public init<Context>(context: Context) where Context: BaggageContext {
+    public init<Context>(context: Context) where Context: LoggingContext {
         self.baggage = context.baggage
         self._logger = context.logger
         self._logger.updateMetadata(previous: .topLevel, latest: self.baggage)
@@ -165,12 +165,12 @@ public struct DefaultContext: BaggageContext {
 // ==== ----------------------------------------------------------------------------------------------------------------
 // MARK: `with...` functions
 
-extension DefaultContext {
+extension DefaultLoggingContext {
     /// Fluent API allowing for modification of underlying logger when passing the context to other functions.
     ///
     /// - Parameter logger: Logger that should replace the underlying logger of this context.
     /// - Returns: new context, with the passed in `logger`
-    public func withLogger(_ logger: Logger) -> DefaultContext {
+    public func withLogger(_ logger: Logger) -> DefaultLoggingContext {
         var copy = self
         copy.logger = logger
         return copy
@@ -180,7 +180,7 @@ extension DefaultContext {
     ///
     /// - Parameter logger: Logger that should replace the underlying logger of this context.
     /// - Returns: new context, with the passed in `logger`
-    public func withLogger(_ function: (inout Logger) -> Void) -> DefaultContext {
+    public func withLogger(_ function: (inout Logger) -> Void) -> DefaultLoggingContext {
         var logger = self.logger
         function(&logger)
         return .init(baggage: self.baggage, logger: logger)
@@ -190,7 +190,7 @@ extension DefaultContext {
     ///
     /// - Parameter logLevel: New log level which should be used to create the new context
     /// - Returns: new context, with the passed in `logLevel` used for the underlying logger
-    public func withLogLevel(_ logLevel: Logger.Level) -> DefaultContext {
+    public func withLogLevel(_ logLevel: Logger.Level) -> DefaultLoggingContext {
         var copy = self
         copy.logger.logLevel = logLevel
         return copy
@@ -204,7 +204,7 @@ extension DefaultContext {
     ///     })
     ///
     /// - Parameter function:
-    public func withBaggage(_ function: (inout Baggage) -> Void) -> DefaultContext {
+    public func withBaggage(_ function: (inout Baggage) -> Void) -> DefaultLoggingContext {
         var baggage = self.baggage
         function(&baggage)
         return self.withBaggage(baggage)
@@ -216,7 +216,7 @@ extension DefaultContext {
     ///
     /// - Parameter baggage: baggage that should *replace* the context's current baggage.
     /// - Returns: new context, with the passed in baggage
-    public func withBaggage(_ baggage: Baggage) -> DefaultContext {
+    public func withBaggage(_ baggage: Baggage) -> DefaultLoggingContext {
         var copy = self
         copy.baggage = baggage
         return copy
@@ -226,7 +226,7 @@ extension DefaultContext {
 // ==== ----------------------------------------------------------------------------------------------------------------
 // MARK: Context Initializers
 
-extension DefaultContext {
+extension DefaultLoggingContext {
     /// Creates a new empty "top level" default baggage context, generally used as an "initial" context to immediately be populated with
     /// some values by a framework or runtime. Another use case is for tasks starting in the "background" (e.g. on a timer),
     /// which don't have a "request context" per se that they can pick up, and as such they have to create a "top level"
@@ -251,12 +251,12 @@ extension DefaultContext {
     /// such that other developers are informed that the lack of context was not done on purpose, but rather because either
     /// not being sure where to obtain a context from, or other framework limitations -- e.g. the outer framework not being
     /// context aware just yet.
-    public static func topLevel(logger: Logger) -> DefaultContext {
+    public static func topLevel(logger: Logger) -> DefaultLoggingContext {
         return .init(baggage: .topLevel, logger: logger)
     }
 }
 
-extension DefaultContext {
+extension DefaultLoggingContext {
     /// A baggage context intended as a placeholder until a real value can be passed through a function call.
     ///
     /// It should ONLY be used while prototyping or when the passing of the proper context is not yet possible,
@@ -280,7 +280,7 @@ extension DefaultContext {
     /// - Parameters:
     ///   - reason: Informational reason for developers, why a placeholder context was used instead of a proper one,
     /// - Returns: Empty "to-do" baggage context which should be eventually replaced with a carried through one, or `background`.
-    public static func TODO(logger: Logger, _ reason: StaticString? = "", function: String = #function, file: String = #file, line: UInt = #line) -> DefaultContext {
+    public static func TODO(logger: Logger, _ reason: StaticString? = "", function: String = #function, file: String = #file, line: UInt = #line) -> DefaultLoggingContext {
         let baggage = Baggage.TODO(reason, function: function, file: file, line: line)
         #if BAGGAGE_CRASH_TODOS
         fatalError("BAGGAGE_CRASH_TODOS: at \(file):\(line) (function \(function)), reason: \(reason)", file: file, line: line)

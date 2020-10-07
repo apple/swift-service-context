@@ -15,7 +15,7 @@ import Baggage
 import Logging
 import XCTest
 
-final class BaggageContextTests: XCTestCase {
+final class LoggingContextTests: XCTestCase {
     func test_ExampleFrameworkContext_dumpBaggage() throws {
         var baggage = Baggage.topLevel
         let logger = Logger(label: "TheLogger")
@@ -23,7 +23,7 @@ final class BaggageContextTests: XCTestCase {
         baggage.testID = 42
         let context = ExampleFrameworkContext(context: baggage, logger: logger)
 
-        func frameworkFunctionDumpsBaggage(param: String, context: BaggageContext) -> String {
+        func frameworkFunctionDumpsBaggage(param: String, context: LoggingContext) -> String {
             var s = ""
             context.baggage.forEach { key, item in
                 s += "\(key.name): \(item)\n"
@@ -73,11 +73,11 @@ final class BaggageContextTests: XCTestCase {
         ])
     }
 
-    func test_DefaultContext_log_withBaggage() throws {
+    func test_DefaultLoggingContext_log_withBaggage() throws {
         let logging = TestLogging()
         let logger = Logger(label: "TheLogger", factory: { label in logging.make(label: label) })
 
-        var context = DefaultContext.topLevel(logger: logger)
+        var context = DefaultLoggingContext.topLevel(logger: logger)
 
         context.baggage.secondTestID = "value"
         context.baggage.testID = 42
@@ -104,7 +104,7 @@ final class BaggageContextTests: XCTestCase {
         ])
     }
 
-    func test_ExampleFrameworkContext_log_prefersBaggageContextOverExistingLoggerMetadata() {
+    func test_ExampleFrameworkContext_log_prefersLoggingContextOverExistingLoggerMetadata() {
         let baggage = Baggage.topLevel
         let logging = TestLogging()
         var logger = Logger(label: "TheLogger", factory: { label in logging.make(label: label) })
@@ -122,7 +122,7 @@ final class BaggageContextTests: XCTestCase {
     }
 }
 
-struct ExampleFrameworkContext: BaggageContext {
+struct ExampleFrameworkContext: LoggingContext {
     var baggage: Baggage {
         willSet {
             self._logger.updateMetadata(previous: self.baggage, latest: newValue)
@@ -147,7 +147,7 @@ struct ExampleFrameworkContext: BaggageContext {
     }
 }
 
-struct CoolFrameworkContext: BaggageContext {
+struct CoolFrameworkContext: LoggingContext {
     var baggage: Baggage {
         willSet {
             self.logger.updateMetadata(previous: self.baggage, latest: newValue)
