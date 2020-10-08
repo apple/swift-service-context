@@ -1,4 +1,4 @@
-# Baggage Context
+# Distributed Tracing: LoggingContext / Baggage
 
 [![Swift 5.2](https://img.shields.io/badge/Swift-5.2-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.1](https://img.shields.io/badge/Swift-5.1-ED523F.svg?style=flat)](https://swift.org/download/)
