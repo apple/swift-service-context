@@ -7,7 +7,7 @@
 
 `LoggingContext` is a minimal (zero-dependency) "context" library meant to "carry" baggage (metadata) for cross-cutting
 tools such as tracers. It is purposefully not tied to any specific use-case (in the spirit of the
-[Tracing Plane paper](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf)'s LoggingContext). However, it should
+[Tracing Plane paper](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf)'s BaggageContext). However, it should
 enable a vast majority of use cases cross-cutting tools need to support. Unlike mentioned in the paper, our
 `LoggingContext` does not implement its own serialization scheme (today).
 
