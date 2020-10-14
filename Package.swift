@@ -13,7 +13,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
-        .package(url: "https://github.com/apple/swift-distributed-tracing-baggage-core.git", from: "0.3.0"),
+        // FIXME: changes to https when public
+        .package(url: "git@github.com:apple/swift-distributed-tracing-baggage-core.git", from: "0.0.1"),
     ],
     targets: [
         .target(

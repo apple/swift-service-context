@@ -24,6 +24,6 @@ extension Baggage {
     ///
     /// - Parameter logger: to be used in the returned `DefaultLoggingContext`, it will be populated with loggable baggage values.
     public func context(logger: Logger) -> DefaultLoggingContext {
-        .init(logger: logger, baggage: self)
+        return .init(logger: logger, baggage: self)
     }
 }
