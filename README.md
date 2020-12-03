@@ -3,7 +3,6 @@
 [![Swift 5.2](https://img.shields.io/badge/Swift-5.2-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.1](https://img.shields.io/badge/Swift-5.1-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.0](https://img.shields.io/badge/Swift-5.0-ED523F.svg?style=flat)](https://swift.org/download/)
-[![CI](https://github.com/slashmo/gsoc-swift-baggage-context/workflows/CI/badge.svg)](https://github.com/slashmo/gsoc-swift-baggage-context/actions?query=workflow%3ACI)
 
 `LoggingContext` is a minimal (zero-dependency) "context" library meant to "carry" baggage (metadata) for cross-cutting
 tools such as tracers. It is purposefully not tied to any specific use-case (in the spirit of the
@@ -11,7 +10,7 @@ tools such as tracers. It is purposefully not tied to any specific use-case (in 
 enable a vast majority of use cases cross-cutting tools need to support. Unlike mentioned in the paper, our
 `LoggingContext` does not implement its own serialization scheme (today).
 
-See https://github.com/apple/gsoc-swift-tracing for actual instrument types and implementations which can be used to
+See https://github.com/apple/swift-distributed-tracing for actual instrument types and implementations which can be used to
 deploy various cross-cutting instruments all reusing the same baggage type. More information can be found in the
 [SSWG meeting notes](https://gist.github.com/ktoso/4d160232407e4d5835b5ba700c73de37#swift-baggage-context--distributed-tracing).
 
