@@ -22,7 +22,7 @@ so that's what you'd import in your Swift files.
 ```swift
 dependencies: [
   // ... 
-  .package(url: "https://github.com/apple/swift-distributed-tracing-baggage.git", from: "0.3.0"),
+  .package(url: "https://github.com/apple/swift-distributed-tracing-baggage.git", from: "0.1.0"),
 ]
 ```
 
