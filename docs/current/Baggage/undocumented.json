@@ -1,0 +1,19 @@
+{
+  "warnings": [
+    {
+      "file": "/code/Sources/Baggage/LogHandler.swift",
+      "line": 79,
+      "symbol": "BaggageMetadataLogHandler.init(logger:baggage:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/code/Sources/Baggage/LoggingContext.swift",
+      "line": 119,
+      "symbol": "DefaultLoggingContext._logger",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/code"
+}

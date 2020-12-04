@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DefaultLoggingContext Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Struct/DefaultLoggingContext" class="dashAnchor"></a>
+
+    <a title="DefaultLoggingContext Structure Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          Baggage 0.1.1 Docs
+        </a>
+         (93% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/apple/swift-distributed-tracing-baggage">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="dash-feed://https%3A%2F%2Fapple.github.io%2Fswift-distributed-tracing-baggage%2Fdocs%2F0.1.1%2FBaggage%2Fdocsets%2FBaggage.xml">
+            <img class="header-icon" src="../img/dash.png"/>
+            Install in Dash
+          </a>
+        </p>
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">Baggage Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      DefaultLoggingContext Structure Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Baggage.html">Baggage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Logger.html">Logger</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/LoggingContext.html">LoggingContext</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/BaggageMetadataLogHandler.html">BaggageMetadataLogHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/DefaultLoggingContext.html">DefaultLoggingContext</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>DefaultLoggingContext</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DefaultLoggingContext</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/LoggingContext.html">LoggingContext</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>A default <code><a href="../Protocols/LoggingContext.html">LoggingContext</a></code> type.</p>
+
+<p>It is a carrier of contextual <code>Baggage</code> and related <code>Logger</code>, allowing to log and trace throughout a system.</p>
+
+<p>Any values set on the <code>baggage</code> will be made accessible to the logger as call-site metadata, allowing it to log those.</p>
+<h3 id='logged-metadata-and-baggage-items' class='heading'>Logged Metadata and Baggage Items</h3>
+
+<p>Please refer to your configured log handler documentation about how to configure which metadata values should be logged
+and which not, as each log handler may handle and configure those differently. The default implementations log <em>all</em>
+metadata/baggage values present, which often is the right thing, however in larger systems one may want to choose a
+log handler which allows for configuring these details.</p>
+<h3 id='accepting-context-types-in-apis' class='heading'>Accepting context types in APIs</h3>
+
+<p>It is preferred to accept values of <code><a href="../Protocols/LoggingContext.html">LoggingContext</a></code> in public library APIs, e.g.:</p>
+<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">call</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">context</span><span class="p">:</span> <span class="kt">LoggingContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Thing</span>
+</code></pre>
+
+<p>The context parameter SHOULD be positioned as the <em>last non-optional not-function parameter</em>.
+If unsure how to pass/accept the context, please refer to the project&rsquo;s README for more examples and exact context passing guidelines.</p>
+<div class="aside aside-see-also">
+    <p class="aside-title">See also</p>
+    <code>CoreBaggage.Baggage</code>
+
+</div><div class="aside aside-see-also">
+    <p class="aside-title">See also</p>
+    <code>Logging.Logger</code>
+
+</div>
+
+              <div class="slightly-smaller">
+                <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L117-L165">Show on GitHub</a>
+              </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV7_logger0C06LoggerVvp"></a>
+                    <a name="//apple_ref/swift/Property/_logger" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV7_logger0C06LoggerVvp">_logger</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">_logger</span><span class="p">:</span> <span class="kt">Logger</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage14LoggingContextP6logger0B06LoggerVvp"></a>
+                    <a name="//apple_ref/swift/Property/logger" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage14LoggingContextP6logger0B06LoggerVvp">logger</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">logger</span><span class="p">:</span> <span class="kt">Logger</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L120-L130">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV7baggage04CoreA0AAVvp"></a>
+                    <a name="//apple_ref/swift/Property/baggage" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV7baggage04CoreA0AAVvp">baggage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The <code>Baggage</code> carried with this context.
+It&rsquo;s values will automatically be made available to the <code><a href="../Structs/DefaultLoggingContext.html#/s:7Baggage14LoggingContextP6logger0B06LoggerVvp">logger</a></code> as metadata when logging.</p>
+
+<p>Baggage values are different from plain logging metadata in that they are intended to be
+carried across process and node boundaries (serialized and deserialized) and are made
+available to instruments using <code>swift-distributed-tracing</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">baggage</span><span class="p">:</span> <span class="kt">Baggage</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L138-L150">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV6logger7baggageAC0C06LoggerV_04CoreA0AAVtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(logger:baggage:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV6logger7baggageAC0C06LoggerV_04CoreA0AAVtcfc">init(logger:<wbr>baggage:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a default context, which will update the logger any time the context.baggage is modified.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">logger</span><span class="p">:</span> <span class="kt">Logger</span><span class="p">,</span> <span class="nv">baggage</span><span class="p">:</span> <span class="kt">Baggage</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L153-L157">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV7contextAcA0cD0_p_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(context:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV7contextAcA0cD0_p_tcfc">init(context:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a default context, which will update the logger any time the context.baggage is modified.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LoggingContext.html">LoggingContext</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L160-L164">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/%60with...%60%20functions"></a>
+                <a name="//apple_ref/swift/Section/`with...` functions" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/%60with...%60%20functions"></a>
+                  <h3 class="section-name"><p><code>with...</code> functions</p>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV10withLoggeryAC0C00F0VF"></a>
+                    <a name="//apple_ref/swift/Method/withLogger(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV10withLoggeryAC0C00F0VF">withLogger(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fluent API allowing for modification of underlying logger when passing the context to other functions.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">withLogger</span><span class="p">(</span><span class="n">_</span> <span class="nv">logger</span><span class="p">:</span> <span class="kt">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DefaultLoggingContext</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>logger</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Logger that should replace the underlying logger of this context.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>new context, with the passed in <code><a href="../Structs/DefaultLoggingContext.html#/s:7Baggage14LoggingContextP6logger0B06LoggerVvp">logger</a></code></p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L175-L179">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV10withLoggeryACy0C00F0VzXEF"></a>
+                    <a name="//apple_ref/swift/Method/withLogger(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV10withLoggeryACy0C00F0VzXEF">withLogger(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fluent API allowing for modification of underlying logger when passing the context to other functions.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">withLogger</span><span class="p">(</span><span class="n">_</span> <span class="nv">function</span><span class="p">:</span> <span class="p">(</span><span class="k">inout</span> <span class="kt">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DefaultLoggingContext</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>logger</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Logger that should replace the underlying logger of this context.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>new context, with the passed in <code><a href="../Structs/DefaultLoggingContext.html#/s:7Baggage14LoggingContextP6logger0B06LoggerVvp">logger</a></code></p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L185-L189">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV12withLogLevelyAC0C06LoggerV0G0OF"></a>
+                    <a name="//apple_ref/swift/Method/withLogLevel(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV12withLogLevelyAC0C06LoggerV0G0OF">withLogLevel(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fluent API allowing for modification of underlying log level when passing the context to other functions.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">withLogLevel</span><span class="p">(</span><span class="n">_</span> <span class="nv">logLevel</span><span class="p">:</span> <span class="kt">Logger</span><span class="o">.</span><span class="kt">Level</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DefaultLoggingContext</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>logLevel</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>New log level which should be used to create the new context</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>new context, with the passed in <code>logLevel</code> used for the underlying logger</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L195-L199">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV04withA0yACy04CoreA0AAVzXEF"></a>
+                    <a name="//apple_ref/swift/Method/withBaggage(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV04withA0yACy04CoreA0AAVzXEF">withBaggage(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fluent API allowing for modification a few baggage values when passing the context to other functions, e.g.</p>
+<pre class="highlight swift"><code><span class="nf">makeRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nv">context</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">withBaggage</span> <span class="p">{</span>
+    <span class="nv">$0</span><span class="o">.</span><span class="n">traceID</span> <span class="o">=</span> <span class="s">"fake-value"</span>
+    <span class="nv">$0</span><span class="o">.</span><span class="n">calledFrom</span> <span class="o">=</span> <span class="kd">#function</span>
+<span class="p">})</span>
+</code></pre>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">withBaggage</span><span class="p">(</span><span class="n">_</span> <span class="nv">function</span><span class="p">:</span> <span class="p">(</span><span class="k">inout</span> <span class="kt">Baggage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DefaultLoggingContext</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>function</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p></p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L209-L213">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV04withA0yAC04CoreA0AAVF"></a>
+                    <a name="//apple_ref/swift/Method/withBaggage(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV04withA0yAC04CoreA0AAVF">withBaggage(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fluent API allowing for replacement of underlying baggage when passing the context to other functions.</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    <p>Use with caution, generally it is not recommended to modify an entire baggage, but rather only add a few values to it.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">withBaggage</span><span class="p">(</span><span class="n">_</span> <span class="nv">baggage</span><span class="p">:</span> <span class="kt">Baggage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DefaultLoggingContext</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>baggage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>baggage that should <em>replace</em> the context&rsquo;s current baggage.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>new context, with the passed in baggage</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L221-L225">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Context%20Initializers"></a>
+                <a name="//apple_ref/swift/Section/Context Initializers" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Context%20Initializers"></a>
+                  <h3 class="section-name"><p>Context Initializers</p>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV8topLevel6loggerAC0C06LoggerV_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/topLevel(logger:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV8topLevel6loggerAC0C06LoggerV_tFZ">topLevel(logger:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a new empty &ldquo;top level&rdquo; default baggage context, generally used as an &ldquo;initial&rdquo; context to immediately be populated with
+some values by a framework or runtime. Another use case is for tasks starting in the &ldquo;background&rdquo; (e.g. on a timer),
+which don&rsquo;t have a &ldquo;request context&rdquo; per se that they can pick up, and as such they have to create a &ldquo;top level&rdquo;
+baggage for their work.</p>
+
+<p>It is typically used by the main function, initialization, and tests, and as the top-level Context for incoming requests.</p>
+<h3 id='usage-in-frameworks-and-libraries' class='heading'>Usage in frameworks and libraries</h3>
+
+<p>This function is really only intended to be used frameworks and libraries, at the &ldquo;top-level&rdquo; where a request&rsquo;s,
+message&rsquo;s or task&rsquo;s processing is initiated. For example, a framework handling requests, should create an empty
+context when handling a request only to immediately populate it with useful trace information extracted from e.g.
+request headers.</p>
+<h3 id='usage-in-applications' class='heading'>Usage in applications</h3>
+
+<p>Application code should never have to create an empty context during the processing lifetime of any request,
+and only should create contexts if some processing is performed in the background - thus the naming of this property.</p>
+
+<p>Usually, a framework such as an HTTP server or similar &ldquo;request handler&rdquo; would already provide users
+with a context to be passed along through subsequent calls.</p>
+
+<p>If unsure where to obtain a context from, prefer using <code>.TODO(&quot;Not sure where I should get a context from here?&quot;)</code>,
+such that other developers are informed that the lack of context was not done on purpose, but rather because either
+not being sure where to obtain a context from, or other framework limitations &ndash; e.g. the outer framework not being
+context aware just yet.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">topLevel</span><span class="p">(</span><span class="nv">logger</span><span class="p">:</span> <span class="kt">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DefaultLoggingContext</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L256-L258">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV4TODO6logger_8function4file4lineAC0C06LoggerV_s12StaticStringVSgS2SSutFZ"></a>
+                    <a name="//apple_ref/swift/Method/TODO(logger:_:function:file:line:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV4TODO6logger_8function4file4lineAC0C06LoggerV_s12StaticStringVSgS2SSutFZ">TODO(logger:<wbr>_:<wbr>function:<wbr>file:<wbr>line:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A baggage context intended as a placeholder until a real value can be passed through a function call.</p>
+
+<p>It should ONLY be used while prototyping or when the passing of the proper context is not yet possible,
+e.g. because an external library did not pass it correctly and has to be fixed before the proper context
+can be obtained where the TO-DO is currently used.</p>
+<h2 id='crashing-on-to-do-context-creation' class='heading'>Crashing on TO-DO context creation</h2>
+
+<p>You may set the <code>BAGGAGE_CRASH_TODOS</code> variable while compiling a project in order to make calls to this function crash
+with a fatal error, indicating where a to-do baggage context was used. This comes in handy when wanting to ensure that
+a project never ends up using with code initially was written as &ldquo;was lazy, did not pass context&rdquo;, yet the
+project requires context passing to be done correctly throughout the application. Similar checks can be performed
+at compile time easily using linters (not yet implemented), since it is always valid enough to detect a to-do context
+being passed as illegal and warn or error when spotted.</p>
+<h2 id='example' class='heading'>Example</h2>
+<pre class="highlight swift"><code><span class="n">frameworkHandler</span> <span class="p">{</span> <span class="n">what</span> <span class="k">in</span>
+    <span class="nf">hello</span><span class="p">(</span><span class="nv">who</span><span class="p">:</span> <span class="s">"World"</span><span class="p">,</span> <span class="nv">baggage</span><span class="p">:</span> <span class="o">.</span><span class="kt">TODO</span><span class="p">(</span><span class="nv">logger</span><span class="p">:</span> <span class="n">logger</span><span class="p">,</span> <span class="s">"The framework XYZ should be modified to pass us a context here, and we'd pass it along"</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="kt">TODO</span><span class="p">(</span><span class="nv">logger</span><span class="p">:</span> <span class="kt">Logger</span><span class="p">,</span> <span class="n">_</span> <span class="nv">reason</span><span class="p">:</span> <span class="kt">StaticString</span><span class="p">?</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="nv">function</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kd">#function</span><span class="p">,</span> <span class="nv">file</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kd">#file</span><span class="p">,</span> <span class="nv">line</span><span class="p">:</span> <span class="kt">UInt</span> <span class="o">=</span> <span class="kd">#line</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DefaultLoggingContext</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>reason</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Informational reason for developers, why a placeholder context was used instead of a proper one,</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Empty &ldquo;to-do&rdquo; baggage context which should be eventually replaced with a carried through one, or <code>background</code>.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L285-L292">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2020 <a class="link" href="https://github.com/apple/swift-distributed-tracing-baggage" target="_blank" rel="external">Swift Distributed Tracing team</a>. All rights reserved. (Last updated: 2020-12-04)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

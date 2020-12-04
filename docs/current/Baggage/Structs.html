@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Structures  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Section/Structures" class="dashAnchor"></a>
+
+    <a title="Structures  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          Baggage 0.1.1 Docs
+        </a>
+         (93% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/apple/swift-distributed-tracing-baggage">
+            <img class="header-icon" src="img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="dash-feed://https%3A%2F%2Fapple.github.io%2Fswift-distributed-tracing-baggage%2Fdocs%2F0.1.1%2FBaggage%2Fdocsets%2FBaggage.xml">
+            <img class="header-icon" src="img/dash.png"/>
+            Install in Dash
+          </a>
+        </p>
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">Baggage Reference</a>
+      <img class="carat" src="img/carat.png" />
+      Structures  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Baggage.html">Baggage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Logger.html">Logger</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/LoggingContext.html">LoggingContext</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Structs/BaggageMetadataLogHandler.html">BaggageMetadataLogHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Structs/DefaultLoggingContext.html">DefaultLoggingContext</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>Structures</h1>
+            <p>The following structures are available globally.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Baggage%20%28as%20additional%20Logger.Metadata%29%20LogHandler"></a>
+                <a name="//apple_ref/swift/Section/Baggage (as additional Logger.Metadata) LogHandler" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Baggage%20%28as%20additional%20Logger.Metadata%29%20LogHandler"></a>
+                  <h3 class="section-name"><p>Baggage (as additional Logger.Metadata) LogHandler</p>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage0A18MetadataLogHandlerV"></a>
+                    <a name="//apple_ref/swift/Struct/BaggageMetadataLogHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage0A18MetadataLogHandlerV">BaggageMetadataLogHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Proxying log handler which adds <code>Baggage</code> as metadata when log events are to be emitted.</p>
+
+<p>The values stored in the <code>Baggage</code> are merged with the existing metadata on the logger. If both contain values for the same key,
+the <code>Baggage</code> values are preferred.</p>
+
+                        <a href="Structs/BaggageMetadataLogHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">BaggageMetadataLogHandler</span> <span class="p">:</span> <span class="kt">LogHandler</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LogHandler.swift#L75-L152">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/LoggingContext"></a>
+                <a name="//apple_ref/swift/Section/LoggingContext" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/LoggingContext"></a>
+                  <h3 class="section-name"><p>LoggingContext</p>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Baggage21DefaultLoggingContextV"></a>
+                    <a name="//apple_ref/swift/Struct/DefaultLoggingContext" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Baggage21DefaultLoggingContextV">DefaultLoggingContext</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A default <code><a href="Protocols/LoggingContext.html">LoggingContext</a></code> type.</p>
+
+<p>It is a carrier of contextual <code>Baggage</code> and related <code>Logger</code>, allowing to log and trace throughout a system.</p>
+
+<p>Any values set on the <code>baggage</code> will be made accessible to the logger as call-site metadata, allowing it to log those.</p>
+<h3 id='logged-metadata-and-baggage-items' class='heading'>Logged Metadata and Baggage Items</h3>
+
+<p>Please refer to your configured log handler documentation about how to configure which metadata values should be logged
+and which not, as each log handler may handle and configure those differently. The default implementations log <em>all</em>
+metadata/baggage values present, which often is the right thing, however in larger systems one may want to choose a
+log handler which allows for configuring these details.</p>
+<h3 id='accepting-context-types-in-apis' class='heading'>Accepting context types in APIs</h3>
+
+<p>It is preferred to accept values of <code><a href="Protocols/LoggingContext.html">LoggingContext</a></code> in public library APIs, e.g.:</p>
+<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">call</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">context</span><span class="p">:</span> <span class="kt">LoggingContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Thing</span>
+</code></pre>
+
+<p>The context parameter SHOULD be positioned as the <em>last non-optional not-function parameter</em>.
+If unsure how to pass/accept the context, please refer to the project&rsquo;s README for more examples and exact context passing guidelines.</p>
+<div class="aside aside-see-also">
+    <p class="aside-title">See also</p>
+    <code>CoreBaggage.Baggage</code>
+
+</div><div class="aside aside-see-also">
+    <p class="aside-title">See also</p>
+    <code>Logging.Logger</code>
+
+</div>
+
+                        <a href="Structs/DefaultLoggingContext.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DefaultLoggingContext</span> <span class="p">:</span> <span class="kt"><a href="Protocols/LoggingContext.html">LoggingContext</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/apple/swift-distributed-tracing-baggage/tree/0.1.1/Sources/Baggage/LoggingContext.swift#L117-L165">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2020 <a class="link" href="https://github.com/apple/swift-distributed-tracing-baggage" target="_blank" rel="external">Swift Distributed Tracing team</a>. All rights reserved. (Last updated: 2020-12-04)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>
