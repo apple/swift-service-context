@@ -25,7 +25,7 @@
 ///
 /// ### Implementation notes
 /// Conforming types MUST exhibit Value Semantics (i.e. be a pure `struct`, or implement the Copy-on-Write pattern),
-/// in order to implement the `set` requirements of the baggage and logger effectively, and also for their user's sanity,
+/// in order to implement the `set` requirements of the baggage and logger effectively, and also for ease of understanding,
 /// as a reference semantics context type can be very confusing to use when shared between multiple threads, as often is the case in server side environments.
 ///
 /// It is STRONGLY encouraged to use the `DefaultLoggingContext` as inspiration for a correct implementation of a `LoggingContext`,
