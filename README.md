@@ -32,10 +32,10 @@ Please refer to in-depth discussion and documentation in the [Swift Distributed 
 
 ## Contributing
 
-Please make sure to run the `./scripts/sanity.sh` script when contributing, it checks formatting and similar things.
+Please make sure to run the `./scripts/soundness.sh` script when contributing, it checks formatting and similar things.
 
 You can make ensure it always is run and passes before you push by installing a pre-push hook with git:
 
 ```
-echo './scripts/sanity.sh' > .git/hooks/pre-push
+echo './scripts/soundness.sh' > .git/hooks/pre-push
 ```
