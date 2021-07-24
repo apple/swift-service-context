@@ -6,12 +6,11 @@ services:
     image: swift-distributed-tracing-baggage:18.04-5.3
     build:
       args:
-        base_image: "swiftlang/swift:nightly-5.3-bionic"
+        base_image: "swiftlang/swift:nightly-5.5-bionic"
 
   test:
     image: swift-distributed-tracing-baggage:18.04-5.3
     environment: []
-      #- SANITIZER_ARG=--sanitize=thread
 
   shell:
     image: swift-distributed-tracing-baggage:18.04-5.3

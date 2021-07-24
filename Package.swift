@@ -1,52 +1,33 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
     name: "swift-distributed-tracing-baggage",
+    platforms: [
+        .macOS(.v12),
+        .iOS(.v15),
+        .watchOS(.v8),
+        .tvOS(.v15),
+    ],
     products: [
         .library(
-            name: "Baggage",
+            name: "BaggageModule",
             targets: [
-                "Baggage",
+                "BaggageModule",
             ]
         ),
-    ],
-    dependencies: [
-        .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
-        .package(url: "https://github.com/apple/swift-distributed-tracing-baggage-core.git", from: "0.1.1"),
     ],
     targets: [
-        .target(
-            name: "Baggage",
-            dependencies: [
-                .product(name: "Logging", package: "swift-log"),
-                .product(name: "CoreBaggage", package: "swift-distributed-tracing-baggage-core"),
-            ]
-        ),
+        .target(name: "BaggageModule"),
 
         // ==== --------------------------------------------------------------------------------------------------------
         // MARK: Tests
 
         .testTarget(
-            name: "BaggageTests",
+            name: "BaggageModuleTests",
             dependencies: [
-                "Baggage",
+                .target(name: "BaggageModule"),
             ]
-        ),
-
-        // ==== --------------------------------------------------------------------------------------------------------
-        // MARK: Performance / Benchmarks
-
-        .target(
-            name: "BaggageBenchmarks",
-            dependencies: [
-                "Baggage",
-                "BaggageBenchmarkTools",
-            ]
-        ),
-        .target(
-            name: "BaggageBenchmarkTools",
-            dependencies: []
         ),
     ]
 )

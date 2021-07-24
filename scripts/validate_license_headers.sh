@@ -1,9 +1,11 @@
 #!/bin/bash
 ##===----------------------------------------------------------------------===##
 ##
-## This source file is part of the Swift Distributed Tracing Baggage open source project
+## This source file is part of the Swift Distributed Tracing Baggage
+## open source project
 ##
-## Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage project authors
+## Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage
+## project authors
 ## Licensed under Apache License v2.0
 ##
 ## See LICENSE.txt for license information
@@ -35,7 +37,7 @@ function replace_acceptable_years() {
 }
 
 printf "=> Checking license headers\n"
-tmp=$(mktemp /tmp/.swift-baggage-context-soundness_XXXXXX)
+tmp=$(mktemp /tmp/.swift-distributed-tracing-baggage-soundness_XXXXXX)
 
 for language in swift-or-c bash dtrace; do
   printf "   * $language... "
@@ -45,14 +47,16 @@ for language in swift-or-c bash dtrace; do
   matching_files=( -name '*' )
   case "$language" in
       swift-or-c)
-        exceptions=( -name c_nio_http_parser.c -o -name c_nio_http_parser.h -o -name cpp_magic.h -o -name Package.swift -o -name CNIOSHA1.h -o -name c_nio_sha1.c -o -name ifaddrs-android.c -o -name ifaddrs-android.h)
+        exceptions=( -name Package.swift)
         matching_files=( -name '*.swift' -o -name '*.c' -o -name '*.h' )
         cat > "$tmp" <<"EOF"
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Distributed Tracing Baggage open source project
+// This source file is part of the Swift Distributed Tracing Baggage
+// open source project
 //
-// Copyright (c) YEARS Apple Inc. and the Swift Distributed Tracing Baggage project authors
+// Copyright (c) YEARS Apple Inc. and the Swift Distributed Tracing Baggage
+// project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
@@ -68,9 +72,11 @@ EOF
 #!/bin/bash
 ##===----------------------------------------------------------------------===##
 ##
-## This source file is part of the Swift Distributed Tracing Baggage open source project
+## This source file is part of the Swift Distributed Tracing Baggage
+## open source project
 ##
-## Copyright (c) YEARS Apple Inc. and the Swift Distributed Tracing Baggage project authors
+## Copyright (c) YEARS Apple Inc. and the Swift Distributed Tracing Baggage
+## project authors
 ## Licensed under Apache License v2.0
 ##
 ## See LICENSE.txt for license information
@@ -86,9 +92,11 @@ EOF
 #!/usr/sbin/dtrace -q -s
 /*===----------------------------------------------------------------------===*
  *
- *  This source file is part of the Swift Distributed Tracing Baggage open source project
+ *  This source file is part of the Swift Distributed Tracing Baggage
+ *  open source project
  *
- *  Copyright (c) YEARS Apple Inc. and the Swift Distributed Tracing Baggage project authors
+ *  Copyright (c) YEARS Apple Inc. and the Swift Distributed Tracing Baggage
+ *  project authors
  *  Licensed under Apache License v2.0
  *
  *  See LICENSE.txt for license information

@@ -1,9 +1,11 @@
 #!/bin/bash
 ##===----------------------------------------------------------------------===##
 ##
-## This source file is part of the Swift Distributed Tracing Baggage open source project
+## This source file is part of the Swift Distributed Tracing Baggage
+## open source project
 ##
-## Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage project authors
+## Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage
+## project authors
 ## Licensed under Apache License v2.0
 ##
 ## See LICENSE.txt for license information
@@ -17,10 +19,10 @@ set -e
 my_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 declare -r root_path="$my_path/.."
 version=$(git describe --abbrev=0 --tags || echo "0.0.0")
-declare -r modules=(Baggage)
-main_module="Baggage"
-declare -r project_xcodeproj_name="swift-distributed-tracing-baggage"
-declare -r project_gh_name="swift-distributed-tracing-baggage"
+declare -r modules=(CoreBaggage)
+main_module="CoreBaggage"
+declare -r project_xcodeproj_name="swift-distributed-tracing-baggage-core"
+declare -r project_gh_name="swift-distributed-tracing-baggage-core"
 
 if [[ "$(uname -s)" == "Linux" ]]; then
   # build code if required
@@ -69,7 +71,6 @@ jazzy_args=(--clean
             --xcodebuild-arguments -scheme,$project_xcodeproj_name-Package)
 cat > "$module_switcher" <<"EOF"
 # Swift Distributed Tracing Baggage Docs
-
 This project contains modules:
 EOF
 
