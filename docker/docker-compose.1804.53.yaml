@@ -6,11 +6,11 @@ services:
     image: swift-distributed-tracing-baggage:18.04-5.3
     build:
       args:
-        base_image: "swiftlang/swift:nightly-5.5-bionic"
+        ubuntu_version: "bionic"
+        swift_version: "5.3"
 
   test:
     image: swift-distributed-tracing-baggage:18.04-5.3
-    environment: []
 
   shell:
     image: swift-distributed-tracing-baggage:18.04-5.3

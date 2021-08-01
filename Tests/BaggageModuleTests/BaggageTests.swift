@@ -3,7 +3,7 @@
 // This source file is part of the Swift Distributed Tracing Baggage
 // open source project
 //
-// Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage
+// Copyright (c) 2020-2021 Apple Inc. and the Swift Distributed Tracing Baggage
 // project authors
 // Licensed under Apache License v2.0
 //
@@ -62,7 +62,12 @@ final class BaggageTests: XCTestCase {
         _ = Baggage.TODO(#function)
     }
 
-    func test_automaticPropagationThroughTaskLocal() {
+    func test_automaticPropagationThroughTaskLocal() throws {
+        #if swift(>=5.5)
+        guard #available(macOS 12, iOS 15, tvOS 15, watchOS 8, *) else {
+            throw XCTSkip("Task locals are not supported on this platform.")
+        }
+
         XCTAssertNil(Baggage.current)
 
         var baggage = Baggage.topLevel
@@ -77,6 +82,7 @@ final class BaggageTests: XCTestCase {
 
         XCTAssertEqual(propagatedBaggage?.count, 1)
         XCTAssertEqual(propagatedBaggage?[FirstTestKey.self], 42)
+        #endif
     }
 
     private enum FirstTestKey: BaggageKey {

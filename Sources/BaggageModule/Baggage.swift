@@ -3,7 +3,7 @@
 // This source file is part of the Swift Distributed Tracing Baggage
 // open source project
 //
-// Copyright (c) 2020 Apple Inc. and the Swift Distributed Tracing Baggage
+// Copyright (c) 2020-2021 Apple Inc. and the Swift Distributed Tracing Baggage
 // project authors
 // Licensed under Apache License v2.0
 //
@@ -224,6 +224,7 @@ extension Baggage {
 
 // MARK: - Propagating Baggage
 
+@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
 extension Baggage {
     /// A `Baggage` automatically propagated through task-local storage. This API enables binding a top-level `Baggage` and passing it
     /// implicitly to any child tasks when using structured concurrency.

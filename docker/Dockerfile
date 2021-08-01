@@ -1,6 +1,6 @@
-ARG swift_version=nightly-5.5
+ARG swift_version=5.2
 ARG ubuntu_version=bionic
-ARG base_image=swiftlang/swift:$swift_version-$ubuntu_version
+ARG base_image=swift:$swift_version-$ubuntu_version
 FROM $base_image
 # needed to do again after FROM due to docker limitation
 ARG swift_version

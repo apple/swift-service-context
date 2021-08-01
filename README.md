@@ -1,6 +1,11 @@
 # 🧳 Distributed Tracing: Baggage
 
+[![Swift 5.2](https://img.shields.io/badge/Swift-5.2-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.3](https://img.shields.io/badge/Swift-5.3-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.4](https://img.shields.io/badge/Swift-5.4-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.5](https://img.shields.io/badge/Swift-5.5-ED523F.svg?style=flat)](https://swift.org/download/)
+
+> ⚠️ Automatic propagation through task-locals only supported in Swift >= 5.5
 
 `Baggage` is a minimal (zero-dependency) context propagation container, intended to "carry" baggage items
 for purposes of cross-cutting tools to be built on top of it.
@@ -20,7 +25,7 @@ deploy various cross-cutting instruments all reusing the same baggage type. More
 ```swift
 dependencies: [
   .package(
-    url: "https://github.com/apple/swift-distributed-tracing-baggage-core.git",
+    url: "https://github.com/apple/swift-distributed-tracing-baggage.git",
     from: "0.1.0"
   )
 ]
