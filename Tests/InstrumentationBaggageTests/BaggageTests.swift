@@ -13,7 +13,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-import BaggageModule
+import InstrumentationBaggage
 import XCTest
 
 final class BaggageTests: XCTestCase {

@@ -21,7 +21,7 @@ import XCTest
 ///
 
 #if os(Linux) || os(FreeBSD)
-   @testable import BaggageModuleTests
+   @testable import InstrumentationBaggageTests
 
 // This protocol is necessary to we can call the 'run' method (on an existential of this protocol)
 // without the compiler noticing that we're calling a deprecated function.

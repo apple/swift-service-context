@@ -5,22 +5,22 @@ let package = Package(
     name: "swift-distributed-tracing-baggage",
     products: [
         .library(
-            name: "BaggageModule",
+            name: "InstrumentationBaggage",
             targets: [
-                "BaggageModule",
+                "InstrumentationBaggage",
             ]
         ),
     ],
     targets: [
-        .target(name: "BaggageModule"),
+        .target(name: "InstrumentationBaggage"),
 
         // ==== --------------------------------------------------------------------------------------------------------
         // MARK: Tests
 
         .testTarget(
-            name: "BaggageModuleTests",
+            name: "InstrumentationBaggageTests",
             dependencies: [
-                .target(name: "BaggageModule"),
+                .target(name: "InstrumentationBaggage"),
             ]
         ),
     ]

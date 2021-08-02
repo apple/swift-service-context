@@ -39,7 +39,7 @@ targets: [
         name: "MyAwesomeApp",
         dependencies: [
             .product(
-              name: "BaggageModule", 
+              name: "InstrumentationBaggage", 
               package: "swift-distributed-tracing-baggage"
             ),
         ]
