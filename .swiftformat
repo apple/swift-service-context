@@ -1,6 +1,6 @@
 # file options
 
---swiftversion 5.0
+--swiftversion 5.2
 --exclude .build
 --exclude UseCases/.build
 --exclude Tests/LinuxMain.swift
@@ -13,6 +13,7 @@
 --self insert
 --stripunusedargs closure-only
 --wraparguments before-first
+--extensionacl on-declarations
 
 # rules
 
