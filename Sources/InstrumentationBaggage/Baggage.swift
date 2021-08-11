@@ -144,7 +144,7 @@ extension Baggage {
     private enum TODOKey: BaggageKey {
         typealias Value = TODOLocation
         static var nameOverride: String? {
-            return "todo"
+            "todo"
         }
     }
 }

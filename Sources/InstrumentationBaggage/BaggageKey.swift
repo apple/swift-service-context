@@ -82,7 +82,7 @@ public struct AnyBaggageKey {
 
 extension AnyBaggageKey: Hashable {
     public static func == (lhs: AnyBaggageKey, rhs: AnyBaggageKey) -> Bool {
-        return ObjectIdentifier(lhs.keyType) == ObjectIdentifier(rhs.keyType)
+        ObjectIdentifier(lhs.keyType) == ObjectIdentifier(rhs.keyType)
     }
 
     public func hash(into hasher: inout Hasher) {
