@@ -26,7 +26,7 @@ deploy various cross-cutting instruments all reusing the same baggage type. More
 dependencies: [
   .package(
     url: "https://github.com/apple/swift-distributed-tracing-baggage.git",
-    from: "0.1.0"
+    from: "0.2.0"
   )
 ]
 ```
