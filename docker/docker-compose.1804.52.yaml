@@ -11,8 +11,6 @@ services:
 
   test:
     image: swift-distributed-tracing-baggage:18.04-5.2
-    environment: []
-      #- SANITIZER_ARG=--sanitize=thread
 
   shell:
     image: swift-distributed-tracing-baggage:18.04-5.2

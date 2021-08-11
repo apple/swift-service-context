@@ -1,28 +1,50 @@
-# 🧳 Distributed Tracing: LoggingContext / Baggage
+# 🧳 Distributed Tracing: Baggage
 
 [![Swift 5.2](https://img.shields.io/badge/Swift-5.2-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 5.1](https://img.shields.io/badge/Swift-5.1-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 5.0](https://img.shields.io/badge/Swift-5.0-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.3](https://img.shields.io/badge/Swift-5.3-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.4](https://img.shields.io/badge/Swift-5.4-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.5](https://img.shields.io/badge/Swift-5.5-ED523F.svg?style=flat)](https://swift.org/download/)
 
-`LoggingContext` is a minimal (zero-dependency) "context" library meant to "carry" baggage (metadata) for cross-cutting
-tools such as tracers. It is purposefully not tied to any specific use-case (in the spirit of the
-[Tracing Plane paper](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf)'s BaggageContext). However, it should
-enable a vast majority of use cases cross-cutting tools need to support. Unlike mentioned in the paper, our
-`LoggingContext` does not implement its own serialization scheme (today).
+> ⚠️ Automatic propagation through task-locals only supported in Swift >= 5.5
+
+`Baggage` is a minimal (zero-dependency) context propagation container, intended to "carry" baggage items
+for purposes of cross-cutting tools to be built on top of it.
+
+It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and the 
+in the spirit of [Tracing Plane](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf) 's "Baggage Context" type,
+although by itself it does not define a specific serialization format.
 
 See https://github.com/apple/swift-distributed-tracing for actual instrument types and implementations which can be used to
 deploy various cross-cutting instruments all reusing the same baggage type. More information can be found in the
 [SSWG meeting notes](https://gist.github.com/ktoso/4d160232407e4d5835b5ba700c73de37#swift-baggage-context--distributed-tracing).
 
-## Installation
+## Dependency
 
-You can install the `LoggingContext` library through the Swift Package Manager. The library itself is called `Baggage`,
-so that's what you'd import in your Swift files.
+ In order to depend on this library you can use the Swift Package Manager, and add the following dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-  // ... 
-  .package(url: "https://github.com/apple/swift-distributed-tracing-baggage.git", from: "0.1.0"),
+  .package(
+    url: "https://github.com/apple/swift-distributed-tracing-baggage.git",
+    from: "0.1.0"
+  )
+]
+```
+
+and depend on the module in your target:
+
+```swift 
+targets: [
+    .target(
+        name: "MyAwesomeApp",
+        dependencies: [
+            .product(
+              name: "InstrumentationBaggage", 
+              package: "swift-distributed-tracing-baggage"
+            ),
+        ]
+    ),
+    // ... 
 ]
 ```
 
@@ -34,8 +56,9 @@ Please refer to in-depth discussion and documentation in the [Swift Distributed 
 
 Please make sure to run the `./scripts/soundness.sh` script when contributing, it checks formatting and similar things.
 
-You can make ensure it always is run and passes before you push by installing a pre-push hook with git:
+You can ensure it always runs and passes before you push by installing a pre-push hook with git:
 
 ```
 echo './scripts/soundness.sh' > .git/hooks/pre-push
+chmod +x .git/hooks/pre-push
 ```
