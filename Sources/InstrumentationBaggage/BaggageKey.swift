@@ -39,9 +39,9 @@
 ///     }
 ///
 /// This pattern allows library authors fine-grained control over which values may be set, and which only get by end-users.
-public protocol BaggageKey: Sendable {
+public protocol BaggageKey: Baggage_Sendable {
     /// The type of value uniquely identified by this key.
-    associatedtype Value: Sendable
+    associatedtype Value: Baggage_Sendable
 
     /// The human-readable name of this key.
     /// This name will be used instead of the type name when a value is printed.
@@ -62,7 +62,7 @@ extension BaggageKey {
 }
 
 /// A type-erased `BaggageKey` used when iterating through the `Baggage` using its `forEach` method.
-public struct AnyBaggageKey: Sendable {
+public struct AnyBaggageKey: Baggage_Sendable {
     /// The key's type represented erased to an `Any.Type`.
     public let keyType: Any.Type
 
