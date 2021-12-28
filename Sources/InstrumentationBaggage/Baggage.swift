@@ -65,8 +65,8 @@
 /// `Baggage` does not expose more functions on purpose to prevent abuse and treating it as too much of an
 /// arbitrary value smuggling container, but only make it convenient for tracing and instrumentation systems which need
 /// to access either specific or all items carried inside a baggage.
-public struct Baggage {
-    private var _storage = [AnyBaggageKey: Any]()
+public struct Baggage: Sendable {
+    private var _storage = [AnyBaggageKey: Sendable]()
 
     /// Internal on purpose, please use `Baggage.TODO` or `Baggage.topLevel` to create an "empty" baggage,
     /// which carries more meaning to other developers why an empty baggage was used.
@@ -151,7 +151,7 @@ extension Baggage {
 
 /// Carried automatically by a "to do" baggage.
 /// It can be used to track where a baggage originated and which "to do" baggage must be fixed into a real one to avoid this.
-public struct TODOLocation {
+public struct TODOLocation: Sendable {
     /// Source file location where the to-do `Baggage` was created
     public let file: String
     /// Source line location where the to-do `Baggage` was created
