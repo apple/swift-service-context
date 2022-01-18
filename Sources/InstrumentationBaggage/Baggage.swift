@@ -224,7 +224,7 @@ extension Baggage {
 
 // MARK: - Propagating Baggage
 
-#if swift(>=5.5)
+#if swift(>=5.5) && canImport(_Concurrency)
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension Baggage {
     /// A `Baggage` automatically propagated through task-local storage. This API enables binding a top-level `Baggage` and passing it
