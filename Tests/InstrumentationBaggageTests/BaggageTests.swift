@@ -63,8 +63,8 @@ final class BaggageTests: XCTestCase {
     }
 
     func test_automaticPropagationThroughTaskLocal() throws {
-        #if swift(>=5.5)
-        guard #available(macOS 12, iOS 15, tvOS 15, watchOS 8, *) else {
+        #if swift(>=5.5) && canImport(_Concurrency)
+        guard #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) else {
             throw XCTSkip("Task locals are not supported on this platform.")
         }
 
