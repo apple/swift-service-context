@@ -15,7 +15,7 @@
 
 #if swift(>=5.5) && canImport(_Concurrency)
 public typealias Baggage_Sendable = Swift.Sendable
-#else 
+#else
 public typealias Baggage_Sendable = Any
 #endif
 
