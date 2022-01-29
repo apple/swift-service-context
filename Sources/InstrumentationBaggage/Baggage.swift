@@ -13,12 +13,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if swift(>=5.5) && canImport(_Concurrency)
-public typealias _Baggage_Sendable = Swift.Sendable
-#else
-public typealias _Baggage_Sendable = Any
-#endif
-
 /// A `Baggage` is a heterogeneous storage type with value semantics for keyed values in a type-safe fashion.
 ///
 /// Its values are uniquely identified via `BaggageKey`s (by type identity). These keys also dictate the type of
@@ -71,8 +65,8 @@ public typealias _Baggage_Sendable = Any
 /// `Baggage` does not expose more functions on purpose to prevent abuse and treating it as too much of an
 /// arbitrary value smuggling container, but only make it convenient for tracing and instrumentation systems which need
 /// to access either specific or all items carried inside a baggage.
-public struct Baggage: _Baggage_Sendable {
-    private var _storage = [AnyBaggageKey: _Baggage_Sendable]()
+public struct Baggage {
+    private var _storage = [AnyBaggageKey: Any]()
 
     /// Internal on purpose, please use `Baggage.TODO` or `Baggage.topLevel` to create an "empty" baggage,
     /// which carries more meaning to other developers why an empty baggage was used.
@@ -157,7 +151,7 @@ extension Baggage {
 
 /// Carried automatically by a "to do" baggage.
 /// It can be used to track where a baggage originated and which "to do" baggage must be fixed into a real one to avoid this.
-public struct TODOLocation: _Baggage_Sendable {
+public struct TODOLocation {
     /// Source file location where the to-do `Baggage` was created
     public let file: String
     /// Source line location where the to-do `Baggage` was created
