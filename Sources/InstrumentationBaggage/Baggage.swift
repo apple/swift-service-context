@@ -3,7 +3,7 @@
 // This source file is part of the Swift Distributed Tracing Baggage
 // open source project
 //
-// Copyright (c) 2020-2021 Apple Inc. and the Swift Distributed Tracing Baggage
+// Copyright (c) 2020-2022 Apple Inc. and the Swift Distributed Tracing Baggage
 // project authors
 // Licensed under Apache License v2.0
 //
@@ -21,12 +21,12 @@ public typealias _Baggage_Sendable = Any
 
 /// A `Baggage` is a heterogeneous storage type with value semantics for keyed values in a type-safe fashion.
 ///
-/// Its values are uniquely identified via `BaggageKey`s (by type identity). These keys also dictate the type of
+/// Its values are uniquely identified via ``BaggageKey``s (by type identity). These keys also dictate the type of
 /// value allowed for a specific key-value pair through their associated type `Value`.
 ///
 /// ## Defining keys and accessing values
 /// Baggage keys are defined as types, most commonly case-less enums (as no actual instances are required)
-/// which conform to the `BaggageKey` protocol:
+/// which conform to the ``BaggageKey`` protocol:
 ///
 ///     private enum TestIDKey: BaggageKey {
 ///       typealias Value = String
@@ -74,7 +74,7 @@ public typealias _Baggage_Sendable = Any
 public struct Baggage: _Baggage_Sendable {
     private var _storage = [AnyBaggageKey: _Baggage_Sendable]()
 
-    /// Internal on purpose, please use `Baggage.TODO` or `Baggage.topLevel` to create an "empty" baggage,
+    /// Internal on purpose, please use ``Baggage/TODO(_:function:file:line:)`` or ``Baggage/topLevel`` to create an "empty" baggage,
     /// which carries more meaning to other developers why an empty baggage was used.
     init() {}
 }
@@ -158,9 +158,9 @@ extension Baggage {
 /// Carried automatically by a "to do" baggage.
 /// It can be used to track where a baggage originated and which "to do" baggage must be fixed into a real one to avoid this.
 public struct TODOLocation: _Baggage_Sendable {
-    /// Source file location where the to-do `Baggage` was created
+    /// Source file location where the to-do ``Baggage`` was created
     public let file: String
-    /// Source line location where the to-do `Baggage` was created
+    /// Source line location where the to-do ``Baggage`` was created
     public let line: UInt
 }
 
