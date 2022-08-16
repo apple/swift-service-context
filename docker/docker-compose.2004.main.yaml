@@ -11,7 +11,9 @@ services:
 
   test:
     image: swift-distributed-tracing-baggage:20.04-main
-    environment: []
+    environment:
       #- SANITIZER_ARG=--sanitize=thread
+      - FORCE_TEST_DISCOVERY=--enable-test-discovery
+
   shell:
     image: swift-distributed-tracing-baggage:20.04-main
