@@ -1,16 +1,21 @@
 # 🧳 Distributed Tracing: Baggage
 
+[![Swift 5.0](https://img.shields.io/badge/Swift-5.0-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.1](https://img.shields.io/badge/Swift-5.1-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.2](https://img.shields.io/badge/Swift-5.2-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.3](https://img.shields.io/badge/Swift-5.3-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.4](https://img.shields.io/badge/Swift-5.4-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.5](https://img.shields.io/badge/Swift-5.5-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.6](https://img.shields.io/badge/Swift-5.6-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.7](https://img.shields.io/badge/Swift-5.6-ED523F.svg?style=flat)](https://swift.org/download/)
 
-> ⚠️ Automatic propagation through task-locals only supported in Swift >= 5.5
+> **Warning**
+> Automatic propagation through task-locals only supported in Swift >= 5.5
 
 `Baggage` is a minimal (zero-dependency) context propagation container, intended to "carry" baggage items
 for purposes of cross-cutting tools to be built on top of it.
 
-It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and the 
+It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and the
 in the spirit of [Tracing Plane](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf) 's "Baggage Context" type,
 although by itself it does not define a specific serialization format.
 
@@ -20,7 +25,7 @@ deploy various cross-cutting instruments all reusing the same baggage type. More
 
 ## Dependency
 
- In order to depend on this library you can use the Swift Package Manager, and add the following dependency to your `Package.swift`:
+In order to depend on this library you can use the Swift Package Manager, and add the following dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
@@ -33,18 +38,18 @@ dependencies: [
 
 and depend on the module in your target:
 
-```swift 
+```swift
 targets: [
     .target(
         name: "MyAwesomeApp",
         dependencies: [
             .product(
-              name: "InstrumentationBaggage", 
+              name: "InstrumentationBaggage",
               package: "swift-distributed-tracing-baggage"
             ),
         ]
     ),
-    // ... 
+    // ...
 ]
 ```
 

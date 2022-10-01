@@ -106,7 +106,7 @@ extension Baggage {
     /// not being sure where to obtain a baggage from, or other framework limitations -- e.g. the outer framework not being
     /// baggage aware just yet.
     public static var topLevel: Baggage {
-        Baggage()
+        return Baggage()
     }
 }
 
@@ -150,7 +150,7 @@ extension Baggage {
     private enum TODOKey: BaggageKey {
         typealias Value = TODOLocation
         static var nameOverride: String? {
-            "todo"
+            return "todo"
         }
     }
 }
@@ -207,12 +207,12 @@ extension Baggage {
 extension Baggage {
     /// The number of items in the baggage.
     public var count: Int {
-        self._storage.count
+        return self._storage.count
     }
 
     /// A Boolean value that indicates whether the baggage is empty.
     public var isEmpty: Bool {
-        self._storage.isEmpty
+        return self._storage.isEmpty
     }
 
     /// Iterate through all items in this `Baggage` by invoking the given closure for each item.

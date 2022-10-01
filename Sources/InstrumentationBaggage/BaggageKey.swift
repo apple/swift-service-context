@@ -58,7 +58,7 @@ public protocol BaggageKey: _Baggage_Sendable {
 }
 
 extension BaggageKey {
-    public static var nameOverride: String? { nil }
+    public static var nameOverride: String? { return nil }
 }
 
 /// A type-erased ``BaggageKey`` used when iterating through the ``Baggage`` using its `forEach` method.
@@ -71,7 +71,7 @@ public struct AnyBaggageKey: _Baggage_Sendable {
     /// A human-readable String representation of the underlying key.
     /// If no explicit name has been set on the wrapped key the type name is used.
     public var name: String {
-        self._nameOverride ?? String(describing: self.keyType.self)
+        return self._nameOverride ?? String(describing: self.keyType.self)
     }
 
     init<Key: BaggageKey>(_ keyType: Key.Type) {
@@ -82,7 +82,7 @@ public struct AnyBaggageKey: _Baggage_Sendable {
 
 extension AnyBaggageKey: Hashable {
     public static func == (lhs: AnyBaggageKey, rhs: AnyBaggageKey) -> Bool {
-        ObjectIdentifier(lhs.keyType) == ObjectIdentifier(rhs.keyType)
+        return ObjectIdentifier(lhs.keyType) == ObjectIdentifier(rhs.keyType)
     }
 
     public func hash(into hasher: inout Hasher) {
