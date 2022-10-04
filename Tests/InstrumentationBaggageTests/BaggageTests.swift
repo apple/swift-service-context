@@ -78,7 +78,8 @@ final class BaggageTests: XCTestCase {
             propagatedBaggage = Baggage.current
         }
 
-        Baggage.$current.withValue(baggage, operation: exampleFunction)
+        let c = Baggage.$current
+        c.withValue(baggage, operation: exampleFunction)
 
         XCTAssertEqual(propagatedBaggage?.count, 1)
         XCTAssertEqual(propagatedBaggage?[FirstTestKey.self], 42)
