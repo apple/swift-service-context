@@ -63,7 +63,7 @@ final class BaggageTests: XCTestCase {
     }
 
     func test_automaticPropagationThroughTaskLocal() throws {
-        #if swift(>=5.5) && canImport(_Concurrency)
+        #if compiler(>=5.5)
         guard #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) else {
             throw XCTSkip("Task locals are not supported on this platform.")
         }
@@ -78,7 +78,8 @@ final class BaggageTests: XCTestCase {
             propagatedBaggage = Baggage.current
         }
 
-        Baggage.$current.withValue(baggage, operation: exampleFunction)
+        let c = Baggage.$current
+        c.withValue(baggage, operation: exampleFunction)
 
         XCTAssertEqual(propagatedBaggage?.count, 1)
         XCTAssertEqual(propagatedBaggage?[FirstTestKey.self], 42)
