@@ -1,6 +1,6 @@
 # file options
 
---swiftversion 5.0
+--swiftversion 5.1
 --exclude .build
 --exclude UseCases/.build
 --exclude Tests/LinuxMain.swift
