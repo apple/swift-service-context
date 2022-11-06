@@ -3,7 +3,7 @@
 // This source file is part of the Swift Distributed Tracing Baggage
 // open source project
 //
-// Copyright (c) 2020-2021 Apple Inc. and the Swift Distributed Tracing Baggage
+// Copyright (c) 2020-2022 Apple Inc. and the Swift Distributed Tracing Baggage
 // project authors
 // Licensed under Apache License v2.0
 //
@@ -13,8 +13,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-/// Baggage keys provide type-safe access to `Baggage`s by declaring the type of value they "key" at compile-time.
-/// To give your `BaggageKey` an explicit name you may override the `nameOverride` property.
+/// Baggage keys provide type-safe access to ``Baggage``s by declaring the type of value they "key" at compile-time.
+/// To give your `BaggageKey` an explicit name you may override the ``BaggageKey/nameOverride-2upe8`` property.
 ///
 /// In general, `BaggageKey`s should be `internal` or `private` to the part of a system using it.
 ///
@@ -39,9 +39,9 @@
 ///     }
 ///
 /// This pattern allows library authors fine-grained control over which values may be set, and which only get by end-users.
-public protocol BaggageKey {
+public protocol BaggageKey: _Baggage_Sendable {
     /// The type of value uniquely identified by this key.
-    associatedtype Value
+    associatedtype Value: _Baggage_Sendable
 
     /// The human-readable name of this key.
     /// This name will be used instead of the type name when a value is printed.
@@ -61,8 +61,8 @@ extension BaggageKey {
     public static var nameOverride: String? { nil }
 }
 
-/// A type-erased `BaggageKey` used when iterating through the `Baggage` using its `forEach` method.
-public struct AnyBaggageKey {
+/// A type-erased ``BaggageKey`` used when iterating through the ``Baggage`` using its `forEach` method.
+public struct AnyBaggageKey: _Baggage_Sendable {
     /// The key's type represented erased to an `Any.Type`.
     public let keyType: Any.Type
 

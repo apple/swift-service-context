@@ -5,3 +5,5 @@ Package.resolved
 /*.xcodeproj
 xcuserdata/
 .swiftpm
+.vscode/
+.history
