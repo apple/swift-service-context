@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+
+  runtime-setup:
+    image: swift-distributed-tracing-baggage:22.04-main
+    build:
+      args:
+        base_image: "swiftlang/swift:nightly-main-jammy"
+
+
+  test:
+    image: swift-distributed-tracing-baggage:22.04-main
+    environment:
+      #- SANITIZER_ARG=--sanitize=thread
+      - FORCE_TEST_DISCOVERY=--enable-test-discovery
+
+  shell:
+    image: swift-distributed-tracing-baggage:22.04-main
