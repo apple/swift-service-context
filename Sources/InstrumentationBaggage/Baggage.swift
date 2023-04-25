@@ -251,9 +251,15 @@ extension Baggage {
     /// To access the task-local value, use `Baggage.current`.
     ///
     /// SeeAlso: [Swift Task Locals](https://developer.apple.com/documentation/swift/tasklocal)
+    #if swift(>=5.7)
     @_unsafeInheritExecutor // same as withValue declared in the stdlib; because we do not want to hop off the executor at all
     public static func withValue<T>(_ value: Baggage?, operation: () async throws -> T) async rethrows -> T {
         try await Baggage.$current.withValue(value, operation: operation)
     }
+    #else
+    public static func withValue<T>(_ value: Baggage?, operation: () async throws -> T) async rethrows -> T {
+        try await Baggage.$current.withValue(value, operation: operation)
+    }
+    #endif
 }
 #endif
