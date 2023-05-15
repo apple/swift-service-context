@@ -95,7 +95,7 @@ extension Baggage {
     ///
     /// ## Usage in applications
     /// Application code should never have to create an empty baggage during the processing lifetime of any request,
-    /// and only should create baggages if some processing is performed in the background - thus the naming of this property.
+    /// and only should create baggage if some processing is performed in the background - thus the naming of this property.
     ///
     /// Usually, a framework such as an HTTP server or similar "request handler" would already provide users
     /// with a context to be passed along through subsequent calls, either implicitly through the task-local `Baggage.$current`

@@ -86,6 +86,21 @@ final class BaggageTests: XCTestCase {
         #endif
     }
 
+    #if swift(>=5.7)
+    actor SomeActor {
+        var value: Int = 0
+
+        func test() async {
+            Baggage.$current.withValue(.topLevel) {
+                value = 12 // should produce no warnings
+            }
+            Baggage.withValue(.topLevel) {
+                value = 12 // should produce no warnings
+            }
+        }
+    }
+    #endif
+
     private enum FirstTestKey: BaggageKey {
         typealias Value = Int
     }
