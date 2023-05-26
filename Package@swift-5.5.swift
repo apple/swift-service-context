@@ -1,9 +1,18 @@
 // swift-tools-version:5.2
+
 import PackageDescription
 
 let package = Package(
-    name: "swift-distributed-tracing-baggage",
+    name: "swift-service-context",
     products: [
+        .library(
+            name: "ServiceContextModule",
+            targets: [
+                "ServiceContextModule",
+            ]
+        ),
+
+        // Deprecated/legacy module
         .library(
             name: "InstrumentationBaggage",
             targets: [
@@ -12,15 +21,22 @@ let package = Package(
         ),
     ],
     targets: [
-        .target(name: "InstrumentationBaggage"),
+        .target(name: "ServiceContextModule"),
 
+        // Deprecated/legacy module
+        .target(
+            name: "InstrumentationBaggage",
+            dependencies: [
+                .target(name: "ServiceContextModule"),
+            ]
+        ),
         // ==== --------------------------------------------------------------------------------------------------------
         // MARK: Tests
 
         .testTarget(
-            name: "InstrumentationBaggageTests",
+            name: "ServiceContextTests",
             dependencies: [
-                .target(name: "InstrumentationBaggage"),
+                .target(name: "ServiceContextModule"),
             ]
         ),
     ]

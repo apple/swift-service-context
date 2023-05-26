@@ -1,10 +1,10 @@
 #!/bin/bash
 ##===----------------------------------------------------------------------===##
 ##
-## This source file is part of the Swift Distributed Tracing Baggage
+## This source file is part of the Swift Service Context
 ## open source project
 ##
-## Copyright (c) 2020-2022 Apple Inc. and the Swift Distributed Tracing Baggage
+## Copyright (c) 2020-2022 Apple Inc. and the Swift Service Context
 ## project authors
 ## Licensed under Apache License v2.0
 ##
@@ -37,7 +37,7 @@ function replace_acceptable_years() {
 }
 
 printf "=> Checking license headers\n"
-tmp=$(mktemp /tmp/.swift-distributed-tracing-baggage-soundness_XXXXXX)
+tmp=$(mktemp /tmp/.swift-service-context-soundness_XXXXXX)
 
 for language in swift-or-c bash dtrace; do
   printf "   * $language... "
@@ -52,10 +52,10 @@ for language in swift-or-c bash dtrace; do
         cat > "$tmp" <<"EOF"
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Distributed Tracing Baggage
+// This source file is part of the Swift Service Context
 // open source project
 //
-// Copyright (c) YEARS Apple Inc. and the Swift Distributed Tracing Baggage
+// Copyright (c) YEARS Apple Inc. and the Swift Service Context
 // project authors
 // Licensed under Apache License v2.0
 //
@@ -72,10 +72,10 @@ EOF
 #!/bin/bash
 ##===----------------------------------------------------------------------===##
 ##
-## This source file is part of the Swift Distributed Tracing Baggage
+## This source file is part of the Swift Service Context
 ## open source project
 ##
-## Copyright (c) YEARS Apple Inc. and the Swift Distributed Tracing Baggage
+## Copyright (c) YEARS Apple Inc. and the Swift Service Context
 ## project authors
 ## Licensed under Apache License v2.0
 ##
@@ -92,10 +92,10 @@ EOF
 #!/usr/sbin/dtrace -q -s
 /*===----------------------------------------------------------------------===*
  *
- *  This source file is part of the Swift Distributed Tracing Baggage
+ *  This source file is part of the Swift Service Context
  *  open source project
  *
- *  Copyright (c) YEARS Apple Inc. and the Swift Distributed Tracing Baggage
+ *  Copyright (c) YEARS Apple Inc. and the Swift Service Context
  *  project authors
  *  Licensed under Apache License v2.0
  *
