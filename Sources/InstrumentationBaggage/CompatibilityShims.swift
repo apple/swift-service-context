@@ -15,6 +15,9 @@
 
 @_exported import ServiceContextModule
 
+@available(*, deprecated, message: "Use 'ServiceContext' from 'ServiceContextModule' instead.")
 public typealias Baggage = ServiceContext
+@available(*, deprecated, message: "Use 'ServiceContext' from 'ServiceContextModule' instead.")
 public typealias BaggageKey = ServiceContextKey
+@available(*, deprecated, message: "Use 'ServiceContext' from 'ServiceContextModule' instead.")
 public typealias AnyBaggageKey = AnyServiceContextKey

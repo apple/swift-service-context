@@ -90,7 +90,7 @@ final class ServiceContextTests: XCTestCase {
     actor SomeActor {
         var value: Int = 0
 
-        func test() async {
+        func check() async {
             ServiceContext.$current.withValue(.topLevel) {
                 value = 12 // should produce no warnings
             }

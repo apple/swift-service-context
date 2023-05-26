@@ -32,7 +32,6 @@ extension ServiceContextTests {
                 ("test_forEachIteratesOverAllServiceContextItems", test_forEachIteratesOverAllServiceContextItems),
                 ("test_TODO_doesNotCrashWithoutExplicitCompilerFlag", test_TODO_doesNotCrashWithoutExplicitCompilerFlag),
                 ("test_automaticPropagationThroughTaskLocal", test_automaticPropagationThroughTaskLocal),
-                ("test", test),
            ]
    }
 }
