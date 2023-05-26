@@ -18,6 +18,37 @@ See https://github.com/apple/swift-distributed-tracing for actual instrument typ
 deploy various cross-cutting instruments all reusing the same baggage type. More information can be found in the
 [SSWG meeting notes](https://gist.github.com/ktoso/4d160232407e4d5835b5ba700c73de37#swift-baggage-context--distributed-tracing).
 
+## Overview
+
+`ServiceContext` serves as currency type for carrying around additional contextual information between Swift tasks and functions.
+
+One generally starts from a "top level" (empty) or the "current" (`ServiceContext.current`) context and then adds values to it.
+
+The context is a value type and is propagated using task-local values so it can be safely used from concurrent contexts like this:
+
+```swift
+var context = ServiceContext.topLevel
+context[FirstTestKey.self] = 42
+
+func exampleFunction() async -> Int {
+    guard let context = ServiceContext.current {
+        return 0
+    }
+    guard let value = context[FirstTestKey.self] {
+        return 0
+    }
+    print("test = \(value)") // test = 42
+    return value
+}
+
+let c = ServiceContext.withValue(context) {
+    await exampleFunction()
+}
+assert(c == 42)
+```
+
+`ServiceContext` is a fundamental building block for how distributed tracing propagages trace identifiers.
+
 ## Dependency
 
 In order to depend on this library you can use the Swift Package Manager, and add the following dependency to your `Package.swift`:
@@ -26,7 +57,7 @@ In order to depend on this library you can use the Swift Package Manager, and ad
 dependencies: [
   .package(
     url: "https://github.com/apple/swift-service-context.git",
-    from: "0.2.0"
+    from: "1.0.0"
   )
 ]
 ```
