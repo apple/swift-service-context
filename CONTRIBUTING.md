@@ -9,8 +9,8 @@ that your contributions are licensed under the Apache 2.0 license (see
 
 Please ensure to specify the following:
 
-* Swift Distributed Tracing Baggage commit hash
-* Contextual information (e.g. what you were trying to achieve with Swift Distributed Tracing Baggage)
+* Swift Service Context commit hash
+* Contextual information (e.g. what you were trying to achieve with Swift Service Context)
 * Simplest possible steps to reproduce
     * More complex the steps are, lower the priority will be.
     * A pull request with failing test case is preferred, but it's just fine to paste the test case into the issue description.
@@ -24,7 +24,7 @@ Please ensure to specify the following:
  ```
  Commit hash: b17a8a9f0f814c01a56977680cb68d8a779c951f
  Context:
- While testing my application that uses with Swift Distributed Tracing Baggage, I noticed that ...
+ While testing my application that uses with Swift Service Context, I noticed that ...
  Steps to reproduce:
  1. ...
  2. ...
@@ -56,7 +56,7 @@ We require that your commit messages match our template. The easiest way to do t
 
 ### Run `./scripts/soundness.sh`
 
-The scripts directory contains a [soundness.sh script](https://github.com/apple/swift-distributed-tracing-baggage/blob/main/scripts/soundness.sh)
+The scripts directory contains a [soundness.sh script](https://github.com/apple/swift-service-context/blob/main/scripts/soundness.sh)
 that enforces additional checks, like license headers and formatting style.
 
 Please make sure to `./scripts/soundness.sh` before pushing a change upstream, otherwise it is likely the PR validation will fail
@@ -80,4 +80,4 @@ In the case of formatting issues, you can then `git add` the formatting changes,
 
 ## How to contribute your work
 
-Please open a pull request at https://github.com/apple/swift-distributed-tracing-baggage. Make sure the CI passes, and then wait for code review.
+Please open a pull request at https://github.com/apple/swift-service-context. Make sure the CI passes, and then wait for code review.

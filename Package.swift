@@ -1,9 +1,18 @@
 // swift-tools-version:5.6
+
 import PackageDescription
 
 let package = Package(
-    name: "swift-distributed-tracing-baggage",
+    name: "swift-service-context",
     products: [
+        .library(
+            name: "ServiceContextModule",
+            targets: [
+                "ServiceContextModule",
+            ]
+        ),
+
+        // Deprecated/legacy module
         .library(
             name: "InstrumentationBaggage",
             targets: [
@@ -15,15 +24,23 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [
-        .target(name: "InstrumentationBaggage"),
+        .target(name: "ServiceContextModule"),
+
+        // Deprecated/legacy module
+        .target(
+            name: "InstrumentationBaggage",
+            dependencies: [
+                .target(name: "ServiceContextModule"),
+            ]
+        ),
 
         // ==== --------------------------------------------------------------------------------------------------------
         // MARK: Tests
 
         .testTarget(
-            name: "InstrumentationBaggageTests",
+            name: "ServiceContextTests",
             dependencies: [
-                .target(name: "InstrumentationBaggage"),
+                .target(name: "ServiceContextModule"),
             ]
         ),
     ]

@@ -1,4 +1,4 @@
-# 🧳 Distributed Tracing: Baggage
+# Swift Service Context
 
 [![Swift 5.1](https://img.shields.io/badge/Swift-5.1-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.2](https://img.shields.io/badge/Swift-5.2-ED523F.svg?style=flat)](https://swift.org/download/)
@@ -8,11 +8,7 @@
 [![Swift 5.6](https://img.shields.io/badge/Swift-5.6-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.7](https://img.shields.io/badge/Swift-5.7-ED523F.svg?style=flat)](https://swift.org/download/)
 
-> **Warning**
-> Automatic propagation through task-locals only supported in Swift >= 5.5
-
-`Baggage` is a minimal (zero-dependency) context propagation container, intended to "carry" baggage items
-for purposes of cross-cutting tools to be built on top of it.
+`ServiceContext` is a minimal (zero-dependency) context propagation container, intended to "carry" items for purposes of cross-cutting tools to be built on top of it.
 
 It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and the
 in the spirit of [Tracing Plane](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf) 's "Baggage Context" type,
@@ -29,7 +25,7 @@ In order to depend on this library you can use the Swift Package Manager, and ad
 ```swift
 dependencies: [
   .package(
-    url: "https://github.com/apple/swift-distributed-tracing-baggage.git",
+    url: "https://github.com/apple/swift-service-context.git",
     from: "0.2.0"
   )
 ]
@@ -43,18 +39,14 @@ targets: [
         name: "MyAwesomeApp",
         dependencies: [
             .product(
-              name: "InstrumentationBaggage",
-              package: "swift-distributed-tracing-baggage"
+              name: "ServiceContextModule",
+              package: "swift-service-context"
             ),
         ]
     ),
     // ...
 ]
 ```
-
-## Documentation
-
-Please refer to in-depth discussion and documentation in the [Swift Distributed Tracing](https://github.com/apple/swift-distributed-tracing) repository.
 
 ## Contributing
 

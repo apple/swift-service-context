@@ -3,17 +3,17 @@ version: "3"
 services:
 
   runtime-setup:
-    image: swift-distributed-tracing-baggage:22.04-5.9
+    image: swift-service-context:22.04-5.9
     build:
       args:
         base_image: "swiftlang/swift:nightly-5.9-jammy"
 
 
   test:
-    image: swift-distributed-tracing-baggage:22.04-5.9
+    image: swift-service-context:22.04-5.9
     environment:
       #- SANITIZER_ARG=--sanitize=thread
       - FORCE_TEST_DISCOVERY=--enable-test-discovery
 
   shell:
-    image: swift-distributed-tracing-baggage:22.04-5.9
+    image: swift-service-context:22.04-5.9

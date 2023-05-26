@@ -1,9 +1,9 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Distributed Tracing Baggage
+// This source file is part of the Swift Service Context
 // open source project
 //
-// Copyright (c) 2020-2022 Apple Inc. and the Swift Distributed Tracing Baggage
+// Copyright (c) 2020-2022 Apple Inc. and the Swift Service Context
 // project authors
 // Licensed under Apache License v2.0
 //
@@ -13,15 +13,15 @@
 //
 //===----------------------------------------------------------------------===//
 
-/// Baggage keys provide type-safe access to ``Baggage``s by declaring the type of value they "key" at compile-time.
-/// To give your `BaggageKey` an explicit name you may override the ``BaggageKey/nameOverride-2upe8`` property.
+/// Baggage keys provide type-safe access to ``ServiceContext``s by declaring the type of value they "key" at compile-time.
+/// To give your `ServiceContextKey` an explicit name you may override the ``ServiceContextKey/nameOverride-2upe8`` property.
 ///
-/// In general, `BaggageKey`s should be `internal` or `private` to the part of a system using it.
+/// In general, `ServiceContextKey`s should be `internal` or `private` to the part of a system using it.
 ///
-/// All access to baggage items should be performed through an accessor computed property defined as shown below:
+/// All access to context items should be performed through an accessor computed property defined as shown below:
 ///
 ///     /// The Key type should be internal (or private).
-///     enum TestIDKey: BaggageKey {
+///     enum TestIDKey: ServiceContextKey {
 ///         typealias Value = String
 ///         static var nameOverride: String? { "test-id" }
 ///     }
@@ -39,30 +39,30 @@
 ///     }
 ///
 /// This pattern allows library authors fine-grained control over which values may be set, and which only get by end-users.
-public protocol BaggageKey: _Baggage_Sendable {
+public protocol ServiceContextKey: _ServiceContext_Sendable {
     /// The type of value uniquely identified by this key.
-    associatedtype Value: _Baggage_Sendable
+    associatedtype Value: _ServiceContext_Sendable
 
     /// The human-readable name of this key.
     /// This name will be used instead of the type name when a value is printed.
     ///
-    /// It MAY also be picked up by an instrument (from Swift Tracing) which serializes baggage items and e.g. used as
+    /// It MAY also be picked up by an instrument (from Swift Tracing) which serializes context items and e.g. used as
     /// header name for carried metadata. Though generally speaking header names are NOT required to use the nameOverride,
     /// and MAY use their well known names for header names etc, as it depends on the specific transport and instrument used.
     ///
-    /// For example, a baggage key representing the W3C "trace-state" header may want to return "trace-state" here,
-    /// in order to achieve a consistent look and feel of this baggage item throughout logging and tracing systems.
+    /// For example, a context key representing the W3C "trace-state" header may want to return "trace-state" here,
+    /// in order to achieve a consistent look and feel of this context item throughout logging and tracing systems.
     ///
     /// Defaults to `nil`.
     static var nameOverride: String? { get }
 }
 
-extension BaggageKey {
+extension ServiceContextKey {
     public static var nameOverride: String? { nil }
 }
 
-/// A type-erased ``BaggageKey`` used when iterating through the ``Baggage`` using its `forEach` method.
-public struct AnyBaggageKey: _Baggage_Sendable {
+/// A type-erased ``ServiceContextKey`` used when iterating through the ``ServiceContext`` using its `forEach` method.
+public struct AnyServiceContextKey: _ServiceContext_Sendable {
     /// The key's type represented erased to an `Any.Type`.
     public let keyType: Any.Type
 
@@ -74,14 +74,14 @@ public struct AnyBaggageKey: _Baggage_Sendable {
         self._nameOverride ?? String(describing: self.keyType.self)
     }
 
-    init<Key: BaggageKey>(_ keyType: Key.Type) {
+    init<Key: ServiceContextKey>(_ keyType: Key.Type) {
         self.keyType = keyType
         self._nameOverride = keyType.nameOverride
     }
 }
 
-extension AnyBaggageKey: Hashable {
-    public static func == (lhs: AnyBaggageKey, rhs: AnyBaggageKey) -> Bool {
+extension AnyServiceContextKey: Hashable {
+    public static func == (lhs: AnyServiceContextKey, rhs: AnyServiceContextKey) -> Bool {
         ObjectIdentifier(lhs.keyType) == ObjectIdentifier(rhs.keyType)
     }
 

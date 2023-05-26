@@ -6,13 +6,13 @@ version: "3"
 services:
 
   runtime-setup:
-    image: swift-distributed-tracing-baggage:default
+    image: swift-service-context:default
     build:
       context: .
       dockerfile: Dockerfile
 
   common: &common
-    image: swift-distributed-tracing-baggage:default
+    image: swift-service-context:default
     depends_on: [runtime-setup]
     volumes:
       - ~/.ssh:/root/.ssh
