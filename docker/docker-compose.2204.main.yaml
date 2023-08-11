@@ -14,6 +14,7 @@ services:
     environment:
       #- SANITIZER_ARG=--sanitize=thread
       - FORCE_TEST_DISCOVERY=--enable-test-discovery
+      - STRICT_CONCURRENCY_ARG=-Xswiftc -strict-concurrency=complete
 
   shell:
     image: swift-service-context:22.04-main
