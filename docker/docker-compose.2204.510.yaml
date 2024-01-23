@@ -3,18 +3,18 @@ version: "3"
 services:
 
   runtime-setup:
-    image: swift-service-context:22.04-5.9
+    image: swift-service-context:22.04-5.10
     build:
       args:
-        ubuntu_version: "jammy"
-        swift_version: "5.9"
+        base_image: "swiftlang/swift:nightly-5.10-jammy"
+
 
   test:
-    image: swift-service-context:22.04-5.9
+    image: swift-service-context:22.04-5.10
     environment:
       #- SANITIZER_ARG=--sanitize=thread
       - FORCE_TEST_DISCOVERY=--enable-test-discovery
       - STRICT_CONCURRENCY_ARG=-Xswiftc -strict-concurrency=complete
 
   shell:
-    image: swift-service-context:22.04-5.9
+    image: swift-service-context:22.04-5.10
