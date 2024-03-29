@@ -14,9 +14,9 @@
 //===----------------------------------------------------------------------===//
 
 /// Baggage keys provide type-safe access to ``ServiceContext``s by declaring the type of value they "key" at compile-time.
-/// To give your `ServiceContextKey` an explicit name you may override the ``ServiceContextKey/nameOverride-2upe8`` property.
+/// To give your `ServiceContextKey` an explicit name, override the ``ServiceContextKey/nameOverride-6shk1`` property.
 ///
-/// In general, `ServiceContextKey`s should be `internal` or `private` to the part of a system using it.
+/// In general, any `ServiceContextKey` should be `internal` or `private` to the part of a system using it.
 ///
 /// All access to context items should be performed through an accessor computed property defined as shown below:
 ///
@@ -63,7 +63,7 @@ extension ServiceContextKey {
 
 /// A type-erased ``ServiceContextKey`` used when iterating through the ``ServiceContext`` using its `forEach` method.
 public struct AnyServiceContextKey: _ServiceContext_Sendable {
-    /// The key's type represented erased to an `Any.Type`.
+    /// The key's type erased to `Any.Type`.
     public let keyType: Any.Type
 
     private let _nameOverride: String?
