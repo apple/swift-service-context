@@ -233,7 +233,7 @@ extension ServiceContext {
 #if swift(>=5.5) && canImport(_Concurrency)
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension ServiceContext {
-    /// A `ServiceContext` is propagated through task-local storage. This API enables binding a top-level `ServiceContext` and
+    /// A `ServiceContext` is automatically propagated through task-local storage. This API enables binding a top-level `ServiceContext` and
     /// implicitly passes it to child tasks when using structured concurrency.
     @TaskLocal public static var current: ServiceContext?
 
