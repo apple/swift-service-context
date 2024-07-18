@@ -39,9 +39,9 @@
 ///     }
 ///
 /// This pattern allows library authors fine-grained control over which values may be set, and which only get by end-users.
-public protocol ServiceContextKey: _ServiceContext_Sendable {
+public protocol ServiceContextKey: Sendable {
     /// The type of value uniquely identified by this key.
-    associatedtype Value: _ServiceContext_Sendable
+    associatedtype Value: Sendable
 
     /// The human-readable name of this key.
     /// This name will be used instead of the type name when a value is printed.
@@ -62,7 +62,7 @@ extension ServiceContextKey {
 }
 
 /// A type-erased ``ServiceContextKey`` used when iterating through the ``ServiceContext`` using its `forEach` method.
-public struct AnyServiceContextKey: _ServiceContext_Sendable {
+public struct AnyServiceContextKey: Sendable {
     /// The key's type erased to `Any.Type`.
     public let keyType: Any.Type
 

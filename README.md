@@ -1,12 +1,10 @@
 # Swift Service Context
 
-[![Swift 5.1](https://img.shields.io/badge/Swift-5.1-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 5.2](https://img.shields.io/badge/Swift-5.2-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 5.3](https://img.shields.io/badge/Swift-5.3-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 5.4](https://img.shields.io/badge/Swift-5.4-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 5.5](https://img.shields.io/badge/Swift-5.5-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 5.6](https://img.shields.io/badge/Swift-5.6-ED523F.svg?style=flat)](https://swift.org/download/)
 [![Swift 5.7](https://img.shields.io/badge/Swift-5.7-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.8](https://img.shields.io/badge/Swift-5.8-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.9](https://img.shields.io/badge/Swift-5.9-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 5.10](https://img.shields.io/badge/Swift-5.10-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 6.0](https://img.shields.io/badge/Swift-5.10-ED523F.svg?style=flat)](https://swift.org/download/)+
 
 `ServiceContext` is a minimal (zero-dependency) context propagation container, intended to "carry" items for purposes of cross-cutting tools to be built on top of it.
 

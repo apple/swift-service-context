@@ -13,12 +13,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if swift(>=5.5) && canImport(_Concurrency)
-public typealias _ServiceContext_Sendable = Swift.Sendable
-#else
-public typealias _ServiceContext_Sendable = Any
-#endif
-
 /// A `ServiceContext` is a heterogeneous storage type with value semantics for keyed values in a type-safe fashion.
 ///
 /// Its values are uniquely identified via ``ServiceContextKey``s (by type identity). These keys also dictate the type of
@@ -71,8 +65,8 @@ public typealias _ServiceContext_Sendable = Any
 /// `ServiceContext` does not expose more functions on purpose to prevent abuse and treating it as too much of an
 /// arbitrary value smuggling container, but only make it convenient for tracing and instrumentation systems which need
 /// to access either specific or all items carried inside a baggage.
-public struct ServiceContext: _ServiceContext_Sendable {
-    private var _storage = [AnyServiceContextKey: _ServiceContext_Sendable]()
+public struct ServiceContext: Sendable {
+    private var _storage = [AnyServiceContextKey: Sendable]()
 
     /// Internal on purpose, please use ``ServiceContext/TODO(_:function:file:line:)`` or ``ServiceContext/topLevel`` to create an "empty" baggage,
     /// which carries more meaning to other developers why an empty baggage was used.
@@ -157,7 +151,7 @@ extension ServiceContext {
 
 /// Carried automatically by a "to do" baggage.
 /// It can be used to track where a baggage originated and which "to do" baggage must be fixed into a real one to avoid this.
-public struct TODOLocation: _ServiceContext_Sendable {
+public struct TODOLocation: Sendable {
     /// Source file location where the to-do ``ServiceContext`` was created
     public let file: String
     /// Source line location where the to-do ``ServiceContext`` was created
@@ -230,7 +224,6 @@ extension ServiceContext {
 
 // MARK: - Propagating ServiceContext
 
-#if swift(>=5.5) && canImport(_Concurrency)
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension ServiceContext {
     /// A `ServiceContext` is automatically propagated through task-local storage. This API enables binding a top-level `ServiceContext` and
@@ -251,15 +244,16 @@ extension ServiceContext {
     /// To access the task-local value, use `ServiceContext.current`.
     ///
     /// SeeAlso: [Swift Task Locals](https://developer.apple.com/documentation/swift/tasklocal)
-    #if swift(>=5.7)
-    @_unsafeInheritExecutor // same as withValue declared in the stdlib; because we do not want to hop off the executor at all
+#if swift(>=6.0)
+    public static func withValue<T>(_ value: ServiceContext?,
+                                    isolation: isolated (any Actor)? = #isolation,
+                                    operation: () async throws -> T) async rethrows -> T {
+        try await ServiceContext.$current.withValue(value, operation: operation)
+    }
+#else
+    @_unsafeInheritExecutor // Deprecated trick to avoid executor hop here; 6.0 introduces the proper replacement: #isolation
     public static func withValue<T>(_ value: ServiceContext?, operation: () async throws -> T) async rethrows -> T {
         try await ServiceContext.$current.withValue(value, operation: operation)
     }
-    #else
-    public static func withValue<T>(_ value: ServiceContext?, operation: () async throws -> T) async rethrows -> T {
-        try await ServiceContext.$current.withValue(value, operation: operation)
-    }
-    #endif
-}
 #endif
+}
