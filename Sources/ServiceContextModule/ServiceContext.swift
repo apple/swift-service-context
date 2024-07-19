@@ -244,7 +244,6 @@ extension ServiceContext {
     /// To access the task-local value, use `ServiceContext.current`.
     ///
     /// SeeAlso: [Swift Task Locals](https://developer.apple.com/documentation/swift/tasklocal)
-    #if swift(>=6.0)
     public static func withValue<T>(_ value: ServiceContext?,
                                     isolation: isolated(any Actor)? = #isolation,
                                     operation: () async throws -> T) async rethrows -> T
