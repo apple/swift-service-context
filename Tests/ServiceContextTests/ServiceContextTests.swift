@@ -1,13 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Service Context
-// open source project
+// This source file is part of the Swift Service Context open source project
 //
-// Copyright (c) 2020-2021 Apple Inc. and the Swift Service Context
-// project authors
+// Copyright (c) 2020-2021 Apple Inc. and the Swift Service Context project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
+// See CONTRIBUTORS.txt for the list of Swift Service Context project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -46,6 +45,7 @@ final class ServiceContextTests: XCTestCase {
         context[ThirdTestKey.self] = "test"
 
         var contextItems = [AnyServiceContextKey: Any]()
+        // swift-format-ignore: ReplaceForEachWithForLoop
         context.forEach { key, value in
             contextItems[key] = value
         }
@@ -63,7 +63,6 @@ final class ServiceContextTests: XCTestCase {
     }
 
     func test_automaticPropagationThroughTaskLocal() throws {
-        #if compiler(>=5.5)
         guard #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) else {
             throw XCTSkip("Task locals are not supported on this platform.")
         }
@@ -83,23 +82,20 @@ final class ServiceContextTests: XCTestCase {
 
         XCTAssertEqual(propagatedServiceContext?.count, 1)
         XCTAssertEqual(propagatedServiceContext?[FirstTestKey.self], 42)
-        #endif
     }
 
-    #if swift(>=5.7)
     actor SomeActor {
         var value: Int = 0
 
         func check() async {
             ServiceContext.$current.withValue(.topLevel) {
-                value = 12 // should produce no warnings
+                value = 12  // should produce no warnings
             }
             ServiceContext.withValue(.topLevel) {
-                value = 12 // should produce no warnings
+                value = 12  // should produce no warnings
             }
         }
     }
-    #endif
 
     private enum FirstTestKey: ServiceContextKey {
         typealias Value = Int

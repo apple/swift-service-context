@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:5.9
 
 import PackageDescription
 
@@ -8,7 +8,7 @@ let package = Package(
         .library(
             name: "ServiceContextModule",
             targets: [
-                "ServiceContextModule",
+                "ServiceContextModule"
             ]
         ),
 
@@ -16,12 +16,9 @@ let package = Package(
         .library(
             name: "InstrumentationBaggage",
             targets: [
-                "InstrumentationBaggage",
+                "InstrumentationBaggage"
             ]
         ),
-    ],
-    dependencies: [
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [
         .target(name: "ServiceContextModule"),
@@ -30,7 +27,7 @@ let package = Package(
         .target(
             name: "InstrumentationBaggage",
             dependencies: [
-                .target(name: "ServiceContextModule"),
+                .target(name: "ServiceContextModule")
             ]
         ),
 
@@ -40,7 +37,7 @@ let package = Package(
         .testTarget(
             name: "ServiceContextTests",
             dependencies: [
-                .target(name: "ServiceContextModule"),
+                .target(name: "ServiceContextModule")
             ]
         ),
     ]
