@@ -45,7 +45,7 @@ let c = ServiceContext.withValue(context) {
 assert(c == 42)
 ```
 
-`ServiceContext` is a fundamental building block for how distributed tracing propagages trace identifiers.
+`ServiceContext` is a fundamental building block for how distributed tracing propagates trace identifiers.
 
 ## Dependency
 
