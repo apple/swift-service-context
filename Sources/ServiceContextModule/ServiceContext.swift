@@ -1,13 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Service Context
-// open source project
+// This source file is part of the Swift Service Context open source project
 //
-// Copyright (c) 2020-2022 Apple Inc. and the Swift Service Context
-// project authors
+// Copyright (c) 2020-2022 Apple Inc. and the Swift Service Context project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
+// See CONTRIBUTORS.txt for the list of Swift Service Context project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -125,6 +124,9 @@ extension ServiceContext {
     ///
     /// - Parameters:
     ///   - reason: Informational reason for developers, why a placeholder context was used instead of a proper one,
+    ///   - function: The function to which the TODO refers.
+    ///   - file: The file to which the TODO refers.
+    ///   - line: The line to which the TODO refers.
     /// - Returns: Empty "to-do" baggage which should be eventually replaced with a carried through one, or `topLevel`.
     public static func TODO(
         _ reason: StaticString? = "",
@@ -216,6 +218,7 @@ extension ServiceContext {
     /// - Parameter body: The closure to be invoked for each item stored in this `ServiceContext`,
     /// passing the type-erased key and the associated value.
     public func forEach(_ body: (AnyServiceContextKey, Any) throws -> Void) rethrows {
+        // swift-format-ignore: ReplaceForEachWithForLoop
         try self._storage.forEach { key, value in
             try body(key, value)
         }
@@ -239,24 +242,32 @@ extension ServiceContext {
         try ServiceContext.$current.withValue(value, operation: operation)
     }
 
+    #if compiler(>=6.0)
     /// Convenience API to bind the task-local ``ServiceContext/current`` to the passed `value`, and execute the passed `operation`.
     ///
     /// To access the task-local value, use `ServiceContext.current`.
     ///
     /// SeeAlso: [Swift Task Locals](https://developer.apple.com/documentation/swift/tasklocal)
-    #if swift(>=6.0)
-    public static func withValue<T>(_ value: ServiceContext?,
-                                    isolation: isolated(any Actor)? = #isolation,
-                                    operation: () async throws -> T) async rethrows -> T
-    {
+    public static func withValue<T>(
+        _ value: ServiceContext?,
+        isolation: isolated (any Actor)? = #isolation,
+        operation: () async throws -> T
+    ) async rethrows -> T {
         try await ServiceContext.$current.withValue(value, operation: operation)
     }
-    #endif
 
-    @available(*, deprecated, message: "Prefer withValue(_:isolation:operation:)")
+    @available(*, deprecated, message: "Use the method with the isolation parameter instead.")
     @_disfavoredOverload
-    @_unsafeInheritExecutor // Deprecated trick to avoid executor hop here; 6.0 introduces the proper replacement: #isolation
     public static func withValue<T>(_ value: ServiceContext?, operation: () async throws -> T) async rethrows -> T {
         try await ServiceContext.$current.withValue(value, operation: operation)
     }
+    #else
+    // Deprecated trick to avoid executor hop here; 6.0 introduces the proper replacement: #isolation
+    @available(*, deprecated, message: "Prefer withValue(_:isolation:operation:)")
+    @_disfavoredOverload
+    @_unsafeInheritExecutor
+    public static func withValue<T>(_ value: ServiceContext?, operation: () async throws -> T) async rethrows -> T {
+        try await ServiceContext.$current.withValue(value, operation: operation)
+    }
+    #endif
 }
