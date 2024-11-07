@@ -86,7 +86,6 @@ final class ServiceContextTests: XCTestCase {
         #endif
     }
 
-    #if swift(>=5.7)
     actor SomeActor {
         var value: Int = 0
 
@@ -97,9 +96,11 @@ final class ServiceContextTests: XCTestCase {
             ServiceContext.withValue(.topLevel) {
                 value = 12 // should produce no warnings
             }
+            await ServiceContext.withValue(.topLevel) { () async in
+                value = 12 // should produce no warnings
+            }
         }
     }
-    #endif
 
     private enum FirstTestKey: ServiceContextKey {
         typealias Value = Int
