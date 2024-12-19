@@ -257,14 +257,12 @@ extension ServiceContext {
     }
 
     @available(*, deprecated, message: "Use the method with the isolation parameter instead.")
+    // Deprecated trick to avoid executor hop here; 6.0 introduces the proper replacement: #isolation
     @_disfavoredOverload
     public static func withValue<T>(_ value: ServiceContext?, operation: () async throws -> T) async rethrows -> T {
         try await ServiceContext.$current.withValue(value, operation: operation)
     }
     #else
-    // Deprecated trick to avoid executor hop here; 6.0 introduces the proper replacement: #isolation
-    @available(*, deprecated, message: "Prefer withValue(_:isolation:operation:)")
-    @_disfavoredOverload
     @_unsafeInheritExecutor
     public static func withValue<T>(_ value: ServiceContext?, operation: () async throws -> T) async rethrows -> T {
         try await ServiceContext.$current.withValue(value, operation: operation)
