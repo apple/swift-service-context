@@ -76,14 +76,3 @@ targets: [
     // ...
 ]
 ```
-
-## Contributing
-
-Please make sure to run the `./scripts/soundness.sh` script when contributing, it checks formatting and similar things.
-
-You can ensure it always runs and passes before you push by installing a pre-push hook with git:
-
-```
-echo './scripts/soundness.sh' > .git/hooks/pre-push
-chmod +x .git/hooks/pre-push
-```

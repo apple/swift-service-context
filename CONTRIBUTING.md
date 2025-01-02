@@ -48,13 +48,6 @@ A good patch is:
 3. Documented, adding API documentation as needed to cover new functions and properties.
 4. Accompanied by a great commit message, using our commit message template.
 
-### Commit Message Template
-
-We require that your commit messages match our template. The easiest way to do that is to get git to help you by explicitly using the template. To do that, `cd` to the root of our repository and run:
-
-     git config commit.template dev/git.commit.template
-
-
 ### Run CI checks locally
 
 You can run the Github Actions workflows locally using [act](https://github.com/nektos/act). For detailed steps on how to do this please see [https://github.com/swiftlang/github-workflows?tab=readme-ov-file#running-workflows-locally](https://github.com/swiftlang/github-workflows?tab=readme-ov-file#running-workflows-locally).

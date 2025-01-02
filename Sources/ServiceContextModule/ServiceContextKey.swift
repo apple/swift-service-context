@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-/// Baggage keys provide type-safe access to ``ServiceContext``s by declaring the type of value they "key" at compile-time.
+/// Context keys provide type-safe access to ``ServiceContext``s by declaring the type of value they "key" at compile-time.
 /// To give your `ServiceContextKey` an explicit name, override the ``ServiceContextKey/nameOverride-6shk1`` property.
 ///
 /// In general, any `ServiceContextKey` should be `internal` or `private` to the part of a system using it.
@@ -25,7 +25,7 @@
 ///         static var nameOverride: String? { "test-id" }
 ///     }
 ///
-///     extension Baggage {
+///     extension ServiceContext {
 ///         /// This is some useful property documentation.
 ///         public internal(set) var testID: String? {
 ///             get {
