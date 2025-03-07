@@ -29,17 +29,17 @@ var context = ServiceContext.topLevel
 context[FirstTestKey.self] = 42
 
 func exampleFunction() async -> Int {
-    guard let context = ServiceContext.current {
+    guard let context = ServiceContext.current else {
         return 0
     }
-    guard let value = context[FirstTestKey.self] {
+    guard let value = context[FirstTestKey.self] else {
         return 0
     }
     print("test = \(value)") // test = 42
     return value
 }
 
-let c = ServiceContext.withValue(context) {
+let c = await ServiceContext.withValue(context) {
     await exampleFunction()
 }
 assert(c == 42)
