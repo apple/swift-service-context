@@ -94,6 +94,9 @@ final class ServiceContextTests: XCTestCase {
             ServiceContext.withValue(.topLevel) {
                 value = 12  // should produce no warnings
             }
+            await ServiceContext.withValue(.topLevel) { () async in
+                value = 12  // should produce no warnings
+            }
         }
     }
 
