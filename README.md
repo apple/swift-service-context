@@ -8,7 +8,7 @@
 
 `ServiceContext` is a minimal (zero-dependency) context propagation container, intended to "carry" items for purposes of cross-cutting tools to be built on top of it.
 
-It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and the
+It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and 
 in the spirit of [Tracing Plane](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf) 's "Baggage Context" type,
 although by itself it does not define a specific serialization format.
 
