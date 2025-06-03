@@ -219,7 +219,8 @@ extension ServiceContext {
     ///
     /// - Parameter body: The closure to be invoked for each item stored in this `ServiceContext`,
     /// passing the type-erased key and the associated value.
-    public func forEach(_ body: (AnyServiceContextKey, Any) throws -> Void) rethrows {
+    @preconcurrency
+    public func forEach(_ body: (AnyServiceContextKey, any Sendable) throws -> Void) rethrows {
         // swift-format-ignore: ReplaceForEachWithForLoop
         try self._storage.forEach { key, value in
             try body(key, value)
