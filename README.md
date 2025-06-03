@@ -8,7 +8,7 @@
 
 `ServiceContext` is a minimal (zero-dependency) context propagation container, intended to "carry" items for purposes of cross-cutting tools to be built on top of it.
 
-It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and the
+It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and 
 in the spirit of [Tracing Plane](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf) 's "Baggage Context" type,
 although by itself it does not define a specific serialization format.
 
@@ -29,17 +29,17 @@ var context = ServiceContext.topLevel
 context[FirstTestKey.self] = 42
 
 func exampleFunction() async -> Int {
-    guard let context = ServiceContext.current {
+    guard let context = ServiceContext.current else {
         return 0
     }
-    guard let value = context[FirstTestKey.self] {
+    guard let value = context[FirstTestKey.self] else {
         return 0
     }
     print("test = \(value)") // test = 42
     return value
 }
 
-let c = ServiceContext.withValue(context) {
+let c = await ServiceContext.withValue(context) {
     await exampleFunction()
 }
 assert(c == 42)
@@ -75,15 +75,4 @@ targets: [
     ),
     // ...
 ]
-```
-
-## Contributing
-
-Please make sure to run the `./scripts/soundness.sh` script when contributing, it checks formatting and similar things.
-
-You can ensure it always runs and passes before you push by installing a pre-push hook with git:
-
-```
-echo './scripts/soundness.sh' > .git/hooks/pre-push
-chmod +x .git/hooks/pre-push
 ```
