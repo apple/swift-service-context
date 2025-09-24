@@ -96,7 +96,7 @@ extension AnyServiceContextKey: Hashable {
     public static func == (lhs: AnyServiceContextKey, rhs: AnyServiceContextKey) -> Bool {
         ObjectIdentifier(lhs.keyType) == ObjectIdentifier(rhs.keyType)
     }
-    
+
     /// Hashes the essential components of this value by feeding them into the given hasher.
     /// - Parameter hasher: The hasher to use when combining the components of this instance.
     public func hash(into hasher: inout Hasher) {
