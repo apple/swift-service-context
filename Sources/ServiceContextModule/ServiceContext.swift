@@ -12,58 +12,67 @@
 //
 //===----------------------------------------------------------------------===//
 
-/// A `ServiceContext` is a heterogeneous storage type with value semantics for keyed values in a type-safe fashion.
+/// A Service Context is a heterogeneous storage type with value semantics that provides keyed values in a type-safe fashion.
 ///
-/// Its values are uniquely identified via ``ServiceContextKey``s (by type identity). These keys also dictate the type of
-/// value allowed for a specific key-value pair through their associated type `Value`.
+/// Its values are uniquely identified with ``ServiceContextKey``,  by type identity.
+/// These keys also dictate the type of value allowed for a specific key-value pair through their associated type `Value`.
 ///
-/// ## Defining keys and accessing values
-/// ServiceContext keys are defined as types, most commonly case-less enums (as no actual instances are required)
-/// which conform to the ``ServiceContextKey`` protocol:
+/// ### Defining keys and accessing values
+/// Define ``ServiceContext`` keys as types  which conform to the ``ServiceContextKey`` protocol:
+/// Specify the types using case-less enums as no actual instances are required.
 ///
-///     private enum TestIDKey: ServiceContextKey {
-///       typealias Value = String
-///     }
+/// ```swift
+/// private enum TestIDKey: ServiceContextKey {
+///   typealias Value = String
+/// }
+/// ```
 ///
-/// While defining a key, one should also immediately declare an extension on `ServiceContext` to allow convenient and discoverable ways to interact
+/// When defining a key, also declare an extension on `ServiceContext` to allow convenient and discoverable ways to interact
 /// with the context item. The extension should take the form of:
 ///
-///     extension ServiceContext {
-///       var testID: String? {
-///         get {
-///           self[TestIDKey.self]
-///         } set {
-///           self[TestIDKey.self] = newValue
-///         }
-///       }
+///  ```swift
+/// extension ServiceContext {
+///   var testID: String? {
+///     get {
+///       self[TestIDKey.self]
+///     } set {
+///       self[TestIDKey.self] = newValue
 ///     }
+///   }
+/// }
+/// ```
 ///
-/// For consistency, it is recommended to name key types with the `...Key` suffix (e.g. `SomethingKey`) and the property
-/// used to access a value identifier by such key the prefix of the key (e.g. `something`). Please also observe the usual
-/// Swift naming conventions, e.g. prefer `ID` to `Id` etc.
+/// For consistency, name key types with a `...Key` suffix (for example, `SomethingKey`) and the property
+/// used to access a value identifier by such key the prefix of the key (for example `something`).
+/// Please also observe the usual Swift naming conventions, such as prefering `ID` to `Id`, and so on.
 ///
-/// ## Usage
+/// ### Usage
 /// Using a context container is fairly straight forward, as it boils down to using the prepared computed properties:
 ///
-///     var context = ServiceContext.topLevel
-///     // set a new value
-///     context.testID = "abc"
-///     // retrieve a stored value
-///     let testID = context.testID ?? "default"
-///     // remove a stored value
-///     context.testIDKey = nil
+/// ```swift
+/// var context = ServiceContext.topLevel
 ///
-/// Note that normally a context should not be "created" ad-hoc by user code, but rather it should be passed to it from
-/// a runtime. A `ServiceContext` may already be available to you through ServiceContext.$current when using structured concurrency.
+/// // set a new value
+/// context.testID = "abc"
+///
+/// // retrieve a stored value
+/// let testID = context.testID ?? "default"
+///
+/// // remove a stored value
+/// context.testIDKey = nil
+/// ```
+///
+/// Note that normally a context should not be "created" ad-hoc by user code, but rather passed to it from
+/// a runtime. A `ServiceContext` may already be available to you through `ServiceContext.$current` when using structured concurrency.
 /// Otherwise, for example when working in an HTTP server framework, it is most likely that the context is already passed
-/// directly or indirectly (e.g. in a `FrameworkContext`).
+/// directly or indirectly (such as in a `FrameworkContext`).
 ///
 /// ### Accessing all values
 ///
-/// The only way to access "all" values in a context is by using the `forEach` function.
-/// `ServiceContext` does not expose more functions on purpose to prevent abuse and treating it as too much of an
-/// arbitrary value smuggling container, but only make it convenient for tracing and instrumentation systems which need
-/// to access either specific or all items carried inside a context.
+/// The only way to access "all" values in a context is the `forEach` function.
+/// `ServiceContext` intentionally doesn't expose more functions to prevent abuse and developers treating it as too much of an
+/// arbitrary value smuggling container.
+/// This makes it convenient for tracing and instrumentation systems which need to access either specific or all items carried inside a context.
 public struct ServiceContext: Sendable {
     private var _storage = [AnyServiceContextKey: Sendable]()
 
@@ -75,28 +84,31 @@ public struct ServiceContext: Sendable {
 // MARK: - Creating ServiceContext
 
 extension ServiceContext {
-    /// Creates a new empty "top level" context, generally used as an "initial" context to immediately be populated with
-    /// some values by a framework or runtime. Another use case is for tasks starting in the "background" (e.g. on a timer),
-    /// which don't have a "request context" per se that they can pick up, and as such they have to create a "top level"
+    /// Creates a new empty top level context.
+    ///
+    /// Generally used as an initial context to immediately be populated with some values by a framework or runtime.
+    ///
+    /// Another use case is for tasks starting in the "background" (such as on a timer),
+    /// which don't have a "request context" that they can pick up, and as such they have to create a "top level"
     /// context for their work.
     ///
-    /// ## Usage in frameworks and libraries
-    /// This function is really only intended to be used by frameworks and libraries, at the "top-level" where a request's,
-    /// message's or task's processing is initiated. For example, a framework handling requests, should create an empty
-    /// context when handling a request only to immediately populate it with useful trace information extracted from e.g.
-    /// request headers.
+    /// ### Usage in frameworks and libraries
+    /// This function is intended to be used by frameworks and libraries, at the "top-level" where a request's,
+    /// message's, or task's processing is initiated. For example, a framework handling requests should create an empty
+    /// context when handling a request and immediately populate it with useful trace information extracted from a carrier,
+    /// such as an HTTP request and the request's headers.
     ///
-    /// ## Usage in applications
+    /// ### Usage in applications
     /// Application code should never have to create an empty context during the processing lifetime of any request,
-    /// and only should create context if some processing is performed in the background - thus the naming of this property.
+    /// and only create context if some processing is performed in the background - thus the naming of this property.
     ///
     /// Usually, a framework such as an HTTP server or similar "request handler" would already provide users
-    /// with a context to be passed along through subsequent calls, either implicitly through the task-local `ServiceContext.$current`
+    /// with a context to pass along through subsequent calls, either implicitly through the task-local `ServiceContext.$current`
     /// or explicitly as part of some kind of "FrameworkContext".
     ///
-    /// If unsure where to obtain a context from, prefer using `.TODO("Not sure where I should get a context from here?")`
-    /// in order to inform other developers that the lack of context passing was not done on purpose, but rather because either
-    /// not being sure where to obtain a context from, or other framework limitations -- e.g. the outer framework not being
+    /// If you are unsure where to obtain a context from, prefer using `.TODO("Not sure where I should get a context from here?")`
+    /// in order to inform other developers that the lack of context passing was not done on purpose, but rather because you either
+    /// weren't sure where to obtain a context from, or other framework limitations -- for example the outer framework not being
     /// context aware just yet.
     public static var topLevel: ServiceContext {
         ServiceContext()
@@ -106,24 +118,26 @@ extension ServiceContext {
 extension ServiceContext {
     /// A context intended as a placeholder until a real value can be passed through a function call.
     ///
-    /// It should ONLY be used while prototyping or when the passing of the proper context is not yet possible,
-    /// e.g. because an external library did not pass it correctly and has to be fixed before the proper context
+    /// This type should ONLY be used while prototyping or when the passing of the proper context is not yet possible,
+    /// for example because an external library did not pass it correctly and has to be fixed before the proper context
     /// can be obtained where the TO-DO is currently used.
     ///
-    /// ## Crashing on TO-DO context creation
-    /// You may set the `SERVICE_CONTEXT_CRASH_TODOS` variable while compiling a project in order to make calls to this function crash
-    /// with a fatal error, indicating where a to-do context was used. This comes in handy when wanting to ensure that
+    /// ### Crashing on TO-DO context creation
+    /// You may set the `SERVICE_CONTEXT_CRASH_TODOS` swift definition while compiling a project in order to make calls to this function crash
+    /// with a fatal error, which indicates where a to-do context is used. This comes in handy when you want to ensure that
     /// a project never ends up using code which initially was written as "was lazy, did not pass context", yet the
     /// project requires context passing to be done correctly throughout the application. Similar checks can be performed
     /// at compile time easily using linters (not yet implemented), since it is always valid enough to detect a to-do context
     /// being passed as illegal and warn or error when spotted.
     ///
-    /// ## Example
+    /// ### Example
     ///
-    ///     let context = ServiceContext.TODO("The framework XYZ should be modified to pass us a context here, and we'd pass it along"))
+    /// ```swift
+    /// let context = ServiceContext.TODO("The framework XYZ should be modified to pass us a context here, and we'd pass it along"))
+    /// ```
     ///
     /// - Parameters:
-    ///   - reason: Informational reason for developers, why a placeholder context was used instead of a proper one,
+    ///   - reason: Informational reason for developers, why a placeholder context was used instead of a proper one.
     ///   - function: The function to which the TODO refers.
     ///   - file: The file to which the TODO refers.
     ///   - line: The line to which the TODO refers.
@@ -154,6 +168,7 @@ extension ServiceContext {
 }
 
 /// Carried automatically by a "to do" context.
+///
 /// It can be used to track where a context originated and which "to do" context must be fixed into a real one to avoid this.
 public struct TODOLocation: Sendable {
     /// Source file location where the to-do ``ServiceContext`` was created
@@ -166,30 +181,33 @@ public struct TODOLocation: Sendable {
 
 extension ServiceContext {
     /// Provides type-safe access to the context's values.
-    /// This API should ONLY be used inside of accessor implementations.
+    ///
+    /// > Note: This API should ONLY be used inside of accessor implementations.
     ///
     /// End users should use "accessors" the key's author MUST define rather than using this subscript, following this pattern:
     ///
-    ///     internal enum TestID: ServiceContext.Key {
-    ///         typealias Value = TestID
-    ///     }
+    /// ```swift
+    /// internal enum TestID: ServiceContext.Key {
+    ///     typealias Value = TestID
+    /// }
     ///
-    ///     extension ServiceContext {
-    ///         public internal(set) var testID: TestID? {
-    ///             get {
-    ///                 self[TestIDKey.self]
-    ///             }
-    ///             set {
-    ///                 self[TestIDKey.self] = newValue
-    ///             }
+    /// extension ServiceContext {
+    ///     public internal(set) var testID: TestID? {
+    ///         get {
+    ///             self[TestIDKey.self]
+    ///         }
+    ///         set {
+    ///             self[TestIDKey.self] = newValue
     ///         }
     ///     }
+    /// }
+    /// ```
     ///
     /// This is in order to enforce a consistent style across projects and also allow for fine grained control over
-    /// who may set and who may get such property. Just access control to the Key type itself lacks such fidelity.
+    /// who may set and who may get such property. Just access control to the Key type itself lacks sufficient fidelity.
     ///
-    /// Note that specific context and context types MAY (and usually do), offer also a way to set context values,
-    /// however in the most general case it is not required, as some frameworks may only be able to offer reading.
+    /// Specific context and context types may, and usually do, also offer a way to set context values.
+    /// However in the most general case it is not required, as some frameworks may only be able to offer reading.
     public subscript<Key: ServiceContextKey>(_ key: Key.Type) -> Key.Value? {
         get {
             guard let value = self._storage[AnyServiceContextKey(key)] else { return nil }
@@ -213,7 +231,7 @@ extension ServiceContext {
         self._storage.isEmpty
     }
 
-    /// Iterate through all items in this `ServiceContext` by invoking the given closure for each item.
+    /// Iterate through all items in this service context by invoking the given closure for each item.
     ///
     /// The order of those invocations is NOT guaranteed and should not be relied on.
     ///
@@ -232,11 +250,13 @@ extension ServiceContext {
 
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension ServiceContext {
-    /// A `ServiceContext` is automatically propagated through task-local storage. This API enables binding a top-level `ServiceContext` and
+    /// A Service Context is automatically propagated through task-local storage.
+    ///
+    /// This API enables binding a top-level `ServiceContext` and
     /// implicitly passes it to child tasks when using structured concurrency.
     @TaskLocal public static var current: ServiceContext?
 
-    /// Convenience API to bind the task-local ``ServiceContext/current`` to the passed `value`, and execute the passed `operation`.
+    /// Bind the task-local ``ServiceContext/current`` to the passed `value`, and execute the passed `operation`.
     ///
     /// To access the task-local value, use `ServiceContext.current`.
     ///
@@ -246,7 +266,7 @@ extension ServiceContext {
     }
 
     #if compiler(>=6.0)
-    /// Convenience API to bind the task-local ``ServiceContext/current`` to the passed `value`, and execute the passed `operation`.
+    /// Bind the task-local ``ServiceContext/current`` to the passed `value`, and execute the passed `operation`.
     ///
     /// To access the task-local value, use `ServiceContext.current`.
     ///
