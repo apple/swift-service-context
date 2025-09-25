@@ -9,13 +9,14 @@ for purposes of cross-cutting tools to be built on top of it.
 
 It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and the
 in the spirit of [Tracing Plane](https://cs.brown.edu/~jcmace/papers/mace18universal.pdf)'s "Baggage Context" type,
-although by itself it does not define a specific serialization format.
+although by itself it doesn't define a specific serialization format.
 
-See https://github.com/apple/swift-distributed-tracing for actual instrument types and implementations which can be used to
-deploy various cross-cutting instruments all reusing the same context type. More information can be found in the
+See the [Swift Distributed Tracing](https://github.com/apple/swift-distributed-tracing) repository for instrument types
+and implementations you can use to deploy various cross-cutting instruments that all reuse the same context type. 
+More information can be found in the
 [SSWG meeting notes](https://gist.github.com/ktoso/4d160232407e4d5835b5ba700c73de37#swift-baggage-context--distributed-tracing).
 
-> Automatic propagation through task-locals by using `ServiceContext.current` is supported in Swift >= 5.5
+> Note: Automatic propagation through task-locals by using `ServiceContext.current` is supported in Swift version 5.5 or later.
 
 ## Getting started
 
@@ -47,6 +48,14 @@ targets: [
 ]
 ```
 
-## Usage
+### Usage
 
 Please refer to in-depth discussion and documentation in the [Swift Distributed Tracing](https://github.com/apple/swift-distributed-tracing) repository.
+
+## Topics
+
+- ``ServiceContext``
+- ``ServiceContextKey``
+- ``AnyServiceContextKey``
+- ``TODOLocation``
+
