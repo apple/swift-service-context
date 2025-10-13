@@ -61,8 +61,13 @@ public protocol ServiceContextKey: Sendable {
 }
 
 extension ServiceContextKey {
-    /// The human-readable name of this key.
+    /// A human-readable name to use for this key instead of the type name.
     public static var nameOverride: String? { nil }
+
+    /// A human-readable String representation of the underlying key.
+    ///
+    /// If no explicit name is returned by `nameOverride`, the type name is used.
+    public static var name: String { AnyServiceContextKey(self).name }
 }
 
 /// A type-erased service context key that you use when iterating through the service context.
