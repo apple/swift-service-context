@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-import ServiceContextModule
+@testable import ServiceContextModule
 import XCTest
 
 final class ServiceContextTests: XCTestCase {
@@ -60,6 +60,32 @@ final class ServiceContextTests: XCTestCase {
 
     func test_TODO_doesNotCrashWithoutExplicitCompilerFlag() {
         _ = ServiceContext.TODO(#function)
+    }
+
+    func test_serviceContextKeyName_withoutOverride() {
+        let name = FirstTestKey.name
+        XCTAssertEqual(name, "FirstTestKey")
+    }
+
+    func test_serviceContextKeyName_withOverride() {
+        let name = ThirdTestKey.name
+        XCTAssertEqual(name, "explicit")
+    }
+
+    func test_anyServiceContextKeyName_withoutOverride() {
+        let anyKey = AnyServiceContextKey(FirstTestKey.self)
+        XCTAssertEqual(anyKey.name, "FirstTestKey")
+    }
+
+    func test_anyServiceContextKeyName_withOverride() {
+        let anyKey = AnyServiceContextKey(ThirdTestKey.self)
+        XCTAssertEqual(anyKey.name, "explicit")
+    }
+
+    func test_serviceContextKeyName_matchesAnyServiceContextKeyName() {
+        XCTAssertEqual(FirstTestKey.name, AnyServiceContextKey(FirstTestKey.self).name)
+        XCTAssertEqual(SecondTestKey.name, AnyServiceContextKey(SecondTestKey.self).name)
+        XCTAssertEqual(ThirdTestKey.name, AnyServiceContextKey(ThirdTestKey.self).name)
     }
 
     func test_automaticPropagationThroughTaskLocal() throws {
