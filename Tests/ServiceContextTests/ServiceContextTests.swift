@@ -12,8 +12,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-@testable import ServiceContextModule
 import XCTest
+
+@testable import ServiceContextModule
 
 final class ServiceContextTests: XCTestCase {
     func test_topLevelServiceContextIsEmpty() {
