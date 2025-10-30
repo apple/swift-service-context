@@ -12,33 +12,37 @@
 //
 //===----------------------------------------------------------------------===//
 
-import XCTest
+import Testing
 
 @testable import ServiceContextModule
 
-final class ServiceContextTests: XCTestCase {
-    func test_topLevelServiceContextIsEmpty() {
+@Suite("ServiceContext Tests")
+struct ServiceContextTests {
+    @Test("Top-level ServiceContext is empty")
+    func topLevelServiceContextIsEmpty() {
         let context = ServiceContext.topLevel
 
-        XCTAssertTrue(context.isEmpty)
-        XCTAssertEqual(context.count, 0)
+        #expect(context.isEmpty)
+        #expect(context.count == 0)
     }
 
-    func test_readAndWriteThroughSubscript() throws {
+    @Test("Read and write values through subscript")
+    func readAndWriteThroughSubscript() throws {
         var context = ServiceContext.topLevel
-        XCTAssertNil(context[FirstTestKey.self])
-        XCTAssertNil(context[SecondTestKey.self])
+        #expect(context[FirstTestKey.self] == nil)
+        #expect(context[SecondTestKey.self] == nil)
 
         context[FirstTestKey.self] = 42
         context[SecondTestKey.self] = 42.0
 
-        XCTAssertFalse(context.isEmpty)
-        XCTAssertEqual(context.count, 2)
-        XCTAssertEqual(context[FirstTestKey.self], 42)
-        XCTAssertEqual(context[SecondTestKey.self], 42.0)
+        #expect(!context.isEmpty)
+        #expect(context.count == 2)
+        #expect(context[FirstTestKey.self] == 42)
+        #expect(context[SecondTestKey.self] == 42.0)
     }
 
-    func test_forEachIteratesOverAllServiceContextItems() {
+    @Test("Context forEach iterates over all context items")
+    func forEachIteratesOverAllServiceContextItems() {
         var context = ServiceContext.topLevel
 
         context[FirstTestKey.self] = 42
@@ -50,51 +54,59 @@ final class ServiceContextTests: XCTestCase {
         context.forEach { key, value in
             contextItems[key] = value
         }
-        XCTAssertEqual(contextItems.count, 3)
-        XCTAssertTrue(contextItems.contains(where: { $0.key.name == "FirstTestKey" }))
-        XCTAssertTrue(contextItems.contains(where: { $0.value as? Int == 42 }))
-        XCTAssertTrue(contextItems.contains(where: { $0.key.name == "SecondTestKey" }))
-        XCTAssertTrue(contextItems.contains(where: { $0.value as? Double == 42.0 }))
-        XCTAssertTrue(contextItems.contains(where: { $0.key.name == "explicit" }))
-        XCTAssertTrue(contextItems.contains(where: { $0.value as? String == "test" }))
+        #expect(contextItems.count == 3)
+        #expect(contextItems.contains(where: { $0.key.name == "FirstTestKey" }))
+        #expect(contextItems.contains(where: { $0.value as? Int == 42 }))
+        #expect(contextItems.contains(where: { $0.key.name == "SecondTestKey" }))
+        #expect(contextItems.contains(where: { $0.value as? Double == 42.0 }))
+        #expect(contextItems.contains(where: { $0.key.name == "explicit" }))
+        #expect(contextItems.contains(where: { $0.value as? String == "test" }))
     }
 
-    func test_TODO_doesNotCrashWithoutExplicitCompilerFlag() {
+    @Test("TODO Context does not crash without explicit compiler flag")
+    func TODO_doesNotCrashWithoutExplicitCompilerFlag() {
         _ = ServiceContext.TODO(#function)
     }
 
-    func test_serviceContextKeyName_withoutOverride() {
+    @Test("ServiceContextKey name defaults to type name without override")
+    func serviceContextKeyName_withoutOverride() {
         let name = FirstTestKey.name
-        XCTAssertEqual(name, "FirstTestKey")
+        #expect(name == "FirstTestKey")
     }
 
-    func test_serviceContextKeyName_withOverride() {
+    @Test("ServiceContextKey name uses explicit override when provided")
+    func serviceContextKeyName_withOverride() {
         let name = ThirdTestKey.name
-        XCTAssertEqual(name, "explicit")
+        #expect(name == "explicit")
     }
 
-    func test_anyServiceContextKeyName_withoutOverride() {
+    @Test("AnyServiceContextKey name defaults to type name without override")
+    func anyServiceContextKeyName_withoutOverride() {
         let anyKey = AnyServiceContextKey(FirstTestKey.self)
-        XCTAssertEqual(anyKey.name, "FirstTestKey")
+        #expect(anyKey.name == "FirstTestKey")
     }
 
-    func test_anyServiceContextKeyName_withOverride() {
+    @Test("AnyServiceContextKey name uses explicit override when provided")
+    func anyServiceContextKeyName_withOverride() {
         let anyKey = AnyServiceContextKey(ThirdTestKey.self)
-        XCTAssertEqual(anyKey.name, "explicit")
+        #expect(anyKey.name == "explicit")
     }
 
-    func test_serviceContextKeyName_matchesAnyServiceContextKeyName() {
-        XCTAssertEqual(FirstTestKey.name, AnyServiceContextKey(FirstTestKey.self).name)
-        XCTAssertEqual(SecondTestKey.name, AnyServiceContextKey(SecondTestKey.self).name)
-        XCTAssertEqual(ThirdTestKey.name, AnyServiceContextKey(ThirdTestKey.self).name)
+    @Test("ServiceContextKey name matches AnyServiceContextKey name")
+    func serviceContextKeyName_matchesAnyServiceContextKeyName() {
+        #expect(FirstTestKey.name == AnyServiceContextKey(FirstTestKey.self).name)
+        #expect(SecondTestKey.name == AnyServiceContextKey(SecondTestKey.self).name)
+        #expect(ThirdTestKey.name == AnyServiceContextKey(ThirdTestKey.self).name)
     }
 
-    func test_automaticPropagationThroughTaskLocal() throws {
+    @Test("Automatic propagation through task-local storage")
+    func automaticPropagationThroughTaskLocal() throws {
         guard #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) else {
-            throw XCTSkip("Task locals are not supported on this platform.")
+            #expect(Bool(true), "Task locals are not supported on this platform.")
+            return
         }
 
-        XCTAssertNil(ServiceContext.current)
+        #expect(ServiceContext.current == nil)
 
         var context = ServiceContext.topLevel
         context[FirstTestKey.self] = 42
@@ -107,8 +119,8 @@ final class ServiceContextTests: XCTestCase {
         let c = ServiceContext.$current
         c.withValue(context, operation: exampleFunction)
 
-        XCTAssertEqual(propagatedServiceContext?.count, 1)
-        XCTAssertEqual(propagatedServiceContext?[FirstTestKey.self], 42)
+        #expect(propagatedServiceContext?.count == 1)
+        #expect(propagatedServiceContext?[FirstTestKey.self] == 42)
     }
 
     actor SomeActor {
