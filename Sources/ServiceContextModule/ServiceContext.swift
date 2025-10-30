@@ -265,7 +265,6 @@ extension ServiceContext {
         try ServiceContext.$current.withValue(value, operation: operation)
     }
 
-    #if compiler(>=6.0)
     /// Bind the task-local ``ServiceContext/current`` to the passed `value`, and execute the passed `operation`.
     ///
     /// To access the task-local value, use `ServiceContext.current`.
@@ -285,10 +284,4 @@ extension ServiceContext {
     public static func withValue<T>(_ value: ServiceContext?, operation: () async throws -> T) async rethrows -> T {
         try await ServiceContext.$current.withValue(value, operation: operation)
     }
-    #else
-    @_unsafeInheritExecutor
-    public static func withValue<T>(_ value: ServiceContext?, operation: () async throws -> T) async rethrows -> T {
-        try await ServiceContext.$current.withValue(value, operation: operation)
-    }
-    #endif
 }
