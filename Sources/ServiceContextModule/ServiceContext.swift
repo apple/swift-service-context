@@ -270,10 +270,10 @@ extension ServiceContext {
     /// To access the task-local value, use `ServiceContext.current`.
     ///
     /// SeeAlso: [Swift Task Locals](https://developer.apple.com/documentation/swift/tasklocal)
-#if swift(>=6.2)
+    #if swift(>=6.2)
     public nonisolated(nonsending) static func withValue<T, Failure: Error>(
         _ value: ServiceContext?,
-        operation: nonisolated(nonsending)() async throws(Failure) -> T
+        operation: nonisolated(nonsending) () async throws(Failure) -> T
     ) async throws(Failure) -> T {
         do {
             return try await ServiceContext.$current.withValue(value, operation: operation)
@@ -281,12 +281,16 @@ extension ServiceContext {
             throw error as! Failure
         }
     }
-#endif
+    #endif
 
-#if swift(>=6.2)
-    @available(*, deprecated, message: "Prefer the 'nonisolated(nonsending)' overload with stricter execution on caller context semantics")
+    #if swift(>=6.2)
+    @available(
+        *,
+        deprecated,
+        message: "Prefer the 'nonisolated(nonsending)' overload with stricter execution on caller context semantics"
+    )
     @_disfavoredOverload
-#endif
+    #endif
     public static func withValue<T>(
         _ value: ServiceContext?,
         isolation: isolated (any Actor)? = #isolation,
