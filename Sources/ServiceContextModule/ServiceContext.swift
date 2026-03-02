@@ -271,7 +271,7 @@ extension ServiceContext {
     ///
     /// SeeAlso: [Swift Task Locals](https://developer.apple.com/documentation/swift/tasklocal)
     #if swift(>=6.2)
-    public nonisolated(nonsending) static func withValue<T, Failure: Error>(
+    public nonisolated(nonsending) static func withValue<T: ~Copyable, Failure: Error>(
         _ value: ServiceContext?,
         operation: nonisolated(nonsending) () async throws(Failure) -> T
     ) async throws(Failure) -> T {
