@@ -14,7 +14,7 @@
 
 import Benchmark
 
-let benchmarks = {
+let benchmarks: @Sendable () -> Void = {
     let defaultMetrics: [BenchmarkMetric] = [
         .mallocCountTotal
     ]
