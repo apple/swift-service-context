@@ -59,3 +59,7 @@ Please refer to in-depth discussion and documentation in the [Swift Distributed 
 - ``AnyServiceContextKey``
 - ``TODOLocation``
 
+### Contribute to the project
+
+- <doc:Proposals>
+
