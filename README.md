@@ -1,8 +1,8 @@
 # Swift Service Context
 
-[![Swift 6.0](https://img.shields.io/badge/Swift-6.0-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 6.1](https://img.shields.io/badge/Swift-6.0-ED523F.svg?style=flat)](https://swift.org/download/) 
-[![Swift 6.2](https://img.shields.io/badge/Swift-6.0-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 6.1](https://img.shields.io/badge/Swift-6.1-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 6.2](https://img.shields.io/badge/Swift-6.2-ED523F.svg?style=flat)](https://swift.org/download/)
+[![Swift 6.3](https://img.shields.io/badge/Swift-6.3-ED523F.svg?style=flat)](https://swift.org/download/)
 
 `ServiceContext` is a minimal (zero-dependency) context propagation container, intended to "carry" items for purposes of cross-cutting tools to be built on top of it.
 
