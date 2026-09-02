@@ -20,8 +20,16 @@ let package = Package(
             ]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/kukushechkin/swift-distributed-tracing.git", branch: "move-service-context-to-sdt")
+    ],
     targets: [
-        .target(name: "ServiceContextModule"),
+        .target(
+            name: "ServiceContextModule",
+            dependencies: [
+                .product(name: "ServiceContextCore", package: "swift-distributed-tracing")
+            ]
+        ),
 
         // Deprecated/legacy module
         .target(

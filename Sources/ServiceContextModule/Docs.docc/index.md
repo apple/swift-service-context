@@ -18,6 +18,10 @@ More information can be found in the
 
 > Note: Automatic propagation through task-locals by using `ServiceContext.current` is supported in Swift version 5.5 or later.
 
+> Note: `ServiceContext` itself is implemented in the `swift-distributed-tracing` package's `ServiceContextCore`
+> module. This package re-exports it under the `ServiceContextModule` name so existing dependents keep working
+> unchanged. New code that also needs tracing spans should depend on `Tracing` directly.
+
 ## Getting started
 
 In order to depend on this library you can use the Swift Package Manager, and add the following dependency to your `Package.swift`:
