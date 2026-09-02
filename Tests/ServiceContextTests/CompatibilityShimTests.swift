@@ -17,7 +17,7 @@ import Testing
 import ServiceContextModule
 
 // `ServiceContext`'s full behavior test suite now lives with its implementation in
-// swift-distributed-tracing's `ServiceContextCoreTests`. These tests only confirm the
+// swift-distributed-tracing's `ContextStorageTests`. These tests only confirm the
 // backward-compatibility re-export shim still exposes a working, usable API.
 @Suite("ServiceContextModule compatibility shim")
 struct CompatibilityShimTests {

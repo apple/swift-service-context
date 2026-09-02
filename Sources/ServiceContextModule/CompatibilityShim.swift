@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// `ServiceContext` now lives in the `swift-distributed-tracing` package's `ServiceContextCore` module.
+// `ServiceContext` now lives in the `swift-distributed-tracing` package's `ContextStorage` module.
 // This module re-exports it under its original name so `import ServiceContextModule` keeps working
 // unchanged for existing dependents of this package.
-@_exported import ServiceContextCore
+@_exported import ContextStorage
