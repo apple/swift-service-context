@@ -13,12 +13,12 @@
 //===----------------------------------------------------------------------===//
 
 // `ServiceContext`, `ServiceContextKey`, and `AnyServiceContextKey` now live in the
-// `swift-distributed-tracing` package's `ContextStorage` module, renamed to `Context`, `ContextKey`,
-// and `AnyContextKey`. This module re-exports the module and declares its own, non-deprecated
-// names so `import ServiceContextModule` keeps working unchanged, with no deprecation notice, for
-// existing dependents of this package.
+// `swift-distributed-tracing` package's `ContextStorage` module, renamed to `TracingContext`,
+// `TracingContextKey`, and `AnyTracingContextKey`. This module re-exports the module and declares its
+// own, non-deprecated names so `import ServiceContextModule` keeps working unchanged, with no
+// deprecation notice, for existing dependents of this package.
 @_exported import ContextStorage
 
-public typealias ServiceContext = ContextStorage.Context
-public typealias ServiceContextKey = ContextStorage.ContextKey
-public typealias AnyServiceContextKey = ContextStorage.AnyContextKey
+public typealias ServiceContext = ContextStorage.TracingContext
+public typealias ServiceContextKey = ContextStorage.TracingContextKey
+public typealias AnyServiceContextKey = ContextStorage.AnyTracingContextKey
