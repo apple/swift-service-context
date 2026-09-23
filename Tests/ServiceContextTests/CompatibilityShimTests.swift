@@ -12,9 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-import Testing
-
 import ServiceContextModule
+import Testing
 
 // `ServiceContext`'s full behavior test suite now lives with its implementation in
 // swift-distributed-tracing's `ContextStorageTests`. These tests only confirm the
