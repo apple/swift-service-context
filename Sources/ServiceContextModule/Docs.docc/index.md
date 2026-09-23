@@ -26,7 +26,7 @@ More information can be found in the
 > dependents to keep compatible should prefer `TracingContext`, `TracingContextKey`, and
 > `AnyTracingContextKey`.
 
-## Getting started
+### Getting started
 
 In order to depend on this library you can use the Swift Package Manager, and add the following dependency to your `Package.swift`:
 
@@ -65,7 +65,6 @@ Please refer to in-depth discussion and documentation in the [Swift Distributed 
 - ``ServiceContext``
 - ``ServiceContextKey``
 - ``AnyServiceContextKey``
-- ``TODOLocation``
 
 ### Contribute to the project
 
