@@ -18,13 +18,13 @@ More information can be found in the
 
 > Note: Automatic propagation through task-locals by using `ServiceContext.current` is supported in Swift version 5.5 or later.
 
-> Note: `ServiceContext`, `ServiceContextKey`, and `AnyServiceContextKey` are implemented in the
-> `swift-distributed-tracing` package's `ContextStorage` module, where the types themselves are named
-> `TracingContext`, `TracingContextKey`, and `AnyTracingContextKey`. This package declares its own,
-> non-deprecated names so existing dependents keep working unchanged, with no deprecation notice. New
-> code that also needs tracing spans should depend on `Tracing` directly, and new code with no existing
-> dependents to keep compatible should prefer `TracingContext`, `TracingContextKey`, and
-> `AnyTracingContextKey`.
+> Note: `ServiceContext`, `ServiceContextKey`, `AnyServiceContextKey`, and `TODOLocation` are
+> implemented in the `swift-distributed-tracing` package's `ContextStorage` module, where the first
+> three types are named `TracingContext`, `TracingContextKey`, and `AnyTracingContextKey`.
+> `TODOLocation` keeps its name. This package declares its own, non-deprecated names so existing
+> dependents keep working unchanged, with no deprecation notice. New code that also needs tracing
+> spans should depend on `Tracing` directly, and new code with no existing dependents to keep
+> compatible should prefer `TracingContext`, `TracingContextKey`, and `AnyTracingContextKey`.
 
 ### Getting started
 
@@ -65,6 +65,7 @@ Please refer to in-depth discussion and documentation in the [Swift Distributed 
 - ``ServiceContext``
 - ``ServiceContextKey``
 - ``AnyServiceContextKey``
+- ``TODOLocation``
 
 ### Contribute to the project
 

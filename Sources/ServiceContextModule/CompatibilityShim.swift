@@ -16,9 +16,11 @@
 // `swift-distributed-tracing` package's `ContextStorage` module, renamed to `TracingContext`,
 // `TracingContextKey`, and `AnyTracingContextKey`. This module re-exports the module and declares its
 // own, non-deprecated names so `import ServiceContextModule` keeps working unchanged, with no
-// deprecation notice, for existing dependents of this package.
+// deprecation notice, for existing dependents of this package. `TODOLocation` kept its name, so this
+// typealias just makes it reachable under this module too.
 @_exported import ContextStorage
 
 public typealias ServiceContext = ContextStorage.TracingContext
 public typealias ServiceContextKey = ContextStorage.TracingContextKey
 public typealias AnyServiceContextKey = ContextStorage.AnyTracingContextKey
+public typealias TODOLocation = ContextStorage.TODOLocation
