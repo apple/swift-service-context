@@ -6,12 +6,12 @@
 
 > **This package is now a thin compatibility layer.** The implementation of `ServiceContext` moved into
 > [swift-distributed-tracing](https://github.com/apple/swift-distributed-tracing), where the type is named
-> `TracingContext`. `import ServiceContextModule` keeps compiling and behaving exactly as it does today,
-> with no code changes required.
+> `InstrumentationContext`. `import ServiceContextModule` keeps compiling and behaving exactly as it does
+> today, with no code changes required.
 >
 > New projects, and existing ones that can freely update their code, should depend on
-> swift-distributed-tracing directly and use `TracingContext` (or `Tracing`, if they also need spans)
-> instead of adding this package.
+> swift-distributed-tracing directly and use `InstrumentationContext` (or `Tracing`, if they also need
+> spans) instead of adding this package.
 
 `ServiceContext` is a minimal context propagation container: a value type, propagated through task-local
 storage, that carries arbitrary key-value pairs across concurrent Swift code.
@@ -40,7 +40,7 @@ targets: [
 ]
 ```
 
-Depend on the `ContextStorage` product instead of `Tracing` if you only need context propagation, with no
+Depend on the `Instrumentation` product instead of `Tracing` if you only need context propagation, with no
 tracing spans.
 
 ### Existing dependents

@@ -30,7 +30,7 @@ let package = Package(
         .target(
             name: "ServiceContextModule",
             dependencies: [
-                .product(name: "ContextStorage", package: "swift-distributed-tracing")
+                .product(name: "Instrumentation", package: "swift-distributed-tracing")
             ]
         ),
 
