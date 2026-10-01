@@ -270,17 +270,12 @@ extension ServiceContext {
     /// To access the task-local value, use `ServiceContext.current`.
     ///
     /// SeeAlso: [Swift Task Locals](https://developer.apple.com/documentation/swift/tasklocal)
-    @available(
-        *,
-        deprecated,
-        message: "Use 'withValue(_:operation:)', which runs the operation on the caller's executor."
-    )
     public static func withValue<T>(
         _ value: ServiceContext?,
         isolation: isolated (any Actor)? = #isolation,
         operation: () async throws -> T
     ) async rethrows -> T {
-        try await ServiceContext.$current.withValue(value, operation: operation)
+        try await ServiceContext.$current.withValue(value, operation: { try await operation() })
     }
 
     @available(*, deprecated, message: "Use the method with the isolation parameter instead.")
