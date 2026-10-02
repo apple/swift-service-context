@@ -275,7 +275,7 @@ extension ServiceContext {
         isolation: isolated (any Actor)? = #isolation,
         operation: () async throws -> T
     ) async rethrows -> T {
-        try await ServiceContext.$current.withValue(value, operation: operation)
+        try await ServiceContext.$current.withValue(value, operation: { try await operation() })
     }
 
     @available(*, deprecated, message: "Use the method with the isolation parameter instead.")
