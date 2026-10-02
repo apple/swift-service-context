@@ -1,9 +1,9 @@
 # Swift Service Context
 
-[![Swift 6.1](https://img.shields.io/badge/Swift-6.1-ED523F.svg?style=flat)](https://swift.org/download/) 
-[![Swift 6.2](https://img.shields.io/badge/Swift-6.2-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 6.3](https://img.shields.io/badge/Swift-6.3-ED523F.svg?style=flat)](https://swift.org/download/)
-[![Swift 6.4](https://img.shields.io/badge/Swift-6.4-ED523F.svg?style=flat)](https://swift.org/download/)
+[![](https://img.shields.io/badge/docc-read_documentation-blue)](https://swiftpackageindex.com/apple/swift-service-context/documentation)
+[![](https://img.shields.io/github/v/release/apple/swift-service-context)](https://github.com/apple/swift-service-context/releases)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fapple%2Fswift-service-context%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/apple/swift-service-context)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fapple%2Fswift-service-context%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/apple/swift-service-context)
 
 `ServiceContext` is a minimal (zero-dependency) context propagation container, intended to "carry" items for purposes of cross-cutting tools to be built on top of it.
 
