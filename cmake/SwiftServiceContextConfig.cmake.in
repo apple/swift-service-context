@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/SwiftServiceContextTargets.cmake")
+check_required_components(SwiftServiceContext)

@@ -75,3 +75,7 @@ targets: [
     // ...
 ]
 ```
+
+## Building with CMake
+
+See [the CMake build instructions](cmake/README.md) for library builds and consumer validation.
