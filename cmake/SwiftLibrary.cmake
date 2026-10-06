@@ -26,6 +26,10 @@ function(_swift_service_context_library target)
   set_target_properties(${target} PROPERTIES
     Swift_MODULE_DIRECTORY "${module_directory}"
     POSITION_INDEPENDENT_CODE YES)
+  if(WIN32)
+    # Swift's autolinker uses the lib prefix for MSVC libraries too.
+    set_target_properties(${target} PROPERTIES PREFIX "lib" IMPORT_PREFIX "lib")
+  endif()
   target_compile_options(${target} PRIVATE
     "$<$<COMPILE_LANGUAGE:Swift>:SHELL:-package-name swift_service_context>"
     "$<$<COMPILE_LANGUAGE:Swift>:SHELL:-enable-experimental-feature StrictConcurrency=complete>")
