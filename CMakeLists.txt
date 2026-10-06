@@ -1,4 +1,16 @@
-# SPDX-License-Identifier: Apache-2.0
+##===----------------------------------------------------------------------===##
+##
+## This source file is part of the Swift Service Context open source project
+##
+## Copyright (c) 2026 Apple Inc. and the Swift Service Context project authors
+## Licensed under Apache License v2.0
+##
+## See LICENSE.txt for license information
+## See CONTRIBUTORS.txt for the list of Swift Service Context project authors
+##
+## SPDX-License-Identifier: Apache-2.0
+##
+##===----------------------------------------------------------------------===##
 
 cmake_minimum_required(VERSION 3.29)
 project(SwiftServiceContext LANGUAGES C Swift)
@@ -16,13 +28,13 @@ add_library(ServiceContextModule
   Sources/ServiceContextModule/ServiceContextKey.swift
 )
 add_library(SwiftServiceContext::ServiceContextModule ALIAS ServiceContextModule)
-swift_library(ServiceContextModule)
+_swift_service_context_library(ServiceContextModule)
 
 add_library(InstrumentationBaggage
   Sources/InstrumentationBaggage/CompatibilityShims.swift
 )
 add_library(SwiftServiceContext::InstrumentationBaggage ALIAS InstrumentationBaggage)
-swift_library(InstrumentationBaggage)
+_swift_service_context_library(InstrumentationBaggage)
 target_link_libraries(InstrumentationBaggage PUBLIC ServiceContextModule)
 
 set(package_directory "${CMAKE_INSTALL_LIBDIR}/cmake/SwiftServiceContext")
