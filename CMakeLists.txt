@@ -34,7 +34,13 @@ add_library(ServiceContextModule
 add_library(SwiftServiceContext::ServiceContextModule ALIAS ServiceContextModule)
 _swift_service_context_library(ServiceContextModule)
 
-add_library(InstrumentationBaggage
+# This compatibility module has no runtime symbols, so Windows cannot create
+# a DLL import library for it. Preserve the module in a static archive instead.
+set(compatibility_library_type)
+if(WIN32)
+  set(compatibility_library_type STATIC)
+endif()
+add_library(InstrumentationBaggage ${compatibility_library_type}
   Sources/InstrumentationBaggage/CompatibilityShims.swift
 )
 add_library(SwiftServiceContext::InstrumentationBaggage ALIAS InstrumentationBaggage)

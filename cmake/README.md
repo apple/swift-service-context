@@ -18,8 +18,10 @@ cmake --build build
 cmake --install build
 ```
 
-Pass `-DBUILD_SHARED_LIBS=ON` to build shared libraries. An enclosing CMake project
-can also use `add_subdirectory` and link the namespaced targets. The build directory
+Pass `-DBUILD_SHARED_LIBS=ON` to build shared libraries. On Windows, the
+`InstrumentationBaggage` compatibility module remains static because its
+re-exports and type aliases have no runtime symbols for a DLL import library.
+An enclosing CMake project can also use `add_subdirectory` and link the namespaced targets. The build directory
 and install prefix both provide a `SwiftServiceContext` package configuration.
 
 The independent consumer verifies that public modules can be imported and linked:
