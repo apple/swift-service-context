@@ -22,8 +22,8 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/kukushechkin/swift-distributed-tracing.git",
-            branch: "move-service-context-to-sdt"
+            url: "https://github.com/apple/swift-distributed-tracing.git",
+            from: "1.6.0"
         )
     ],
     targets: [
