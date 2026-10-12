@@ -20,8 +20,19 @@ let package = Package(
             ]
         ),
     ],
+    dependencies: [
+        .package(
+            url: "https://github.com/apple/swift-distributed-tracing.git",
+            from: "1.6.0"
+        )
+    ],
     targets: [
-        .target(name: "ServiceContextModule"),
+        .target(
+            name: "ServiceContextModule",
+            dependencies: [
+                .product(name: "Instrumentation", package: "swift-distributed-tracing")
+            ]
+        ),
 
         // Deprecated/legacy module
         .target(

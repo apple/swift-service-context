@@ -16,9 +16,18 @@ and implementations you can use to deploy various cross-cutting instruments that
 More information can be found in the
 [SSWG meeting notes](https://gist.github.com/ktoso/4d160232407e4d5835b5ba700c73de37#swift-baggage-context--distributed-tracing).
 
-> Note: Automatic propagation through task-locals by using `ServiceContext.current` is supported in Swift version 5.5 or later.
+Automatic propagation through task-locals by using `ServiceContext.current` is supported in Swift version 5.5 or later.
 
-## Getting started
+`ServiceContext`, `ServiceContextKey`, `AnyServiceContextKey`, and `TODOLocation` are
+implemented in the `swift-distributed-tracing` package's `Instrumentation` module, where the first
+three types are named `InstrumentationContext`, `InstrumentationContextKey`, and
+`AnyInstrumentationContextKey`. `TODOLocation` keeps its name. This package declares its own,
+non-deprecated names so existing dependents keep working unchanged, with no deprecation notice. New
+code that also needs tracing spans should depend on `Tracing` directly, and new code with no existing
+dependents to keep compatible should prefer `InstrumentationContext`, `InstrumentationContextKey`, and
+`AnyInstrumentationContextKey`.
+
+### Getting started
 
 In order to depend on this library you can use the Swift Package Manager, and add the following dependency to your `Package.swift`:
 
