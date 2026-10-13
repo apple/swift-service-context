@@ -21,13 +21,9 @@ let package = Package(
         ),
     ],
     dependencies: [
-        //        .package(
-        //            url: "https://github.com/apple/swift-distributed-tracing.git",
-        //            from: "1.7.0"
-        //        )
         .package(
-            url: "https://github.com/kukushechkin/swift-distributed-tracing.git",
-            branch: "add-ServiceContextModule-compatibility-module"
+            url: "https://github.com/apple/swift-distributed-tracing.git",
+            from: "1.7.0"
         )
     ],
     targets: [
