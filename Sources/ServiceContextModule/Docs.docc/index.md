@@ -4,7 +4,7 @@ Common currency type for type-safe and Swift concurrency aware context propagati
 
 ## Overview
 
-``ServiceContext-170to`` is a minimal (zero-dependency) context propagation container, intended to "carry" context items
+`ServiceContext` is a minimal (zero-dependency) context propagation container, intended to "carry" context items
 for purposes of cross-cutting tools to be built on top of it.
 
 It is modeled after the concepts explained in [W3C Baggage](https://w3c.github.io/baggage/) and the
@@ -62,11 +62,6 @@ targets: [
 Please refer to in-depth discussion and documentation in the [Swift Distributed Tracing](https://github.com/apple/swift-distributed-tracing) repository.
 
 ## Topics
-
-- ``ServiceContext-170to``
-- ``ServiceContextKey-1epoj``
-- ``AnyServiceContextKey-ohx5``
-- ``TODOLocation-typealias``
 
 ### Contribute to the project
 

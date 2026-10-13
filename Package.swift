@@ -68,8 +68,3 @@ for target in package.targets {
     settings.append(.enableExperimentalFeature("StrictConcurrency=complete"))
     target.swiftSettings = settings
 }
-
-
-package.dependencies.append(
-    .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0")
-)
