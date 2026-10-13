@@ -38,8 +38,8 @@ Focus this section on what will change for the _contributors_ to Swift Service C
 ### API stability
 
 Discuss the API implications, making sure to consider all of:
-- existing ``ServiceContext`` users
-- existing ``ServiceContextKey`` implementations
+- existing ``ServiceContext-170to`` users
+- existing ``ServiceContextKey-1epoj`` implementations
 
 ### Future directions
 

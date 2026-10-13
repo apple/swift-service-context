@@ -8,7 +8,7 @@ let package = Package(
         .library(
             name: "ServiceContextModule",
             targets: [
-                "ServiceContextModule"
+                "ServiceContextModuleCompatibility"
             ]
         ),
 
@@ -31,25 +31,22 @@ let package = Package(
         )
     ],
     targets: [
+        // The `ServiceContextModule` module lives in swift-distributed-tracing, as part of its `Instrumentation`
+        // product. Target names must be unique across the package graph. So this target has a different name and only
+        // keeps the `ServiceContextModule` product of this package.
         .target(
-            name: "ServiceContextModule",
+            name: "ServiceContextModuleCompatibility",
             dependencies: [
-                // The `Instrumentation` product of swift-distributed-tracing also contains a module named
-                // `ServiceContextModule`. Target names must be unique across the package graph. The alias renames that
-                // module in every build that contains this package. The module of this target keeps the name.
-                .product(
-                    name: "Instrumentation",
-                    package: "swift-distributed-tracing",
-                    moduleAliases: ["ServiceContextModule": "SDTServiceContextModule"]
-                )
-            ]
+                .product(name: "Instrumentation", package: "swift-distributed-tracing")
+            ],
+            path: "Sources/ServiceContextModule"
         ),
 
         // Deprecated/legacy module
         .target(
             name: "InstrumentationBaggage",
             dependencies: [
-                .target(name: "ServiceContextModule")
+                .product(name: "Instrumentation", package: "swift-distributed-tracing")
             ]
         ),
 
@@ -59,7 +56,8 @@ let package = Package(
         .testTarget(
             name: "ServiceContextTests",
             dependencies: [
-                .target(name: "ServiceContextModule")
+                .target(name: "ServiceContextModuleCompatibility"),
+                .product(name: "Instrumentation", package: "swift-distributed-tracing"),
             ]
         ),
     ]
@@ -70,3 +68,8 @@ for target in package.targets {
     settings.append(.enableExperimentalFeature("StrictConcurrency=complete"))
     target.swiftSettings = settings
 }
+
+
+package.dependencies.append(
+    .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0")
+)
