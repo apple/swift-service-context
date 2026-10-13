@@ -21,16 +21,24 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/apple/swift-distributed-tracing.git",
-            from: "1.6.0"
-        )
+//        .package(
+//            url: "https://github.com/apple/swift-distributed-tracing.git",
+//            from: "1.7.0"
+//        )
+        .package(url: "https://github.com/kukushechkin/swift-distributed-tracing.git", branch: "add-ServiceContextModule-compatibility-module")
     ],
     targets: [
         .target(
             name: "ServiceContextModule",
             dependencies: [
-                .product(name: "Instrumentation", package: "swift-distributed-tracing")
+                // The `Instrumentation` product of swift-distributed-tracing also contains a module named
+                // `ServiceContextModule`. Target names must be unique across the package graph. The alias renames that
+                // module in every build that contains this package. The module of this target keeps the name.
+                .product(
+                    name: "Instrumentation",
+                    package: "swift-distributed-tracing",
+                    moduleAliases: ["ServiceContextModule": "SDTServiceContextModule"]
+                )
             ]
         ),
 
