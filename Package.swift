@@ -8,7 +8,7 @@ let package = Package(
         .library(
             name: "ServiceContextModule",
             targets: [
-                "ServiceContextModule"
+                "ServiceContextModuleCompatibility"
             ]
         ),
 
@@ -21,24 +21,32 @@ let package = Package(
         ),
     ],
     dependencies: [
+        //        .package(
+        //            url: "https://github.com/apple/swift-distributed-tracing.git",
+        //            from: "1.7.0"
+        //        )
         .package(
-            url: "https://github.com/apple/swift-distributed-tracing.git",
-            from: "1.6.0"
+            url: "https://github.com/kukushechkin/swift-distributed-tracing.git",
+            branch: "add-ServiceContextModule-compatibility-module"
         )
     ],
     targets: [
+        // The `ServiceContextModule` module lives in swift-distributed-tracing, as part of its `Instrumentation`
+        // product. Target names must be unique across the package graph. So this target has a different name and only
+        // keeps the `ServiceContextModule` product of this package.
         .target(
-            name: "ServiceContextModule",
+            name: "ServiceContextModuleCompatibility",
             dependencies: [
                 .product(name: "Instrumentation", package: "swift-distributed-tracing")
-            ]
+            ],
+            path: "Sources/ServiceContextModule"
         ),
 
         // Deprecated/legacy module
         .target(
             name: "InstrumentationBaggage",
             dependencies: [
-                .target(name: "ServiceContextModule")
+                .product(name: "Instrumentation", package: "swift-distributed-tracing")
             ]
         ),
 
@@ -48,7 +56,8 @@ let package = Package(
         .testTarget(
             name: "ServiceContextTests",
             dependencies: [
-                .target(name: "ServiceContextModule")
+                .target(name: "ServiceContextModuleCompatibility"),
+                .product(name: "Instrumentation", package: "swift-distributed-tracing"),
             ]
         ),
     ]
