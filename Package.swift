@@ -23,7 +23,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-distributed-tracing.git",
-            from: "1.7.0"
+            from: "1.7.2"
         )
     ],
     targets: [
