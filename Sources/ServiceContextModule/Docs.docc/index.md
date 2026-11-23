@@ -35,7 +35,7 @@ In order to depend on this library you can use the Swift Package Manager, and ad
 dependencies: [
   .package(
     url: "https://github.com/apple/swift-service-context.git",
-    from: "0.2.0"
+    from: "1.0.0"
   )
 ]
 ```
